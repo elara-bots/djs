@@ -45,7 +45,6 @@ class WebhookClient extends BaseClient {
   // These are here only for documentation purposes - they are implemented by Webhook
   /* eslint-disable no-empty-function */
   send() {}
-  sendSlackMessage() {}
   fetchMessage() {}
   edit() {}
   editMessage() {}

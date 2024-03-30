@@ -9,13 +9,6 @@ const GuildMemberFlags = require('../util/GuildMemberFlags');
 const Permissions = require('../util/Permissions');
 
 /**
- * @type {WeakSet<GuildMember>}
- * @private
- * @internal
- */
-const deletedGuildMembers = new WeakSet();
-
-/**
  * Represents a member of a guild on Discord.
  * @implements {TextBasedChannel}
  * @extends {Base}
@@ -343,16 +336,6 @@ class GuildMember extends Base {
   }
 
   /**
-   * Sets the flags for this member.
-   * @param {GuildMemberFlagsResolvable} flags The flags to set
-   * @param {string} [reason] Reason for setting the flags
-   * @returns {Promise<GuildMember>}
-   */
-  setFlags(flags, reason) {
-    return this.edit({ flags, reason });
-  }
-
-  /**
    * Creates a DM channel between the client and this member.
    * @param {boolean} [force=false] Whether to skip the cache check and request the API
    * @returns {Promise<DMChannel>}
@@ -503,7 +486,6 @@ class GuildMember extends Base {
 TextBasedChannel.applyToClass(GuildMember);
 
 exports.GuildMember = GuildMember;
-exports.deletedGuildMembers = deletedGuildMembers;
 
 /**
  * @external APIGuildMember

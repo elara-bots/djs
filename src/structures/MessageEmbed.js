@@ -1,14 +1,7 @@
 'use strict';
 
-const process = require('node:process');
 const { RangeError } = require('../errors');
 const Util = require('../util/Util');
-
-let deprecationEmittedForSetAuthor = false;
-let deprecationEmittedForSetFooter = false;
-let deprecationEmittedForAddField = false;
-
-// TODO: Remove the deprecated code for `setAuthor()` and `setFooter()`.
 
 /**
  * Represents an embed in a message (image/video preview, rich embed, etc.)
@@ -315,18 +308,8 @@ class MessageEmbed {
    * @param {string} value The value of this field
    * @param {boolean} [inline=false] If this field will be displayed inline
    * @returns {MessageEmbed}
-   * @deprecated This method is a wrapper for {@link MessageEmbed#addFields}. Use that instead.
    */
   addField(name, value, inline) {
-    if (!deprecationEmittedForAddField) {
-      process.emitWarning(
-        // eslint-disable-next-line max-len
-        'MessageEmbed#addField is deprecated and will be removed in the next major update. Use MessageEmbed#addFields instead.',
-        'DeprecationWarning',
-      );
-
-      deprecationEmittedForAddField = true;
-    }
     return this.addFields({ name, value, inline });
   }
 
@@ -387,15 +370,6 @@ class MessageEmbed {
     }
 
     if (typeof options === 'string') {
-      if (!deprecationEmittedForSetAuthor) {
-        process.emitWarning(
-          'Passing strings for MessageEmbed#setAuthor is deprecated. Pass a sole object instead.',
-          'DeprecationWarning',
-        );
-
-        deprecationEmittedForSetAuthor = true;
-      }
-
       options = { name: options, url: deprecatedURL, iconURL: deprecatedIconURL };
     }
 
@@ -446,15 +420,6 @@ class MessageEmbed {
     }
 
     if (typeof options === 'string') {
-      if (!deprecationEmittedForSetFooter) {
-        process.emitWarning(
-          'Passing strings for MessageEmbed#setFooter is deprecated. Pass a sole object instead.',
-          'DeprecationWarning',
-        );
-
-        deprecationEmittedForSetFooter = true;
-      }
-
       options = { text: options, iconURL: deprecatedIconURL };
     }
 

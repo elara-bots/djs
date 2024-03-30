@@ -178,14 +178,6 @@ class Sticker extends Base {
   }
 
   /**
-   * Fetches the pack this sticker is part of from Discord, if this is a Nitro sticker.
-   * @returns {Promise<?StickerPack>}
-   */
-  async fetchPack() {
-    return (this.packId && (await this.client.fetchPremiumStickerPacks()).get(this.packId)) ?? null;
-  }
-
-  /**
    * Fetches the user who uploaded this sticker, if this is a guild sticker.
    * @returns {Promise<?User>}
    */

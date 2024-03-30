@@ -1,13 +1,10 @@
 'use strict';
 
-const process = require('node:process');
 const { Collection } = require('@discordjs/collection');
 const CachedManager = require('./CachedManager');
 const { TypeError, Error } = require('../errors');
 const GuildBan = require('../structures/GuildBan');
 const { GuildMember } = require('../structures/GuildMember');
-
-let deprecationEmittedForDays = false;
 
 /**
  * Manages API methods for GuildBans and stores their cache.
@@ -152,15 +149,6 @@ class GuildBanManager extends CachedManager {
     if (typeof options !== 'object') throw new TypeError('INVALID_TYPE', 'options', 'object', true);
     const id = this.client.users.resolveId(user);
     if (!id) throw new Error('BAN_RESOLVE_ID', true);
-
-    if (typeof options.days !== 'undefined' && !deprecationEmittedForDays) {
-      process.emitWarning(
-        'The days option for GuildBanManager#create() is deprecated. Use the deleteMessageSeconds option instead.',
-        'DeprecationWarning',
-      );
-
-      deprecationEmittedForDays = true;
-    }
 
     await this.client.api
       .guilds(this.guild.id)

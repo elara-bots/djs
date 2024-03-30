@@ -879,31 +879,6 @@ class Message extends Base {
   }
 
   /**
-   * Suppresses or unsuppresses embeds on a message.
-   * @param {boolean} [suppress=true] If the embeds should be suppressed or not
-   * @returns {Promise<Message>}
-   */
-  suppressEmbeds(suppress = true) {
-    const flags = new MessageFlags(this.flags.bitfield);
-
-    if (suppress) {
-      flags.add(MessageFlags.FLAGS.SUPPRESS_EMBEDS);
-    } else {
-      flags.remove(MessageFlags.FLAGS.SUPPRESS_EMBEDS);
-    }
-
-    return this.edit({ flags });
-  }
-
-  /**
-   * Removes the attachments from this message.
-   * @returns {Promise<Message>}
-   */
-  removeAttachments() {
-    return this.edit({ attachments: [] });
-  }
-
-  /**
    * Resolves a component by a custom id.
    * @param {string} customId The custom id to resolve against
    * @returns {?MessageActionRowComponent}

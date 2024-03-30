@@ -1,11 +1,8 @@
 'use strict';
 
-const process = require('node:process');
 const { Collection } = require('@discordjs/collection');
 const AnonymousGuild = require('./AnonymousGuild');
 const GuildAuditLogs = require('./GuildAuditLogs');
-const GuildPreview = require('./GuildPreview');
-const GuildTemplate = require('./GuildTemplate');
 const Integration = require('./Integration');
 const Webhook = require('./Webhook');
 const { Error } = require('../errors');
@@ -34,10 +31,6 @@ const {
 const DataResolver = require('../util/DataResolver');
 const SystemChannelFlags = require('../util/SystemChannelFlags');
 const Util = require('../util/Util');
-
-let deprecationEmittedForSetChannelPositions = false;
-let deprecationEmittedForSetRolePositions = false;
-let deprecationEmittedForMe = false;
 
 /**
  * Represents a guild (or a server) on Discord.
@@ -532,34 +525,11 @@ class Guild extends AnonymousGuild {
   }
 
   /**
-   * AFK voice channel for this guild
-   * @type {?VoiceChannel}
-   * @readonly
-   */
-  get afkChannel() {
-    return this.client.channels.resolve(this.afkChannelId);
-  }
-
-  /**
-   * Widget channel for this guild
-   * @type {?(TextChannel|NewsChannel|VoiceChannel|StageChannel|ForumChannel)}
-   * @readonly
-   */
-  get widgetChannel() {
-    return this.client.channels.resolve(this.widgetChannelId);
-  }
-  /**
    * The client user as a GuildMember of this guild
    * @type {?GuildMember}
-   * @deprecated Use {@link GuildMemberManager#me} instead.
    * @readonly
    */
   get me() {
-    if (!deprecationEmittedForMe) {
-      process.emitWarning('Guild#me is deprecated. Use Guild#members#me instead.', 'DeprecationWarning');
-      deprecationEmittedForMe = true;
-    }
-
     return this.members.me;
   }
 
@@ -601,25 +571,6 @@ class Guild extends AnonymousGuild {
       (collection, integration) => collection.set(integration.id, new Integration(this.client, integration, this)),
       new Collection(),
     );
-  }
-
-  /**
-   * Fetches a collection of templates from this guild.
-   * Resolves with a collection mapping templates by their codes.
-   * @returns {Promise<Collection<string, GuildTemplate>>}
-   */
-  async fetchTemplates() {
-    const templates = await this.client.api.guilds(this.id).templates.get();
-    return templates.reduce((col, data) => col.set(data.code, new GuildTemplate(this.client, data)), new Collection());
-  }
-
-  /**
-   * Obtains a guild preview for this guild from Discord.
-   * @returns {Promise<GuildPreview>}
-   */
-  async fetchPreview() {
-    const data = await this.client.api.guilds(this.id).preview.get();
-    return new GuildPreview(this.client, data);
   }
 
   /**
@@ -808,162 +759,6 @@ class Guild extends AnonymousGuild {
     if ('premiumProgressBarEnabled' in data) _data.premium_progress_bar_enabled = data.premiumProgressBarEnabled;
     const newData = await this.client.api.guilds(this.id).patch({ data: _data, reason });
     return this.client.actions.GuildUpdate.handle(newData).updated;
-  }
-
-  /**
-   * Sets a new guild icon.
-   * @param {?(Base64Resolvable|BufferResolvable)} icon The new icon of the guild
-   * @param {string} [reason] Reason for changing the guild's icon
-   * @returns {Promise<Guild>}
-   * @example
-   * // Edit the guild icon
-   * guild.setIcon('./icon.png')
-   *  .then(updated => console.log('Updated the guild icon'))
-   *  .catch(console.error);
-   */
-  setIcon(icon, reason) {
-    return this.edit({ icon }, reason);
-  }
-
-  /**
-   * Sets a new owner of the guild.
-   * @param {GuildMemberResolvable} owner The new owner of the guild
-   * @param {string} [reason] Reason for setting the new owner
-   * @returns {Promise<Guild>}
-   * @example
-   * // Edit the guild owner
-   * guild.setOwner(guild.members.cache.first())
-   *  .then(guild => guild.fetchOwner())
-   *  .then(owner => console.log(`Updated the guild owner to ${owner.displayName}`))
-   *  .catch(console.error);
-   */
-  setOwner(owner, reason) {
-    return this.edit({ owner }, reason);
-  }
-
-  /**
-   * Sets a new guild invite splash image.
-   * @param {?(Base64Resolvable|BufferResolvable)} splash The new invite splash image of the guild
-   * @param {string} [reason] Reason for changing the guild's invite splash image
-   * @returns {Promise<Guild>}
-   * @example
-   * // Edit the guild splash
-   * guild.setSplash('./splash.png')
-   *  .then(updated => console.log('Updated the guild splash'))
-   *  .catch(console.error);
-   */
-  setSplash(splash, reason) {
-    return this.edit({ splash }, reason);
-  }
-
-  /**
-   * Sets a new guild discovery splash image.
-   * @param {?(Base64Resolvable|BufferResolvable)} discoverySplash The new discovery splash image of the guild
-   * @param {string} [reason] Reason for changing the guild's discovery splash image
-   * @returns {Promise<Guild>}
-   * @example
-   * // Edit the guild discovery splash
-   * guild.setDiscoverySplash('./discoverysplash.png')
-   *   .then(updated => console.log('Updated the guild discovery splash'))
-   *   .catch(console.error);
-   */
-  setDiscoverySplash(discoverySplash, reason) {
-    return this.edit({ discoverySplash }, reason);
-  }
-
-  /**
-   * Sets a new guild banner.
-   * @param {?(Base64Resolvable|BufferResolvable)} banner The new banner of the guild
-   * @param {string} [reason] Reason for changing the guild's banner
-   * @returns {Promise<Guild>}
-   * @example
-   * guild.setBanner('./banner.png')
-   *  .then(updated => console.log('Updated the guild banner'))
-   *  .catch(console.error);
-   */
-  setBanner(banner, reason) {
-    return this.edit({ banner }, reason);
-  }
-
-  /**
-   * Data that can be resolved to give a Category Channel object. This can be:
-   * * A CategoryChannel object
-   * * A Snowflake
-   * @typedef {CategoryChannel|Snowflake} CategoryChannelResolvable
-   */
-
-  /**
-   * The data needed for updating a channel's position.
-   * @typedef {Object} ChannelPosition
-   * @property {GuildChannel|Snowflake} channel Channel to update
-   * @property {number} [position] New position for the channel
-   * @property {CategoryChannelResolvable} [parent] Parent channel for this channel
-   * @property {boolean} [lockPermissions] If the overwrites should be locked to the parents overwrites
-   */
-
-  /**
-   * Batch-updates the guild's channels' positions.
-   * <info>Only one channel's parent can be changed at a time</info>
-   * @param {ChannelPosition[]} channelPositions Channel positions to update
-   * @returns {Promise<Guild>}
-   * @deprecated Use {@link GuildChannelManager#setPositions} instead
-   * @example
-   * guild.setChannelPositions([{ channel: channelId, position: newChannelIndex }])
-   *   .then(guild => console.log(`Updated channel positions for ${guild}`))
-   *   .catch(console.error);
-   */
-  setChannelPositions(channelPositions) {
-    if (!deprecationEmittedForSetChannelPositions) {
-      process.emitWarning(
-        'The Guild#setChannelPositions method is deprecated. Use GuildChannelManager#setPositions instead.',
-        'DeprecationWarning',
-      );
-
-      deprecationEmittedForSetChannelPositions = true;
-    }
-
-    return this.channels.setPositions(channelPositions);
-  }
-
-  /**
-   * The data needed for updating a guild role's position
-   * @typedef {Object} GuildRolePosition
-   * @property {RoleResolvable} role The role's id
-   * @property {number} position The position to update
-   */
-
-  /**
-   * Batch-updates the guild's role positions
-   * @param {GuildRolePosition[]} rolePositions Role positions to update
-   * @returns {Promise<Guild>}
-   * @deprecated Use {@link RoleManager#setPositions} instead
-   * @example
-   * guild.setRolePositions([{ role: roleId, position: updatedRoleIndex }])
-   *  .then(guild => console.log(`Role positions updated for ${guild}`))
-   *  .catch(console.error);
-   */
-  setRolePositions(rolePositions) {
-    if (!deprecationEmittedForSetRolePositions) {
-      process.emitWarning(
-        'The Guild#setRolePositions method is deprecated. Use RoleManager#setPositions instead.',
-        'DeprecationWarning',
-      );
-
-      deprecationEmittedForSetRolePositions = true;
-    }
-
-    return this.roles.setPositions(rolePositions);
-  }
-
-  /**
-   * Sets whether this guild's invites are disabled.
-   * @param {boolean} [disabled=true] Whether the invites are disabled
-   * @returns {Promise<Guild>}
-   */
-  disableInvites(disabled = true) {
-    const features = this.features.filter(feature => feature !== 'INVITES_DISABLED');
-    if (disabled) features.push('INVITES_DISABLED');
-    return this.edit({ features });
   }
 
   /**

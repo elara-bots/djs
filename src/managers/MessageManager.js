@@ -70,25 +70,6 @@ class MessageManager extends CachedManager {
   }
 
   /**
-   * Fetches the pinned messages of this channel and returns a collection of them.
-   * <info>The returned Collection does not contain any reaction data of the messages.
-   * Those need to be fetched separately.</info>
-   * @param {boolean} [cache=true] Whether to cache the message(s)
-   * @returns {Promise<Collection<Snowflake, Message>>}
-   * @example
-   * // Get pinned messages
-   * channel.messages.fetchPinned()
-   *   .then(messages => console.log(`Received ${messages.size} messages`))
-   *   .catch(console.error);
-   */
-  async fetchPinned(cache = true) {
-    const data = await this.client.api.channels[this.channel.id].pins.get();
-    const messages = new Collection();
-    for (const message of data) messages.set(message.id, this._add(message, cache));
-    return messages;
-  }
-
-  /**
    * Data that can be resolved to a Message object. This can be:
    * * A Message
    * * A Snowflake

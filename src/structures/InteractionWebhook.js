@@ -38,6 +38,6 @@ class InteractionWebhook {
   get url() {}
 }
 
-Webhook.applyToClass(InteractionWebhook, ['sendSlackMessage', 'edit', 'delete', 'createdTimestamp', 'createdAt']);
+Webhook.applyToClass(InteractionWebhook, ['edit', 'delete', 'createdTimestamp', 'createdAt']);
 
 module.exports = InteractionWebhook;

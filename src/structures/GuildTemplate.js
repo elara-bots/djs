@@ -1,9 +1,6 @@
 'use strict';
 
-const { setTimeout } = require('node:timers');
 const Base = require('./Base');
-const { Events } = require('../util/Constants');
-const DataResolver = require('../util/DataResolver');
 
 /**
  * Represents the template for a guild.
@@ -103,45 +100,6 @@ class GuildTemplate extends Base {
     this.unSynced = 'is_dirty' in data ? Boolean(data.is_dirty) : null;
 
     return this;
-  }
-
-  /**
-   * Creates a guild based on this template.
-   * <warn>This is only available to bots in fewer than 10 guilds.</warn>
-   * @param {string} name The name of the guild
-   * @param {BufferResolvable|Base64Resolvable} [icon] The icon for the guild
-   * @returns {Promise<Guild>}
-   */
-  async createGuild(name, icon) {
-    const { client } = this;
-    const data = await client.api.guilds.templates(this.code).post({
-      data: {
-        name,
-        icon: await DataResolver.resolveImage(icon),
-      },
-    });
-
-    if (client.guilds.cache.has(data.id)) return client.guilds.cache.get(data.id);
-
-    return new Promise(resolve => {
-      const resolveGuild = guild => {
-        client.off(Events.GUILD_CREATE, handleGuild);
-        client.decrementMaxListeners();
-        resolve(guild);
-      };
-
-      const handleGuild = guild => {
-        if (guild.id === data.id) {
-          clearTimeout(timeout);
-          resolveGuild(guild);
-        }
-      };
-
-      client.incrementMaxListeners();
-      client.on(Events.GUILD_CREATE, handleGuild);
-
-      const timeout = setTimeout(() => resolveGuild(client.guilds._add(data)), 10_000).unref();
-    });
   }
 
   /**

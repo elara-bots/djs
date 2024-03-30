@@ -1,6 +1,5 @@
 'use strict';
 
-const process = require('node:process');
 const { Collection } = require('@discordjs/collection');
 const CachedManager = require('./CachedManager');
 const { TypeError } = require('../errors');
@@ -10,8 +9,6 @@ const Permissions = require('../util/Permissions');
 const { resolveColor } = require('../util/Util');
 const Util = require('../util/Util');
 
-let cacheWarningEmitted = false;
-
 /**
  * Manages API methods for roles and stores their cache.
  * @extends {CachedManager}
@@ -19,13 +16,6 @@ let cacheWarningEmitted = false;
 class RoleManager extends CachedManager {
   constructor(guild, iterable) {
     super(guild.client, Role, iterable);
-    if (!cacheWarningEmitted && this._cache.constructor.name !== 'Collection') {
-      cacheWarningEmitted = true;
-      process.emitWarning(
-        `Overriding the cache handling for ${this.constructor.name} is unsupported and breaks functionality.`,
-        'UnsupportedCacheOverwriteWarning',
-      );
-    }
 
     /**
      * The guild belonging to this manager

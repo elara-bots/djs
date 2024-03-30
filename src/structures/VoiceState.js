@@ -1,7 +1,6 @@
 'use strict';
 
 const Base = require('./Base');
-const { Error, TypeError } = require('../errors');
 
 /**
  * Represents the voice state for a Guild Member.
@@ -161,103 +160,6 @@ class VoiceState extends Base {
    */
   get mute() {
     return this.serverMute || this.selfMute;
-  }
-
-  /**
-   * Mutes/unmutes the member of this voice state.
-   * @param {boolean} [mute=true] Whether or not the member should be muted
-   * @param {string} [reason] Reason for muting or unmuting
-   * @returns {Promise<GuildMember>}
-   */
-  setMute(mute = true, reason) {
-    return this.guild.members.edit(this.id, { mute }, reason);
-  }
-
-  /**
-   * Deafens/undeafens the member of this voice state.
-   * @param {boolean} [deaf=true] Whether or not the member should be deafened
-   * @param {string} [reason] Reason for deafening or undeafening
-   * @returns {Promise<GuildMember>}
-   */
-  setDeaf(deaf = true, reason) {
-    return this.guild.members.edit(this.id, { deaf }, reason);
-  }
-
-  /**
-   * Disconnects the member from the channel.
-   * @param {string} [reason] Reason for disconnecting the member from the channel
-   * @returns {Promise<GuildMember>}
-   */
-  disconnect(reason) {
-    return this.setChannel(null, reason);
-  }
-
-  /**
-   * Moves the member to a different channel, or disconnects them from the one they're in.
-   * @param {GuildVoiceChannelResolvable|null} channel Channel to move the member to, or `null` if you want to
-   * disconnect them from voice.
-   * @param {string} [reason] Reason for moving member to another channel or disconnecting
-   * @returns {Promise<GuildMember>}
-   */
-  setChannel(channel, reason) {
-    return this.guild.members.edit(this.id, { channel }, reason);
-  }
-
-  /**
-   * Toggles the request to speak in the channel.
-   * Only applicable for stage channels and for the client's own voice state.
-   * @param {boolean} [request=true] Whether or not the client is requesting to become a speaker.
-   * @example
-   * // Making the client request to speak in a stage channel (raise its hand)
-   * guild.members.me.voice.setRequestToSpeak(true);
-   * @example
-   * // Making the client cancel a request to speak
-   * guild.members.me.voice.setRequestToSpeak(false);
-   * @returns {Promise<void>}
-   */
-  async setRequestToSpeak(request = true) {
-    if (this.channel?.type !== 'GUILD_STAGE_VOICE') throw new Error('VOICE_NOT_STAGE_CHANNEL');
-
-    if (this.client.user.id !== this.id) throw new Error('VOICE_STATE_NOT_OWN');
-
-    await this.client.api.guilds(this.guild.id, 'voice-states', '@me').patch({
-      data: {
-        channel_id: this.channelId,
-        request_to_speak_timestamp: request ? new Date().toISOString() : null,
-      },
-    });
-  }
-
-  /**
-   * Suppress/unsuppress the user. Only applicable for stage channels.
-   * @param {boolean} [suppressed=true] Whether or not the user should be suppressed.
-   * @example
-   * // Making the client a speaker
-   * guild.members.me.voice.setSuppressed(false);
-   * @example
-   * // Making the client an audience member
-   * guild.members.me.voice.setSuppressed(true);
-   * @example
-   * // Inviting another user to speak
-   * voiceState.setSuppressed(false);
-   * @example
-   * // Moving another user to the audience, or cancelling their invite to speak
-   * voiceState.setSuppressed(true);
-   * @returns {Promise<void>}
-   */
-  async setSuppressed(suppressed = true) {
-    if (typeof suppressed !== 'boolean') throw new TypeError('VOICE_STATE_INVALID_TYPE', 'suppressed');
-
-    if (this.channel?.type !== 'GUILD_STAGE_VOICE') throw new Error('VOICE_NOT_STAGE_CHANNEL');
-
-    const target = this.client.user.id === this.id ? '@me' : this.id;
-
-    await this.client.api.guilds(this.guild.id, 'voice-states', target).patch({
-      data: {
-        channel_id: this.channelId,
-        suppress: suppressed,
-      },
-    });
   }
 
   toJSON() {

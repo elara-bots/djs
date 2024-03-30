@@ -1,12 +1,9 @@
 'use strict';
-const process = require('node:process');
 
 const { Collection } = require('@discordjs/collection');
 const CachedManager = require('./CachedManager');
 const { TypeError } = require('../errors');
 const ThreadMember = require('../structures/ThreadMember');
-
-let deprecationEmittedForPassingBoolean = false;
 
 /**
  * Manages API methods for GuildMembers and stores their cache.
@@ -169,13 +166,6 @@ class ThreadMemberManager extends CachedManager {
    * @returns {Promise<ThreadMember|Collection<Snowflake, ThreadMember>>}
    */
   fetch(member, options = { cache: true, force: false }) {
-    if (typeof member === 'boolean' && !deprecationEmittedForPassingBoolean) {
-      process.emitWarning(
-        'Passing boolean to member option is deprecated, use cache property instead.',
-        'DeprecationWarning',
-      );
-      deprecationEmittedForPassingBoolean = true;
-    }
     const id = this.resolveId(member);
     return id
       ? this._fetchOne(id, options)

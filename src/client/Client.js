@@ -2,7 +2,6 @@
 
 const process = require('node:process');
 const { setInterval } = require('node:timers');
-const { Collection } = require('@discordjs/collection');
 const BaseClient = require('./BaseClient');
 const ActionsManager = require('./actions/ActionsManager');
 const ClientVoiceManager = require('./voice/ClientVoiceManager');
@@ -17,8 +16,6 @@ const ClientPresence = require('../structures/ClientPresence');
 const GuildPreview = require('../structures/GuildPreview');
 const Invite = require('../structures/Invite');
 const { Sticker } = require('../structures/Sticker');
-const StickerPack = require('../structures/StickerPack');
-const VoiceRegion = require('../structures/VoiceRegion');
 const Webhook = require('../structures/Webhook');
 const { Events, InviteScopes, Status } = require('../util/Constants');
 const DataResolver = require('../util/DataResolver');
@@ -182,10 +179,6 @@ class Client extends BaseClient {
     this.readyAt = null;
 
     if (this.options.messageSweepInterval > 0) {
-      process.emitWarning(
-        'The message sweeping client options are deprecated, use the global sweepers instead.',
-        'DeprecationWarning',
-      );
       this.sweepMessageInterval = setInterval(
         this.sweepMessages.bind(this),
         this.options.messageSweepInterval * 1_000,
@@ -324,21 +317,6 @@ class Client extends BaseClient {
   }
 
   /**
-   * Obtains the available voice regions from Discord.
-   * @returns {Promise<Collection<string, VoiceRegion>>}
-   * @example
-   * client.fetchVoiceRegions()
-   *   .then(regions => console.log(`Available regions are: ${regions.map(region => region.name).join(', ')}`))
-   *   .catch(console.error);
-   */
-  async fetchVoiceRegions() {
-    const apiRegions = await this.api.voice.regions.get();
-    const regions = new Collection();
-    for (const region of apiRegions) regions.set(region.id, new VoiceRegion(region));
-    return regions;
-  }
-
-  /**
    * Obtains a sticker from Discord.
    * @param {Snowflake} id The sticker's id
    * @returns {Promise<Sticker>}
@@ -352,18 +330,6 @@ class Client extends BaseClient {
     return new Sticker(this, data);
   }
 
-  /**
-   * Obtains the list of sticker packs available to Nitro subscribers from Discord.
-   * @returns {Promise<Collection<Snowflake, StickerPack>>}
-   * @example
-   * client.fetchPremiumStickerPacks()
-   *   .then(packs => console.log(`Available sticker packs are: ${packs.map(pack => pack.name).join(', ')}`))
-   *   .catch(console.error);
-   */
-  async fetchPremiumStickerPacks() {
-    const data = await this.api('sticker-packs').get();
-    return new Collection(data.sticker_packs.map(p => [p.id, new StickerPack(this, p)]));
-  }
   /**
    * A last ditch cleanup function for garbage collection.
    * @param {Function} options.cleanup The function called to GC

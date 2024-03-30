@@ -313,65 +313,6 @@ class GuildMemberManager extends CachedManager {
   }
 
   /**
-   * Options used for pruning guild members.
-   * <info>It's recommended to set {@link GuildPruneMembersOptions#count options.count}
-   * to `false` for large guilds.</info>
-   * @typedef {Object} GuildPruneMembersOptions
-   * @property {number} [days=7] Number of days of inactivity required to kick
-   * @property {boolean} [dry=false] Get the number of users that will be kicked, without actually kicking them
-   * @property {boolean} [count=true] Whether or not to return the number of users that have been kicked.
-   * @property {RoleResolvable[]} [roles] Array of roles to bypass the "...and no roles" constraint when pruning
-   * @property {string} [reason] Reason for this prune
-   */
-
-  /**
-   * Prunes members from the guild based on how long they have been inactive.
-   * @param {GuildPruneMembersOptions} [options] Options for pruning
-   * @returns {Promise<number|null>} The number of members that were/will be kicked
-   * @example
-   * // See how many members will be pruned
-   * guild.members.prune({ dry: true })
-   *   .then(pruned => console.log(`This will prune ${pruned} people!`))
-   *   .catch(console.error);
-   * @example
-   * // Actually prune the members
-   * guild.members.prune({ days: 1, reason: 'too many people!' })
-   *   .then(pruned => console.log(`I just pruned ${pruned} people!`))
-   *   .catch(console.error);
-   * @example
-   * // Include members with a specified role
-   * guild.members.prune({ days: 7, roles: ['657259391652855808'] })
-   *    .then(pruned => console.log(`I just pruned ${pruned} people!`))
-   *    .catch(console.error);
-   */
-  async prune({ days = 7, dry = false, count: compute_prune_count = true, roles = [], reason } = {}) {
-    if (typeof days !== 'number') throw new TypeError('PRUNE_DAYS_TYPE');
-
-    const query = { days };
-    const resolvedRoles = [];
-
-    for (const role of roles) {
-      const resolvedRole = this.guild.roles.resolveId(role);
-      if (!resolvedRole) {
-        throw new TypeError('INVALID_ELEMENT', 'Array', 'options.roles', role);
-      }
-      resolvedRoles.push(resolvedRole);
-    }
-
-    if (resolvedRoles.length) {
-      query.include_roles = dry ? resolvedRoles.join(',') : resolvedRoles;
-    }
-
-    const endpoint = this.client.api.guilds(this.guild.id).prune;
-
-    const { pruned } = await (dry
-      ? endpoint.get({ query, reason })
-      : endpoint.post({ data: { ...query, compute_prune_count }, reason }));
-
-    return pruned;
-  }
-
-  /**
    * Kicks a user from the guild.
    * <info>The user must be a member of the guild</info>
    * @param {UserResolvable} user The member to kick

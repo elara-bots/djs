@@ -283,22 +283,6 @@ class Role extends Base {
   setColor(color, reason) {
     return this.edit({ color }, reason);
   }
-
-  /**
-   * Sets whether or not the role should be hoisted.
-   * @param {boolean} [hoist=true] Whether or not to hoist the role
-   * @param {string} [reason] Reason for setting whether or not the role should be hoisted
-   * @returns {Promise<Role>}
-   * @example
-   * // Set the hoist of the role
-   * role.setHoist(true)
-   *   .then(updated => console.log(`Role hoisted: ${updated.hoist}`))
-   *   .catch(console.error);
-   */
-  setHoist(hoist = true, reason) {
-    return this.edit({ hoist }, reason);
-  }
-
   /**
    * Sets the permissions of the role.
    * @param {PermissionResolvable} permissions The permissions of the role
@@ -317,33 +301,6 @@ class Role extends Base {
    */
   setPermissions(permissions, reason) {
     return this.edit({ permissions }, reason);
-  }
-
-  /**
-   * Sets whether this role is mentionable.
-   * @param {boolean} [mentionable=true] Whether this role should be mentionable
-   * @param {string} [reason] Reason for setting whether or not this role should be mentionable
-   * @returns {Promise<Role>}
-   * @example
-   * // Make the role mentionable
-   * role.setMentionable(true)
-   *   .then(updated => console.log(`Role updated ${updated.name}`))
-   *   .catch(console.error);
-   */
-  setMentionable(mentionable = true, reason) {
-    return this.edit({ mentionable }, reason);
-  }
-
-  /**
-   * Sets a new icon for the role.
-   * @param {?(BufferResolvable|Base64Resolvable|EmojiResolvable)} icon The icon for the role
-   * <warn>The `EmojiResolvable` should belong to the same guild as the role.
-   * If not, pass the emoji's URL directly</warn>
-   * @param {string} [reason] Reason for changing the role's icon
-   * @returns {Promise<Role>}
-   */
-  setIcon(icon, reason) {
-    return this.edit({ icon }, reason);
   }
 
   /**

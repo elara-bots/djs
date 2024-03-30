@@ -606,9 +606,7 @@ export class Client<Ready extends boolean = boolean> extends BaseClient {
   public destroy(): void;
   public fetchGuildPreview(guild: GuildResolvable): Promise<GuildPreview>;
   public fetchInvite(invite: InviteResolvable, options?: ClientFetchInviteOptions): Promise<Invite>;
-  public fetchVoiceRegions(): Promise<Collection<string, VoiceRegion>>;
   public fetchSticker(id: Snowflake): Promise<Sticker>;
-  public fetchPremiumStickerPacks(): Promise<Collection<Snowflake, StickerPack>>;
   public fetchWebhook(id: Snowflake, token?: string): Promise<Webhook>;
   public generateInvite(options?: InviteGenerationOptions): string;
   public login(token?: string): Promise<string>;
@@ -906,11 +904,7 @@ export class DiscordAPIError extends Error {
   public requestData: HTTPErrorData;
 }
 
-export class DMChannel extends TextBasedChannelMixin(Channel, [
-  'bulkDelete',
-  'fetchWebhooks',
-  'createWebhook',
-]) {
+export class DMChannel extends TextBasedChannelMixin(Channel, ['bulkDelete', 'fetchWebhooks', 'createWebhook']) {
   private constructor(client: Client, data?: RawDMChannelData);
   public recipient: User;
   public type: 'DM';
@@ -938,7 +932,6 @@ export class Guild extends AnonymousGuild {
   private _sortedRoles(): Collection<Snowflake, Role>;
   private _sortedChannels(channel: NonThreadGuildBasedChannel): Collection<Snowflake, NonThreadGuildBasedChannel>;
 
-  public readonly afkChannel: VoiceChannel | null;
   public afkChannelId: Snowflake | null;
   public afkTimeout: number;
   public applicationId: Snowflake | null;
@@ -987,7 +980,6 @@ export class Guild extends AnonymousGuild {
   public vanityURLUses: number | null;
   public readonly voiceAdapterCreator: InternalDiscordGatewayAdapterCreator;
   public readonly voiceStates: VoiceStateManager;
-  public readonly widgetChannel: TextChannel | NewsChannel | VoiceBasedChannel | ForumChannel | null;
   public widgetChannelId: Snowflake | null;
   public widgetEnabled: boolean | null;
   public readonly maximumBitrate: number;
@@ -1000,24 +992,9 @@ export class Guild extends AnonymousGuild {
   ): Promise<GuildAuditLogs<T>>;
   public fetchIntegrations(): Promise<Collection<Snowflake | string, Integration>>;
   public fetchOwner(options?: BaseFetchOptions): Promise<GuildMember>;
-  public fetchPreview(): Promise<GuildPreview>;
-  public fetchTemplates(): Promise<Collection<GuildTemplate['code'], GuildTemplate>>;
   public fetchVanityData(): Promise<Vanity>;
   public fetchWebhooks(): Promise<Collection<Snowflake, Webhook>>;
   public leave(): Promise<Guild>;
-  public disableInvites(disabled?: boolean): Promise<Guild>;
-  public setBanner(banner: BufferResolvable | Base64Resolvable | null, reason?: string): Promise<Guild>;
-  /** @deprecated Use {@link GuildChannelManager.setPositions} instead */
-  public setChannelPositions(channelPositions: readonly ChannelPosition[]): Promise<Guild>;
-  public setDiscoverySplash(
-    discoverySplash: BufferResolvable | Base64Resolvable | null,
-    reason?: string,
-  ): Promise<Guild>;
-  public setIcon(icon: BufferResolvable | Base64Resolvable | null, reason?: string): Promise<Guild>;
-  public setOwner(owner: GuildMemberResolvable, reason?: string): Promise<Guild>;
-  /** @deprecated Use {@link RoleManager.setPositions} instead */
-  public setRolePositions(rolePositions: readonly RolePosition[]): Promise<Guild>;
-  public setSplash(splash: BufferResolvable | Base64Resolvable | null, reason?: string): Promise<Guild>;
   public toJSON(): unknown;
 }
 
@@ -1178,7 +1155,6 @@ export class GuildMember extends PartialTextBasedChannel(Base) {
   public kick(reason?: string): Promise<GuildMember>;
   public permissionsIn(channel: GuildChannelResolvable): Readonly<Permissions>;
   public setNickname(nickname: string | null, reason?: string): Promise<GuildMember>;
-  public setFlags(flags: GuildMemberFlagsResolvable): Promise<GuildMember>;
   public toJSON(): unknown;
   public toString(): MemberMention;
   public valueOf(): string;
@@ -1243,7 +1219,6 @@ export class GuildScheduledEvent<S extends GuildScheduledEventStatus = GuildSche
     options: GuildScheduledEventEditOptions<S, T>,
   ): Promise<GuildScheduledEvent<T>>;
   public delete(): Promise<GuildScheduledEvent<S>>;
-  public setLocation(location: string, reason?: string): Promise<GuildScheduledEvent<S>>;
   public fetchSubscribers<T extends FetchGuildScheduledEventSubscribersOptions>(
     options?: T,
   ): Promise<GuildScheduledEventManagerFetchSubscribersResult<T>>;
@@ -1271,7 +1246,6 @@ export class GuildTemplate extends Base {
   public guildId: Snowflake;
   public serializedGuild: APITemplateSerializedSourceGuild;
   public unSynced: boolean | null;
-  public createGuild(name: string, icon?: BufferResolvable | Base64Resolvable): Promise<Guild>;
   public delete(): Promise<GuildTemplate>;
   public edit(options?: EditGuildTemplateOptions): Promise<GuildTemplate>;
   public sync(): Promise<GuildTemplate>;
@@ -1599,11 +1573,9 @@ export class Message<Cached extends boolean = boolean> extends Base {
   public fetch(force?: boolean): Promise<Message>;
   public pin(reason?: string): Promise<Message>;
   public react(emoji: EmojiIdentifierResolvable): Promise<MessageReaction>;
-  public removeAttachments(): Promise<Message>;
   public reply(options: string | MessagePayload | ReplyMessageOptions): Promise<Message>;
   public resolveComponent(customId: string): MessageActionRowComponent | null;
   public startThread(options: StartThreadOptions): Promise<ThreadChannel>;
-  public suppressEmbeds(suppress?: boolean): Promise<Message>;
   public toJSON(): unknown;
   public toString(): string;
   public unpin(reason?: string): Promise<Message>;
@@ -1647,8 +1619,6 @@ export class MessageAttachment {
   public url: string;
   public waveform: string | null;
   public width: number | null;
-  public setFile(attachment: BufferResolvable | Stream, name?: string): this;
-  public setSpoiler(spoiler?: boolean): this;
   public toJSON(): unknown;
 }
 
@@ -2108,10 +2078,7 @@ export class Role extends Base {
   public iconURL(options?: StaticImageURLOptions): string | null;
   public permissionsIn(channel: NonThreadGuildBasedChannel | Snowflake, checkAdmin?: boolean): Readonly<Permissions>;
   public setColor(color: ColorResolvable, reason?: string): Promise<Role>;
-  public setHoist(hoist?: boolean, reason?: string): Promise<Role>;
-  public setMentionable(mentionable?: boolean, reason?: string): Promise<Role>;
   public setPermissions(permissions: PermissionResolvable, reason?: string): Promise<Role>;
-  public setIcon(icon: BufferResolvable | Base64Resolvable | EmojiResolvable | null, reason?: string): Promise<Role>;
   public setPosition(position: number, options?: SetRolePositionOptions): Promise<Role>;
   public setUnicodeEmoji(unicodeEmoji: string | null, reason?: string): Promise<Role>;
   public toJSON(): unknown;
@@ -2274,7 +2241,6 @@ export class StageChannel extends BaseGuildVoiceChannel {
   public readonly stageInstance: StageInstance | null;
   public topic: string | null;
   public type: 'GUILD_STAGE_VOICE';
-  public createStageInstance(options: StageInstanceCreateOptions): Promise<StageInstance>;
 }
 
 export class DirectoryChannel extends Channel {
@@ -2322,7 +2288,6 @@ export class Sticker extends Base {
   public user: User | null;
   public readonly url: string;
   public fetch(): Promise<Sticker>;
-  public fetchPack(): Promise<StickerPack | null>;
   public fetchUser(): Promise<User | null>;
   public edit(data?: GuildStickerEditData, reason?: string): Promise<Sticker>;
   public delete(reason?: string): Promise<Sticker>;
@@ -2554,14 +2519,6 @@ export class ThreadChannel extends TextBasedChannelMixin(Channel, ['fetchWebhook
   ): Readonly<Permissions> | null;
   public fetchOwner(options?: BaseFetchOptions): Promise<ThreadMember | null>;
   public fetchStarterMessage(options?: BaseFetchOptions): Promise<Message | null>;
-  public setArchived(archived?: boolean, reason?: string): Promise<ThreadChannel>;
-  public setAutoArchiveDuration(
-    autoArchiveDuration: ThreadAutoArchiveDuration | 'MAX',
-    reason?: string,
-  ): Promise<ThreadChannel>;
-  public setInvitable(invitable?: boolean, reason?: string): Promise<ThreadChannel>;
-  public setLocked(locked?: boolean, reason?: string): Promise<ThreadChannel>;
-  public setAppliedTags(appliedTags: Snowflake[], reason?: string): Promise<ThreadChannel>;
   public pin(reason?: string): Promise<ThreadChannel>;
   public unpin(reason?: string): Promise<ThreadChannel>;
 }
@@ -2770,13 +2727,6 @@ export class VoiceState extends Base {
   public selfVideo: boolean | null;
   public suppress: boolean;
   public requestToSpeakTimestamp: number | null;
-
-  public setDeaf(deaf?: boolean, reason?: string): Promise<GuildMember>;
-  public setMute(mute?: boolean, reason?: string): Promise<GuildMember>;
-  public disconnect(reason?: string): Promise<GuildMember>;
-  public setChannel(channel: GuildVoiceChannelResolvable | null, reason?: string): Promise<GuildMember>;
-  public setRequestToSpeak(request?: boolean): Promise<void>;
-  public setSuppressed(suppressed?: boolean): Promise<void>;
 }
 
 export class Webhook extends WebhookMixin() {
@@ -3360,8 +3310,6 @@ export class GuildMemberManager extends CachedManager<Snowflake, GuildMember, Gu
   public fetchMe(options?: BaseFetchOptions): Promise<GuildMember>;
   public kick(user: UserResolvable, reason?: string): Promise<GuildMember | User | Snowflake>;
   public list(options?: GuildListMembersOptions): Promise<Collection<Snowflake, GuildMember>>;
-  public prune(options: GuildPruneMembersOptions & { dry?: false; count: false }): Promise<null>;
-  public prune(options?: GuildPruneMembersOptions): Promise<number>;
   public removeRole(
     user: UserResolvable,
     role: RoleResolvable,
@@ -3462,7 +3410,6 @@ export class MessageManager extends CachedManager<Snowflake, Message, MessageRes
     options?: ChannelLogsQueryOptions,
     cacheOptions?: BaseFetchOptions,
   ): Promise<Collection<Snowflake, Message>>;
-  public fetchPinned(cache?: boolean): Promise<Collection<Snowflake, Message>>;
   public react(message: MessageResolvable, emoji: EmojiIdentifierResolvable): Promise<void>;
   public pin(message: MessageResolvable, reason?: string): Promise<void>;
   public unpin(message: MessageResolvable, reason?: string): Promise<void>;
@@ -3665,7 +3612,6 @@ export interface WebhookFields extends PartialWebhookFields {
   readonly createdTimestamp: number;
   delete(reason?: string): Promise<void>;
   edit(options: WebhookEditData, reason?: string): Promise<Webhook>;
-  sendSlackMessage(body: unknown): Promise<boolean>;
 }
 
 //#endregion
@@ -5568,12 +5514,7 @@ export interface InviteGenerationOptions {
   scopes: InviteScope[];
 }
 
-export type GuildInvitableChannelResolvable =
-  | TextChannel
-  | VoiceChannel
-  | NewsChannel
-  | StageChannel
-  | Snowflake;
+export type GuildInvitableChannelResolvable = TextChannel | VoiceChannel | NewsChannel | StageChannel | Snowflake;
 
 export interface CreateInviteOptions {
   temporary?: boolean;

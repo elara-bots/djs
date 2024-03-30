@@ -1,6 +1,5 @@
 'use strict';
 
-const process = require('node:process');
 const { Collection } = require('@discordjs/collection');
 const CachedManager = require('./CachedManager');
 const ThreadManager = require('./ThreadManager');
@@ -21,8 +20,6 @@ const DataResolver = require('../util/DataResolver');
 const Util = require('../util/Util');
 const { resolveAutoArchiveMaxLimit, transformGuildForumTag, transformGuildDefaultReaction } = require('../util/Util');
 
-let cacheWarningEmitted = false;
-
 /**
  * Manages API methods for GuildChannels and stores their cache.
  * @extends {CachedManager}
@@ -30,17 +27,6 @@ let cacheWarningEmitted = false;
 class GuildChannelManager extends CachedManager {
   constructor(guild, iterable) {
     super(guild.client, GuildChannel, iterable);
-    const defaultCaching =
-      this._cache.constructor.name === 'Collection' ||
-      ((this._cache.maxSize === undefined || this._cache.maxSize === Infinity) &&
-        (this._cache.sweepFilter === undefined || this._cache.sweepFilter.isDefault));
-    if (!cacheWarningEmitted && !defaultCaching) {
-      cacheWarningEmitted = true;
-      process.emitWarning(
-        `Overriding the cache handling for ${this.constructor.name} is unsupported and breaks functionality.`,
-        'UnsupportedCacheOverwriteWarning',
-      );
-    }
 
     /**
      * The guild this Manager belongs to
@@ -163,7 +149,6 @@ class GuildChannelManager extends CachedManager {
 
     const layoutMode =
       typeof defaultForumLayout === 'number' ? defaultForumLayout : ForumLayoutTypes[defaultForumLayout];
-
 
     const data = await this.client.api.guilds(this.guild.id).channels.post({
       data: {

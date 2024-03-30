@@ -293,21 +293,6 @@ class GuildScheduledEvent extends Base {
   }
 
   /**
-   * Sets the new location of the guild scheduled event.
-   * @param {string} location The location of the guild scheduled event
-   * @param {string} [reason] The reason for changing the location
-   * @returns {Promise<GuildScheduledEvent>}
-   * @example
-   * // Set location of a guild scheduled event
-   * guildScheduledEvent.setLocation('Earth')
-   *  .then(guildScheduledEvent => console.log(`Set the location to: ${guildScheduledEvent.entityMetadata.location}`))
-   *  .catch(console.error);
-   */
-  setLocation(location, reason) {
-    return this.edit({ entityMetadata: { location }, reason });
-  }
-
-  /**
    * Fetches subscribers of this guild scheduled event.
    * @param {FetchGuildScheduledEventSubscribersOptions} [options] Options for fetching the subscribers
    * @returns {Promise<Collection<Snowflake, GuildScheduledEventUser>>}

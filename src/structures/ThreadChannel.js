@@ -2,7 +2,6 @@
 
 const { Channel } = require('./Channel');
 const TextBasedChannel = require('./interfaces/TextBasedChannel');
-const { RangeError } = require('../errors');
 const MessageManager = require('../managers/MessageManager');
 const ThreadMemberManager = require('../managers/ThreadMemberManager');
 const ChannelFlags = require('../util/ChannelFlags');
@@ -319,67 +318,6 @@ class ThreadChannel extends Channel {
   }
 
   /**
-   * Sets whether the thread is archived.
-   * @param {boolean} [archived=true] Whether the thread is archived
-   * @param {string} [reason] Reason for archiving or unarchiving
-   * @returns {Promise<ThreadChannel>}
-   * @example
-   * // Archive the thread
-   * thread.setArchived(true)
-   *   .then(newThread => console.log(`Thread is now ${newThread.archived ? 'archived' : 'active'}`))
-   *   .catch(console.error);
-   */
-  setArchived(archived = true, reason) {
-    return this.edit({ archived }, reason);
-  }
-
-  /**
-   * Sets the duration after which the thread will automatically archive in case of no recent activity.
-   * @param {ThreadAutoArchiveDuration} autoArchiveDuration The amount of time (in minutes) after which the thread
-   * should automatically archive in case of no recent activity
-   * @param {string} [reason] Reason for changing the auto archive duration
-   * @returns {Promise<ThreadChannel>}
-   * @example
-   * // Set the thread's auto archive time to 1 hour
-   * thread.setAutoArchiveDuration(60)
-   *   .then(newThread => {
-   *     console.log(`Thread will now archive after ${newThread.autoArchiveDuration} minutes of inactivity`);
-   *    });
-   *   .catch(console.error);
-   */
-  setAutoArchiveDuration(autoArchiveDuration, reason) {
-    return this.edit({ autoArchiveDuration }, reason);
-  }
-
-  /**
-   * Sets whether members without the `MANAGE_THREADS` permission can invite other members without the
-   * `MANAGE_THREADS` permission to this thread.
-   * @param {boolean} [invitable=true] Whether non-moderators can invite non-moderators to this thread
-   * @param {string} [reason] Reason for changing invite
-   * @returns {Promise<ThreadChannel>}
-   */
-  setInvitable(invitable = true, reason) {
-    if (this.type !== 'GUILD_PRIVATE_THREAD') return Promise.reject(new RangeError('THREAD_INVITABLE_TYPE', this.type));
-    return this.edit({ invitable }, reason);
-  }
-
-  /**
-   * Sets whether the thread can be **unarchived** by anyone with `SEND_MESSAGES` permission.
-   * When a thread is locked only members with `MANAGE_THREADS` can unarchive it.
-   * @param {boolean} [locked=true] Whether the thread is locked
-   * @param {string} [reason] Reason for locking or unlocking the thread
-   * @returns {Promise<ThreadChannel>}
-   * @example
-   * // Set the thread to locked
-   * thread.setLocked(true)
-   *   .then(newThread => console.log(`Thread is now ${newThread.locked ? 'locked' : 'unlocked'}`))
-   *   .catch(console.error);
-   */
-  setLocked(locked = true, reason) {
-    return this.edit({ locked }, reason);
-  }
-
-  /**
    * Pins this thread from the forum channel.
    * @param {string} [reason] Reason for pinning
    * @returns {Promise<ThreadChannel>}
@@ -395,16 +333,6 @@ class ThreadChannel extends Channel {
    */
   unpin(reason) {
     return this.edit({ flags: this.flags.remove(ChannelFlags.FLAGS.PINNED) }, reason);
-  }
-
-  /**
-   * Set the applied tags for this channel (only applicable to forum threads)
-   * @param {Snowflake[]} appliedTags The tags to set for this channel
-   * @param {string} [reason] Reason for changing the thread's applied tags
-   * @returns {Promise<ThreadChannel>}
-   */
-  setAppliedTags(appliedTags, reason) {
-    return this.edit({ appliedTags }, reason);
   }
 
   /**
