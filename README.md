@@ -1,3 +1,5 @@
+# This is a heavily modified version of Discord.js, 
+
 <div align="center">
   <br />
   <p>
