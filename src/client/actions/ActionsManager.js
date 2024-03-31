@@ -65,7 +65,6 @@ class ActionsManager {
     this.register(require('./ThreadListSync'));
     this.register(require('./ThreadMemberUpdate'));
     this.register(require('./ThreadMembersUpdate'));
-    this.register(require('./TypingStart'));
     this.register(require('./UserUpdate'));
     this.register(require('./VoiceStateUpdate'));
     this.register(require('./WebhooksUpdate'));

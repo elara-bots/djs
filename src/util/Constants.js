@@ -224,7 +224,6 @@ exports.Opcodes = {
  * * PRESENCE_UPDATE: presenceUpdate
  * * VOICE_SERVER_UPDATE: voiceServerUpdate
  * * VOICE_STATE_UPDATE: voiceStateUpdate
- * * TYPING_START: typingStart
  * * WEBHOOKS_UPDATE: webhookUpdate
  * * INTERACTION_CREATE: interactionCreate
  * * ERROR: error
@@ -309,7 +308,6 @@ exports.Events = {
   PRESENCE_UPDATE: 'presenceUpdate',
   VOICE_SERVER_UPDATE: 'voiceServerUpdate',
   VOICE_STATE_UPDATE: 'voiceStateUpdate',
-  TYPING_START: 'typingStart',
   WEBHOOKS_UPDATE: 'webhookUpdate',
   INTERACTION_CREATE: 'interactionCreate',
   ERROR: 'error',
@@ -418,7 +416,6 @@ exports.PartialTypes = keyMirror(['USER', 'CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 
  * * THREAD_MEMBERS_UPDATE
  * * USER_UPDATE
  * * PRESENCE_UPDATE
- * * TYPING_START
  * * VOICE_STATE_UPDATE
  * * VOICE_SERVER_UPDATE
  * * WEBHOOKS_UPDATE
@@ -483,7 +480,6 @@ exports.WSEvents = keyMirror([
   'THREAD_MEMBERS_UPDATE',
   'USER_UPDATE',
   'PRESENCE_UPDATE',
-  'TYPING_START',
   'VOICE_STATE_UPDATE',
   'VOICE_SERVER_UPDATE',
   'WEBHOOKS_UPDATE',
@@ -535,7 +531,6 @@ exports.InviteScopes = [
   'role_connections.write',
 ];
 
-// TODO: change Integration#expireBehavior to this and clean up Integration
 /**
  * The behavior of expiring subscribers for Integrations. This can be:
  * * REMOVE_ROLE

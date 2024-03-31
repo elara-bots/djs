@@ -4443,7 +4443,6 @@ export interface ClientEvents extends BaseClientEvents {
     newMembers: Collection<Snowflake, ThreadMember>,
   ];
   threadUpdate: [oldThread: ThreadChannel, newThread: ThreadChannel];
-  typingStart: [typing: Typing];
   userUpdate: [oldUser: User | PartialUser, newUser: User];
   voiceStateUpdate: [oldState: VoiceState, newState: VoiceState];
   webhookUpdate: [channel: TextChannel | NewsChannel | VoiceChannel | ForumChannel | StageChannel];
@@ -4706,7 +4705,6 @@ export interface ConstantsEvents {
   PRESENCE_UPDATE: 'presenceUpdate';
   VOICE_SERVER_UPDATE: 'voiceServerUpdate';
   VOICE_STATE_UPDATE: 'voiceStateUpdate';
-  TYPING_START: 'typingStart';
   WEBHOOKS_UPDATE: 'webhookUpdate';
   INTERACTION_CREATE: 'interactionCreate';
   ERROR: 'error';
@@ -6452,7 +6450,6 @@ export type WSEventType =
   | 'THREAD_MEMBERS_UPDATE'
   | 'USER_UPDATE'
   | 'PRESENCE_UPDATE'
-  | 'TYPING_START'
   | 'VOICE_STATE_UPDATE'
   | 'VOICE_SERVER_UPDATE'
   | 'WEBHOOKS_UPDATE'
