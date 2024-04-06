@@ -56,12 +56,6 @@ class GuildMember extends Base {
     this.communicationDisabledUntilTimestamp = null;
 
     /**
-     * The fetched presence from guild.members.fetch
-     * @type {?Presence}
-     */
-    this.fetchedPresence = null;
-
-    /**
      * The role ids of the member
      * @type {Snowflake[]}
      * @private
@@ -197,7 +191,7 @@ class GuildMember extends Base {
    * @readonly
    */
   get presence() {
-    return this.fetchedPresence || this.guild.presences.resolve(this.id);
+    return this.guild.presences.resolve(this.id);
   }
 
   /**

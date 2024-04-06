@@ -1116,7 +1116,6 @@ export class GuildMember extends PartialTextBasedChannel(Base) {
   public readonly bannable: boolean;
   /** @deprecated This will be removed in the next major version, see https://github.com/discordjs/discord.js/issues/7091 */
   public deleted: boolean;
-  public fetchedPresence: Presence | null;
   public readonly displayColor: number;
   public readonly displayHexColor: HexColorString;
   public readonly displayName: string;
