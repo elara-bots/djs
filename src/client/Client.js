@@ -1,7 +1,6 @@
 'use strict';
 
 const process = require('node:process');
-const { setInterval } = require('node:timers');
 const BaseClient = require('./BaseClient');
 const ActionsManager = require('./actions/ActionsManager');
 const ClientVoiceManager = require('./voice/ClientVoiceManager');
@@ -177,13 +176,6 @@ class Client extends BaseClient {
      * @type {?Date}
      */
     this.readyAt = null;
-
-    if (this.options.messageSweepInterval > 0) {
-      this.sweepMessageInterval = setInterval(
-        this.sweepMessages.bind(this),
-        this.options.messageSweepInterval * 1_000,
-      ).unref();
-    }
   }
 
   /**
@@ -352,8 +344,8 @@ class Client extends BaseClient {
   /**
    * Sweeps all text-based channels' messages and removes the ones older than the max message lifetime.
    * If the message has been edited, the time of the edit is used rather than the time of the original message.
-   * @param {number} [lifetime=this.options.messageCacheLifetime] Messages that are older than this (in seconds)
-   * will be removed from the caches. The default is based on {@link ClientOptions#messageCacheLifetime}
+   * @param {number} [lifetime=60000] Messages that are older than this (in seconds)
+   * will be removed from the caches. The default is based on 1m
    * @returns {number} Amount of messages that were removed from the caches,
    * or -1 if the message cache lifetime is unlimited
    * @example
@@ -361,7 +353,7 @@ class Client extends BaseClient {
    * const amount = client.sweepMessages(1800);
    * console.log(`Successfully removed ${amount} messages from the cache.`);
    */
-  sweepMessages(lifetime = this.options.messageCacheLifetime) {
+  sweepMessages(lifetime = 60000) {
     if (typeof lifetime !== 'number' || isNaN(lifetime)) {
       throw new TypeError('INVALID_TYPE', 'lifetime', 'number');
     }
@@ -494,12 +486,6 @@ class Client extends BaseClient {
     if (options.shards && !options.shards.length) throw new RangeError('CLIENT_INVALID_PROVIDED_SHARDS');
     if (typeof options.makeCache !== 'function') {
       throw new TypeError('CLIENT_INVALID_OPTION', 'makeCache', 'a function');
-    }
-    if (typeof options.messageCacheLifetime !== 'number' || isNaN(options.messageCacheLifetime)) {
-      throw new TypeError('CLIENT_INVALID_OPTION', 'The messageCacheLifetime', 'a number');
-    }
-    if (typeof options.messageSweepInterval !== 'number' || isNaN(options.messageSweepInterval)) {
-      throw new TypeError('CLIENT_INVALID_OPTION', 'messageSweepInterval', 'a number');
     }
     if (typeof options.sweepers !== 'object' || options.sweepers === null) {
       throw new TypeError('CLIENT_INVALID_OPTION', 'sweepers', 'an object');

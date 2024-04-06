@@ -173,9 +173,6 @@ exports.Opcodes = {
  * * API_RESPONSE: apiResponse
  * * API_REQUEST: apiRequest
  * * CLIENT_READY: ready
- * * APPLICATION_COMMAND_CREATE: applicationCommandCreate (deprecated)
- * * APPLICATION_COMMAND_DELETE: applicationCommandDelete (deprecated)
- * * APPLICATION_COMMAND_UPDATE: applicationCommandUpdate (deprecated)
  * * APPLICATION_COMMAND_PERMISSIONS_UPDATE: applicationCommandPermissionsUpdate
  * * AUTO_MODERATION_ACTION_EXECUTION: autoModerationActionExecution
  * * AUTO_MODERATION_RULE_CREATE: autoModerationRuleCreate
@@ -372,10 +369,7 @@ exports.PartialTypes = keyMirror(['USER', 'CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 
  * The type of a WebSocket message event, e.g. `MESSAGE_CREATE`. Here are the available events:
  * * READY
  * * RESUMED
- * * APPLICATION_COMMAND_CREATE (deprecated)
- * * APPLICATION_COMMAND_DELETE (deprecated)
  * * APPLICATION_COMMAND_PERMISSIONS_UPDATE
- * * APPLICATION_COMMAND_UPDATE (deprecated)
  * * AUTO_MODERATION_ACTION_EXECUTION
  * * AUTO_MODERATION_RULE_CREATE
  * * AUTO_MODERATION_RULE_DELETE
@@ -670,10 +664,6 @@ exports.ActivityTypes = createEnum(['PLAYING', 'STREAMING', 'LISTENING', 'WATCHI
  * * `GROUP_DM` - a group DM channel
  * * `GUILD_CATEGORY` - a guild category channel
  * * `GUILD_NEWS` - a guild news channel
- * * `GUILD_STORE` - a guild store channel
- * <warn>Store channels are deprecated and will be removed from Discord in March 2022. See
- * [Self-serve Game Selling Deprecation](https://support-dev.discord.com/hc/en-us/articles/6309018858647)
- * for more information.</warn>
  * * `GUILD_NEWS_THREAD` - a guild news channel's public thread channel
  * * `GUILD_PUBLIC_THREAD` - a guild text channel's public thread channel
  * * `GUILD_PRIVATE_THREAD` - a guild text channel's private thread channel
@@ -691,8 +681,7 @@ exports.ChannelTypes = createEnum([
   'GROUP_DM',
   'GUILD_CATEGORY',
   'GUILD_NEWS',
-  'GUILD_STORE',
-  ...Array(3).fill(null),
+  ...Array(4).fill(null),
   // 10
   'GUILD_NEWS_THREAD',
   'GUILD_PUBLIC_THREAD',

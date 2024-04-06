@@ -121,17 +121,6 @@ class ApplicationCommand extends Base {
       this.options ??= [];
     }
 
-    /* eslint-disable max-len */
-    if ('default_permission' in data) {
-      /**
-       * Whether the command is enabled by default when the app is added to a guild
-       * @type {boolean}
-       * @deprecated Use {@link ApplicationCommand.defaultMemberPermissions} and {@link ApplicationCommand.dmPermission} instead.
-       */
-      this.defaultPermission = data.default_permission;
-    }
-    /* eslint-disable max-len */
-
     if ('default_member_permissions' in data) {
       /**
        * The default bitfield used to determine whether this command be used in a guild

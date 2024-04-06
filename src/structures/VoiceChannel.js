@@ -1,10 +1,7 @@
 'use strict';
 
-const process = require('node:process');
 const BaseGuildVoiceChannel = require('./BaseGuildVoiceChannel');
 const Permissions = require('../util/Permissions');
-
-let deprecationEmittedForEditable = false;
 
 /**
  * Represents a guild voice channel on Discord.
@@ -15,18 +12,8 @@ class VoiceChannel extends BaseGuildVoiceChannel {
    * Whether the channel is editable by the client user
    * @type {boolean}
    * @readonly
-   * @deprecated Use {@link VoiceChannel#manageable} instead
    */
   get editable() {
-    if (!deprecationEmittedForEditable) {
-      process.emitWarning(
-        'The VoiceChannel#editable getter is deprecated. Use VoiceChannel#manageable instead.',
-        'DeprecationWarning',
-      );
-
-      deprecationEmittedForEditable = true;
-    }
-
     return this.manageable;
   }
 

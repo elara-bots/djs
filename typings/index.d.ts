@@ -221,7 +221,6 @@ export abstract class Application extends Base {
   public name: string | null;
   public roleConnectionsVerificationURL: string | null;
   public coverURL(options?: StaticImageURLOptions): string | null;
-  /** @deprecated This method is deprecated as it is unsupported and will be removed in the next major version. */
   public fetchAssets(): Promise<ApplicationAsset[]>;
   public iconURL(options?: StaticImageURLOptions): string | null;
   public toJSON(): unknown;
@@ -233,8 +232,6 @@ export class ApplicationCommand<PermissionsFetchType = {}> extends Base {
   public applicationId: Snowflake;
   public readonly createdAt: Date;
   public readonly createdTimestamp: number;
-  /** @deprecated Use {@link defaultMemberPermissions} and {@link dmPermission} instead. */
-  public defaultPermission: boolean;
   public defaultMemberPermissions: Readonly<Permissions> | null;
   public description: string;
   public descriptionLocalizations: LocalizationMap | null;
@@ -564,7 +561,6 @@ export abstract class Channel extends Base {
   public constructor(client: Client, data?: RawChannelData, immediatePatch?: boolean);
   public readonly createdAt: Date | null;
   public readonly createdTimestamp: number | null;
-  /** @deprecated This will be removed in the next major version, see https://github.com/discordjs/discord.js/issues/7091 */
   public deleted: boolean;
   public id: Snowflake;
   public readonly partial: false;
@@ -917,7 +913,6 @@ export class Emoji extends Base {
   public animated: boolean | null;
   public readonly createdAt: Date | null;
   public readonly createdTimestamp: number | null;
-  /** @deprecated This will be removed in the next major version, see https://github.com/discordjs/discord.js/issues/7091 */
   public deleted: boolean;
   public id: Snowflake | null;
   public name: string | null;
@@ -944,7 +939,6 @@ export class Guild extends AnonymousGuild {
   public channels: GuildChannelManager;
   public commands: GuildApplicationCommandManager;
   public defaultMessageNotifications: DefaultMessageNotificationLevel | number;
-  /** @deprecated This will be removed in the next major version, see https://github.com/discordjs/discord.js/issues/7091 */
   public deleted: boolean;
   public discoverySplash: string | null;
   public emojis: GuildEmojiManager;
@@ -955,7 +949,6 @@ export class Guild extends AnonymousGuild {
   public large: boolean;
   public maximumMembers: number | null;
   public maximumPresences: number | null;
-  /** @deprecated Use {@link GuildMemberManager.me} instead. */
   public readonly me: GuildMember | null;
   public memberCount: number;
   public members: GuildMemberManager;
@@ -1114,7 +1107,6 @@ export class GuildMember extends PartialTextBasedChannel(Base) {
   private _roles: Snowflake[];
   public avatar: string | null;
   public readonly bannable: boolean;
-  /** @deprecated This will be removed in the next major version, see https://github.com/discordjs/discord.js/issues/7091 */
   public deleted: boolean;
   public readonly displayColor: number;
   public readonly displayHexColor: HexColorString;
@@ -1302,8 +1294,6 @@ export class IntegrationApplication extends Application {
   public termsOfServiceURL: string | null;
   public privacyPolicyURL: string | null;
   public rpcOrigins: string[];
-  /** @deprecated This property is no longer being sent by the API. */
-  public summary: string | null;
   public hook: boolean | null;
   public cover: string | null;
   public verifyKey: string | null;
@@ -1459,12 +1449,8 @@ export class LimitedCollection<K, V> extends Collection<K, V> {
   public constructor(options?: LimitedCollectionOptions<K, V>, iterable?: Iterable<readonly [K, V]>);
   public maxSize: number;
   public keepOverLimit: ((value: V, key: K, collection: this) => boolean) | null;
-  /** @deprecated Use Global Sweepers instead */
   public interval: NodeJS.Timeout | null;
-  /** @deprecated Use Global Sweepers instead */
   public sweepFilter: SweepFilter<K, V> | null;
-
-  /** @deprecated Use `Sweepers.filterByLifetime` instead */
   public static filterByLifetime<K, V>(options?: LifetimeFilterOptions<K, V>): SweepFilter<K, V>;
 }
 
@@ -1527,7 +1513,6 @@ export class Message<Cached extends boolean = boolean> extends Base {
   public createdTimestamp: number;
   public readonly crosspostable: boolean;
   public readonly deletable: boolean;
-  /** @deprecated This will be removed in the next major version, see https://github.com/discordjs/discord.js/issues/7091 */
   public deleted: boolean;
   public readonly editable: boolean;
   public readonly editedAt: Date | null;
@@ -1728,20 +1713,16 @@ export class MessageEmbed {
   public thumbnail: MessageEmbedThumbnail | null;
   public timestamp: number | null;
   public title: string | null;
-  /** @deprecated */
   public type: string;
   public url: string | null;
   public readonly video: MessageEmbedVideo | null;
-  /** @deprecated This method is a wrapper for {@link MessageEmbed#addFields}. Use that instead. */
   public addField(name: string, value: string, inline?: boolean): this;
   public addFields(...fields: EmbedFieldData[] | EmbedFieldData[][]): this;
   public setFields(...fields: EmbedFieldData[] | EmbedFieldData[][]): this;
   public setAuthor(options: EmbedAuthorData | null): this;
-  /** @deprecated Supply a lone object of interface {@link EmbedAuthorData} instead. */
   public setAuthor(name: string, iconURL?: string, url?: string): this;
   public setColor(color: ColorResolvable): this;
   public setFooter(options: EmbedFooterData | null): this;
-  /** @deprecated Supply a lone object of interface {@link EmbedFooterData} instead. */
   public setFooter(text: string, iconURL?: string): this;
   public setImage(url: string): this;
   public setThumbnail(url: string): this;
@@ -2053,7 +2034,6 @@ export class Role extends Base {
   public color: number;
   public readonly createdAt: Date;
   public readonly createdTimestamp: number;
-  /** @deprecated This will be removed in the next major version, see https://github.com/discordjs/discord.js/issues/7091 */
   public deleted: boolean;
   public readonly editable: boolean;
   public flags: Readonly<RoleFlags>;
@@ -2083,8 +2063,6 @@ export class Role extends Base {
   public setUnicodeEmoji(unicodeEmoji: string | null, reason?: string): Promise<Role>;
   public toJSON(): unknown;
   public toString(): RoleMention;
-
-  /** @deprecated Use {@link RoleManager.comparePositions} instead. */
   public static comparePositions(role1: Role, role2: Role): number;
 }
 
@@ -2250,7 +2228,6 @@ export class DirectoryChannel extends Channel {
 export class StageInstance extends Base {
   private constructor(client: Client, data: RawStageInstanceData, channel: StageChannel);
   public id: Snowflake;
-  /** @deprecated This will be removed in the next major version, see https://github.com/discordjs/discord.js/issues/7091 */
   public deleted: boolean;
   public guildId: Snowflake;
   public channelId: Snowflake;
@@ -2269,7 +2246,6 @@ export class StageInstance extends Base {
 
 export class Sticker extends Base {
   private constructor(client: Client, data: RawStickerData);
-  /** @deprecated This will be removed in the next major version, see https://github.com/discordjs/discord.js/issues/7091 */
   public deleted: boolean;
   public readonly createdTimestamp: number;
   public readonly createdAt: Date;
@@ -2604,12 +2580,9 @@ export class UserFlags extends BitField<UserFlagsString> {
 
 export class Util extends null {
   private constructor();
-  /** @deprecated When not using with `makeCache` use `Sweepers.archivedThreadSweepFilter` instead */
   public static archivedThreadSweepFilter<K, V>(lifetime?: number): SweepFilter<K, V>;
   public static basename(path: string, ext?: string): string;
   public static cleanContent(str: string, channel: TextBasedChannel): string;
-  /** @deprecated Use {@link MessageOptions.allowedMentions} to control mentions in a message instead. */
-  public static removeMentions(str: string): string;
   private static _removeMentions(str: string): string;
   public static cloneObject(obj: unknown): unknown;
   public static discordSort<K, V extends { rawPosition: number; id: Snowflake }>(
@@ -2647,9 +2620,6 @@ export class Util extends null {
     route: unknown,
     reason?: string,
   ): Promise<{ id: Snowflake; position: number }[]>;
-  /** @deprecated This will be removed in the next major version. */
-  public static splitMessage(text: string, options?: SplitOptions): string[];
-  /** @deprecated This will be removed in the next major version. */
   public static resolveAutoArchiveMaxLimit(guild: Guild): Exclude<ThreadAutoArchiveDuration, 60>;
   public static calculateUserDefaultAvatarIndex(userId: Snowflake): number;
 }
@@ -2691,7 +2661,6 @@ export class Formatters extends null {
 }
 
 export class VoiceChannel extends BaseGuildVoiceChannel {
-  /** @deprecated Use manageable instead */
   public readonly editable: boolean;
   public readonly speakable: boolean;
   public type: 'GUILD_VOICE';
@@ -2704,8 +2673,6 @@ export class VoiceRegion {
   public id: string;
   public name: string;
   public optimal: boolean;
-  /** @deprecated This property is no longer being sent by the API. */
-  public vip: boolean;
   public toJSON(): unknown;
 }
 
@@ -2761,7 +2728,6 @@ export class WebhookClient extends WebhookMixin(BaseClient) {
   ): Promise<APIMessage>;
   public fetchMessage(message: Snowflake, options?: WebhookFetchMessageOptions): Promise<APIMessage>;
   /* tslint:disable:unified-signatures */
-  /** @deprecated */
   public fetchMessage(message: Snowflake, cache?: boolean): Promise<APIMessage>;
   /* tslint:enable:unified-signatures */
   public send(options: string | MessagePayload | WebhookMessageOptions): Promise<APIMessage>;
@@ -3519,8 +3485,6 @@ export class ThreadMemberManager extends CachedManager<Snowflake, ThreadMember, 
     options: FetchThreadMembersWithGuildMemberDataOptions,
   ): Promise<Collection<Snowflake, ThreadMember<true>>>;
   public fetch(member: UserResolvable, options?: FetchThreadMemberOptions): Promise<ThreadMember>;
-
-  /** @deprecated Use `fetch(options)` instead. */
   public fetch(cache: boolean, options?: FetchThreadMembersOptions): Promise<Collection<Snowflake, ThreadMember>>;
 
   public fetch(
@@ -3601,7 +3565,6 @@ export interface PartialWebhookFields {
   ): Promise<Message | APIMessage>;
   fetchMessage(message: Snowflake | '@original', options?: WebhookFetchMessageOptions): Promise<Message | APIMessage>;
   /* tslint:disable:unified-signatures */
-  /** @deprecated */
   fetchMessage(message: Snowflake | '@original', cache?: boolean): Promise<Message | APIMessage>;
   /* tslint:enable:unified-signatures */
   send(options: string | MessagePayload | Omit<WebhookMessageOptions, 'flags'>): Promise<Message | APIMessage>;
@@ -3840,8 +3803,6 @@ export interface ApplicationAsset {
 export interface BaseApplicationCommandData {
   name: string;
   nameLocalizations?: LocalizationMap;
-  /** @deprecated Use {@link defaultMemberPermissions} and {@link dmPermission} instead. */
-  defaultPermission?: boolean;
   defaultMemberPermissions?: PermissionResolvable | null;
   dmPermission?: boolean;
 }
@@ -4209,7 +4170,6 @@ export interface AwaitReactionsOptions extends ReactionCollectorOptions {
 }
 
 export interface BanOptions {
-  /** @deprecated Use {@link deleteMessageSeconds} instead. */
   days?: number;
   deleteMessageSeconds?: number;
   reason?: string;
@@ -4369,12 +4329,6 @@ export interface BaseClientEvents {
 }
 
 export interface ClientEvents extends BaseClientEvents {
-  /** @deprecated See [this issue](https://github.com/discord/discord-api-docs/issues/3690) for more information. */
-  applicationCommandCreate: [command: ApplicationCommand];
-  /** @deprecated See [this issue](https://github.com/discord/discord-api-docs/issues/3690) for more information. */
-  applicationCommandDelete: [command: ApplicationCommand];
-  /** @deprecated See [this issue](https://github.com/discord/discord-api-docs/issues/3690) for more information. */
-  applicationCommandUpdate: [oldCommand: ApplicationCommand | null, newCommand: ApplicationCommand];
   applicationCommandPermissionsUpdate: [data: ApplicationCommandPermissionsUpdateData];
   autoModerationActionExecution: [autoModerationActionExecution: AutoModerationActionExecution];
   autoModerationRuleCreate: [autoModerationRule: AutoModerationRule];
@@ -4415,8 +4369,6 @@ export interface ClientEvents extends BaseClientEvents {
   guildUpdate: [oldGuild: Guild, newGuild: Guild];
   inviteCreate: [invite: Invite];
   inviteDelete: [invite: Invite];
-  /** @deprecated Use messageCreate instead */
-  message: [message: Message];
   messageCreate: [message: Message];
   messageDelete: [message: Message | PartialMessage];
   messageReactionRemoveAll: [
@@ -4446,8 +4398,6 @@ export interface ClientEvents extends BaseClientEvents {
   userUpdate: [oldUser: User | PartialUser, newUser: User];
   voiceStateUpdate: [oldState: VoiceState, newState: VoiceState];
   webhookUpdate: [channel: TextChannel | NewsChannel | VoiceChannel | ForumChannel | StageChannel];
-  /** @deprecated Use interactionCreate instead */
-  interaction: [interaction: Interaction];
   interactionCreate: [interaction: Interaction];
   shardDisconnect: [closeEvent: CloseEvent, shardId: number];
   shardError: [error: Error, shardId: number];
@@ -4477,10 +4427,6 @@ export interface ClientOptions {
   shardCount?: number;
   closeTimeout?: number;
   makeCache?: CacheFactory;
-  /** @deprecated Pass the value of this property as `lifetime` to `sweepers.messages` instead. */
-  messageCacheLifetime?: number;
-  /** @deprecated Pass the value of this property as `interval` to `sweepers.messages` instead. */
-  messageSweepInterval?: number;
   allowedMentions?: MessageMentionOptions;
   invalidRequestWarningInterval?: number;
   partials?: PartialTypes[];
@@ -4651,13 +4597,7 @@ export interface ConstantsEvents {
   API_RESPONSE: 'apiResponse';
   API_REQUEST: 'apiRequest';
   CLIENT_READY: 'ready';
-  /** @deprecated See [this issue](https://github.com/discord/discord-api-docs/issues/3690) for more information. */
-  APPLICATION_COMMAND_CREATE: 'applicationCommandCreate';
-  /** @deprecated See [this issue](https://github.com/discord/discord-api-docs/issues/3690) for more information. */
-  APPLICATION_COMMAND_DELETE: 'applicationCommandDelete';
   APPLICATION_COMMAND_PERMISSIONS_UPDATE: 'applicationCommandPermissionsUpdate';
-  /** @deprecated See [this issue](https://github.com/discord/discord-api-docs/issues/3690) for more information. */
-  APPLICATION_COMMAND_UPDATE: 'applicationCommandUpdate';
   AUTO_MODERATION_ACTION_EXECUTION: 'autoModerationActionExecution';
   AUTO_MODERATION_RULE_CREATE: 'autoModerationRuleCreate';
   AUTO_MODERATION_RULE_DELETE: 'autoModerationRuleDelete';
@@ -6198,9 +6138,7 @@ export type SweeperOptions = {
 export interface LimitedCollectionOptions<K, V> {
   maxSize?: number;
   keepOverLimit?: (value: V, key: K, collection: LimitedCollection<K, V>) => boolean;
-  /** @deprecated Use Global Sweepers instead */
   sweepFilter?: SweepFilter<K, V>;
-  /** @deprecated Use Global Sweepers instead */
   sweepInterval?: number;
 }
 
@@ -6371,12 +6309,6 @@ export interface WebSocketProperties {
   os?: string;
   browser?: string;
   device?: string;
-  /** @deprecated Use {@link os} instead. */
-  $os?: string;
-  /** @deprecated Use {@link browser} instead. */
-  $browser?: string;
-  /** @deprecated Use {@link device} instead. */
-  $device?: string;
 }
 
 export interface WidgetActivity {

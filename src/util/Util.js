@@ -1,7 +1,6 @@
 'use strict';
 
 const { parse } = require('node:path');
-const process = require('node:process');
 const { Collection } = require('@discordjs/collection');
 const fetch = require('node-fetch');
 const { Colors, Endpoints } = require('./Constants');
@@ -9,10 +8,6 @@ const Options = require('./Options');
 const { Error: DiscordError, RangeError, TypeError } = require('../errors');
 const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
 const isObject = d => typeof d === 'object' && d !== null;
-
-let deprecationEmittedForSplitMessage = false;
-let deprecationEmittedForRemoveMentions = false;
-let deprecationEmittedForResolveAutoArchiveMaxLimit = false;
 
 const TextSortableGroupTypes = ['GUILD_TEXT', 'GUILD_ANNOUCMENT', 'GUILD_FORUM'];
 const VoiceSortableGroupTypes = ['GUILD_VOICE', 'GUILD_STAGE_VOICE'];
@@ -65,61 +60,6 @@ class Util extends null {
     }
 
     return out;
-  }
-
-  /**
-   * Options for splitting a message.
-   * @typedef {Object} SplitOptions
-   * @property {number} [maxLength=2000] Maximum character length per message piece
-   * @property {string|string[]|RegExp|RegExp[]} [char='\n'] Character(s) or Regex(es) to split the message with,
-   * an array can be used to split multiple times
-   * @property {string} [prepend=''] Text to prepend to every piece except the first
-   * @property {string} [append=''] Text to append to every piece except the last
-   */
-
-  /**
-   * Splits a string into multiple chunks at a designated character that do not exceed a specific length.
-   * @param {string} text Content to split
-   * @param {SplitOptions} [options] Options controlling the behavior of the split
-   * @deprecated This will be removed in the next major version.
-   * @returns {string[]}
-   */
-  static splitMessage(text, { maxLength = 2_000, char = '\n', prepend = '', append = '' } = {}) {
-    if (!deprecationEmittedForSplitMessage) {
-      process.emitWarning(
-        'The Util.splitMessage method is deprecated and will be removed in the next major version.',
-        'DeprecationWarning',
-      );
-
-      deprecationEmittedForSplitMessage = true;
-    }
-
-    text = Util.verifyString(text);
-    if (text.length <= maxLength) return [text];
-    let splitText = [text];
-    if (Array.isArray(char)) {
-      while (char.length > 0 && splitText.some(elem => elem.length > maxLength)) {
-        const currentChar = char.shift();
-        if (currentChar instanceof RegExp) {
-          splitText = splitText.flatMap(chunk => chunk.match(currentChar));
-        } else {
-          splitText = splitText.flatMap(chunk => chunk.split(currentChar));
-        }
-      }
-    } else {
-      splitText = text.split(char);
-    }
-    if (splitText.some(elem => elem.length > maxLength)) throw new RangeError('SPLIT_MAX_LEN');
-    const messages = [];
-    let msg = '';
-    for (const chunk of splitText) {
-      if (msg && (msg + char + chunk + append).length > maxLength) {
-        messages.push(msg + append);
-        msg = prepend;
-      }
-      msg += (msg && msg !== prepend ? char : '') + chunk;
-    }
-    return messages.concat(msg).filter(m => m);
   }
 
   /**
@@ -582,25 +522,6 @@ class Util extends null {
     return ext && res.ext.startsWith(ext) ? res.name : res.base.split('?')[0];
   }
 
-  /**
-   * Breaks user, role and everyone/here mentions by adding a zero width space after every @ character
-   * @param {string} str The string to sanitize
-   * @returns {string}
-   * @deprecated Use {@link BaseMessageOptions#allowedMentions} instead.
-   */
-  static removeMentions(str) {
-    if (!deprecationEmittedForRemoveMentions) {
-      process.emitWarning(
-        'The Util.removeMentions method is deprecated. Use MessageOptions#allowedMentions instead.',
-        'DeprecationWarning',
-      );
-
-      deprecationEmittedForRemoveMentions = true;
-    }
-
-    return Util._removeMentions(str);
-  }
-
   static _removeMentions(str) {
     return str.replaceAll('@', '@\u200b');
   }
@@ -670,14 +591,6 @@ class Util extends null {
    * @returns {number}
    */
   static resolveAutoArchiveMaxLimit() {
-    if (!deprecationEmittedForResolveAutoArchiveMaxLimit) {
-      process.emitWarning(
-        // eslint-disable-next-line max-len
-        "The Util.resolveAutoArchiveMaxLimit method and the 'MAX' option are deprecated and will be removed in the next major version.",
-        'DeprecationWarning',
-      );
-      deprecationEmittedForResolveAutoArchiveMaxLimit = true;
-    }
     return 10080;
   }
 
