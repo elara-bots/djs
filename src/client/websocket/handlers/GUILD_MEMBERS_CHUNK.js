@@ -7,12 +7,11 @@ module.exports = (client, { d: data }) => {
   const guild = client.guilds.cache.get(data.guild_id);
   if (!guild) return;
   const members = new Collection();
-  const presences = new Collection();
 
   for (const member of data.members) members.set(member.user.id, guild.members._add(member));
   if (data.presences) {
     for (const presence of data.presences) {
-      presences.set(presence.user.id, guild.presences._add(Object.assign(presence, { guild })));
+      guild.presences._add(Object.assign(presence, { guild }));
     }
   }
 
@@ -38,6 +37,5 @@ module.exports = (client, { d: data }) => {
     index: data.chunk_index,
     nonce: data.nonce,
     notFound: data.not_found,
-    presences,
   });
 };
