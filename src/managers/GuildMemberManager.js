@@ -439,7 +439,9 @@ class GuildMemberManager extends CachedManager {
         if (chunk.nonce !== nonce) return;
         i++;
         for (const member of members.values()) {
+          member.fetchedPresence = chunk.presences?.get(member.id);
           fetchedMembers.set(member.id, member);
+          member.fetchedPresence = null;
         }
         if (members.size < 1_000 || (limit && fetchedMembers.size >= limit) || i === chunk.count) {
           clearTimeout(timeout);
