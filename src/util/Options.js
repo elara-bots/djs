@@ -30,6 +30,7 @@ const process = require('node:process');
 /**
  * Options for a client.
  * @typedef {Object} ClientOptions
+ * @property {boolean} [handlePresenceUpdates]
  * @property {number|number[]|string} [shards] The shard's id to run, or an array of shard ids. If not specified,
  * the client will spawn {@link ClientOptions#shardCount} shards. If set to `auto`, it will fetch the
  * recommended amount of shards from Discord and spawn that amount
@@ -130,6 +131,7 @@ class Options extends null {
    */
   static createDefault() {
     return {
+      handlePresenceUpdates: true,
       closeTimeout: 5_000,
       waitGuildTimeout: 15_000,
       shardCount: 1,

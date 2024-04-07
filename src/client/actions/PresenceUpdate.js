@@ -12,7 +12,10 @@ class PresenceUpdateAction extends Action {
     if (data.user?.username) {
       if (!user._equals(data.user)) this.client.actions.UserUpdate.handle(data.user);
     }
-
+    if (this.client.options?.handlePresenceUpdates === false) {
+      // If handlePresenceUpdates is false then do not add/update the presence for the member.
+      return;
+    }
     const guild = this.client.guilds.cache.get(data.guild_id);
     if (!guild) return;
 

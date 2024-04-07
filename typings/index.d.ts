@@ -4423,6 +4423,7 @@ export interface ClientFetchInviteOptions {
 }
 
 export interface ClientOptions {
+  handlePresenceUpdates?: boolean;
   shards?: number | number[] | 'auto';
   shardCount?: number;
   closeTimeout?: number;
