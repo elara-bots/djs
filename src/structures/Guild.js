@@ -439,10 +439,12 @@ class Guild extends AnonymousGuild {
        */
       this.ownerId = data.owner_id;
     }
-
-    if (data.presences) {
-      for (const presence of data.presences) {
-        this.presences._add(Object.assign(presence, { guild: this }));
+    if (this.client.options?.handlePresenceUpdates !== false) {
+      // If handlePresenceUpdates isn't false then add the presences to the cache.
+      if (data.presences) {
+        for (const presence of data.presences) {
+          this.presences._add(Object.assign(presence, { guild: this }));
+        }
       }
     }
 
