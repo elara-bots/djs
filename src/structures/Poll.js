@@ -4,7 +4,7 @@ const { Collection } = require('@discordjs/collection');
 const Base = require('./Base');
 const { PollAnswer } = require('./PollAnswer');
 const { DiscordjsError } = require('../errors/DJSError');
-const { ErrorCodes } = require('../errors/index');
+const { Messages } = require('../errors/index');
 
 /**
  * Represents a Poll
@@ -91,10 +91,9 @@ class Poll extends Base {
    */
   async end() {
     if (Date.now() > this.expiresTimestamp) {
-      throw new DiscordjsError(ErrorCodes.PollAlreadyExpired);
+      throw new DiscordjsError(Messages.POLL_ALREADY_EXPIRED);
     }
-
-    await this.client.rest.post(`/channels/${this.message.channel.id}/polls/${this.message.id}/expire`);
+    await this.client.api.channels(this.message.channel.id).polls(this.message.id).expire.post();
   }
 }
 
