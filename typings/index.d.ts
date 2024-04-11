@@ -303,7 +303,7 @@ export abstract class Base {
 
 export class BaseClient extends EventEmitter {
   public constructor(options?: ClientOptions | WebhookClientOptions);
-  private readonly api: unknown;
+  public readonly api: RouteBuilder;
   private rest: unknown;
   private decrementMaxListeners(): void;
   private incrementMaxListeners(): void;
@@ -345,6 +345,30 @@ export class BaseClient extends EventEmitter {
   public destroy(): void;
   public toJSON(...props: Record<string, boolean | string>[]): unknown;
 }
+
+interface RouteBuilderMethodOptions {
+  query?: URLSearchParams | Record<string, string | string[]>;
+  versioned?: boolean;
+  auth?: boolean;
+  reason?: string;
+  headers?: Record<string, string>;
+  data: Record<string, unknown>;
+}
+
+interface RouteBuilderMethods {
+  get(opts?: RouteBuilderMethodOptions): Promise<any>;
+  post(opts?: RouteBuilderMethodOptions): Promise<any>;
+  delete(opts?: RouteBuilderMethodOptions): Promise<any>;
+  patch(opts?: RouteBuilderMethodOptions): Promise<any>;
+  put(opts?: RouteBuilderMethodOptions): Promise<any>;
+}
+// @ts-ignore
+type RouteBuilderReturn = RouteBuilder &
+  RouteBuilderMethods & {
+    (...args: string[]): RouteBuilderReturn;
+  };
+// @ts-ignore
+type RouteBuilder = Record<string, RouteBuilderReturn>;
 
 export type GuildCacheMessage<Cached extends CacheType> = CacheTypeReducer<
   Cached,

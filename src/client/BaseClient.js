@@ -29,9 +29,8 @@ class BaseClient extends EventEmitter {
 
   /**
    * API shortcut
-   * @type {Object}
+   * @type {RouteBuilder}
    * @readonly
-   * @private
    */
   get api() {
     return this.rest.api;
