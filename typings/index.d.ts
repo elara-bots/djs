@@ -4369,6 +4369,8 @@ export interface ClientEvents extends BaseClientEvents {
   guildUpdate: [oldGuild: Guild, newGuild: Guild];
   inviteCreate: [invite: Invite];
   inviteDelete: [invite: Invite];
+  messagePollVoteAdd: [pollAnswer: PollAnswer, userId: Snowflake];
+  messagePollVoteRemove: [pollAnswer: PollAnswer, userId: Snowflake];
   messageCreate: [message: Message];
   messageDelete: [message: Message | PartialMessage];
   messageReactionRemoveAll: [
@@ -4628,6 +4630,8 @@ export interface ConstantsEvents {
   CHANNEL_DELETE: 'channelDelete';
   CHANNEL_UPDATE: 'channelUpdate';
   CHANNEL_PINS_UPDATE: 'channelPinsUpdate';
+  MESSAGE_POLL_VOTE_ADD: 'messagePollVoteAdd';
+  MESSAGE_POLL_VOTE_REMOVE: 'messagePollVoteRemove';
   MESSAGE_CREATE: 'messageCreate';
   MESSAGE_DELETE: 'messageDelete';
   MESSAGE_UPDATE: 'messageUpdate';
@@ -5701,6 +5705,7 @@ export interface MessageOptions {
   stickers?: StickerResolvable[];
   attachments?: MessageAttachment[];
   flags?: BitFieldResolvable<'SUPPRESS_EMBEDS' | 'SUPPRESS_NOTIFICATIONS', number>;
+  poll?: PollData;
 }
 
 export type MessageReactionResolvable = MessageReaction | Snowflake | string;
@@ -6246,6 +6251,52 @@ export type UserResolvable = User | Snowflake | Message | GuildMember | ThreadMe
 export interface Vanity {
   code: string | null;
   uses: number;
+}
+
+type PollLayoutType = any;
+type APIPoll = any;
+type APIPollAnswer = any;
+
+export class Poll extends Base {
+  private constructor(client: Client<true>, data: APIPoll, message: Message);
+  public readonly message: Message;
+  public question: string;
+  public answers: Collection<number, PollAnswer>;
+  public expiresTimestamp: number;
+  public get expiresAt(): Date;
+  public allowMultiselect: boolean;
+  public layoutType: PollLayoutType;
+  public resultsFinalized: boolean;
+  public end(): Promise<void>;
+}
+
+export interface FetchPollVotersOptions {
+  after?: Snowflake;
+  limit?: number;
+}
+
+export interface PollData {
+  question: string;
+  answers: readonly PollAnswerData[];
+  duration: number;
+  allowMultiselect: boolean;
+  layoutType?: PollLayoutType;
+}
+
+export interface PollAnswerData {
+  text: string;
+  emoji?: EmojiIdentifierResolvable;
+}
+
+export class PollAnswer extends Base {
+  private constructor(client: Client<true>, data: APIPollAnswer & { count?: number }, poll: Poll);
+  private _emoji: APIPartialEmoji | null;
+  public readonly poll: Poll;
+  public id: number;
+  public text: string | null;
+  public voteCount: number;
+  public get emoji(): GuildEmoji | Emoji | null;
+  public fetchVoters(options?: FetchPollVotersOptions): Promise<Collection<Snowflake, User>>;
 }
 
 export type VerificationLevel = keyof typeof VerificationLevels;

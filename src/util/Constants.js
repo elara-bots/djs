@@ -203,6 +203,8 @@ exports.Opcodes = {
  * * CHANNEL_DELETE: channelDelete
  * * CHANNEL_UPDATE: channelUpdate
  * * CHANNEL_PINS_UPDATE: channelPinsUpdate
+ * * MESSAGE_POLL_VOTE_ADD: messagePollVoteAdd
+ * * MESSAGE_POLL_VOTE_REMOVE: messagePollVoteRemove
  * * MESSAGE_CREATE: messageCreate
  * * MESSAGE_DELETE: messageDelete
  * * MESSAGE_UPDATE: messageUpdate
@@ -287,6 +289,8 @@ exports.Events = {
   CHANNEL_DELETE: 'channelDelete',
   CHANNEL_UPDATE: 'channelUpdate',
   CHANNEL_PINS_UPDATE: 'channelPinsUpdate',
+  MESSAGE_POLL_VOTE_ADD: 'messagePollVoteAdd',
+  MESSAGE_POLL_VOTE_REMOVE: 'messagePollVoteRemove',
   MESSAGE_CREATE: 'messageCreate',
   MESSAGE_DELETE: 'messageDelete',
   MESSAGE_UPDATE: 'messageUpdate',
@@ -398,6 +402,8 @@ exports.PartialTypes = keyMirror(['USER', 'CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 
  * * MESSAGE_DELETE
  * * MESSAGE_UPDATE
  * * MESSAGE_DELETE_BULK
+ * * MESSAGE_POLL_VOTE_ADD
+ * * MESSAGE_POLL_VOTE_REMOVE
  * * MESSAGE_REACTION_ADD
  * * MESSAGE_REACTION_REMOVE
  * * MESSAGE_REACTION_REMOVE_ALL
@@ -462,6 +468,8 @@ exports.WSEvents = keyMirror([
   'MESSAGE_DELETE',
   'MESSAGE_UPDATE',
   'MESSAGE_DELETE_BULK',
+  'MESSAGE_POLL_VOTE_ADD',
+  'MESSAGE_POLL_VOTE_REMOVE',
   'MESSAGE_REACTION_ADD',
   'MESSAGE_REACTION_REMOVE',
   'MESSAGE_REACTION_REMOVE_ALL',

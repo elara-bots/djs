@@ -145,7 +145,7 @@ const Messages = {
 
   INTERACTION_ALREADY_REPLIED: 'The reply to this interaction has already been sent or deferred.',
   INTERACTION_NOT_REPLIED: 'The reply to this interaction has not been sent or deferred.',
-
+  POLL_ALREADY_EXPIRED: 'This poll has already expired.',
   COMMAND_INTERACTION_OPTION_NOT_FOUND: name => `Required option "${name}" not found.`,
   COMMAND_INTERACTION_OPTION_TYPE: (name, type, expected) =>
     `Option "${name}" is of type: ${type}; expected ${expected}.`,
