@@ -1530,6 +1530,7 @@ export class Message<Cached extends boolean = boolean> extends Base {
   public readonly partial: false;
   public readonly pinnable: boolean;
   public pinned: boolean;
+  public poll: Poll | null;
   public reactions: ReactionManager;
   public stickers: Collection<Snowflake, Sticker>;
   public system: boolean;
