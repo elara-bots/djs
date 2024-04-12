@@ -6,7 +6,7 @@ const { Events } = require('../../util/Constants');
 class MessagePollVoteRemoveAction extends Action {
   handle(data) {
     const channel = this.getChannel(data);
-    if (!channel?.isTextBased()) return false;
+    if (!channel?.isText()) return false;
 
     const message = this.getMessage(data, channel);
     if (!message) return false;
