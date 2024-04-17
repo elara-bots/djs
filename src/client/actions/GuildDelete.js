@@ -44,9 +44,10 @@ class GuildDeleteAction extends Action {
        * @param {Guild} guild The guild that was deleted
        */
       client.emit(Events.GUILD_DELETE, guild);
-      for (const channel of guild.channels.cache.values()) this.client.channels._remove(channel.id);
+      setTimeout(() => {
+        for (const channel of guild.channels.cache.values()) this.client.channels._remove(channel.id);
+      }, 10_000);
       // Delete the channels from the cache after the event gets emitted.
-
       this.deleted.set(guild.id, guild);
       this.scheduleForDeletion(guild.id);
     } else {
