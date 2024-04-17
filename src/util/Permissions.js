@@ -109,6 +109,7 @@ class Permissions extends BitField {
  * * `VIEW_CREATOR_MONETIZATION_ANALYTICS`
  * * `USE_SOUNDBOARD`
  * * `SEND_VOICE_MESSAGES`
+ * * `SEND_POLLS`
  * @type {Object<string, bigint>}
  * @see {@link https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags}
  */
@@ -157,6 +158,7 @@ Permissions.FLAGS = {
   VIEW_CREATOR_MONETIZATION_ANALYTICS: 1n << 41n,
   USE_SOUNDBOARD: 1n << 42n,
   SEND_VOICE_MESSAGES: 1n << 46n,
+  SEND_POLLS: 1n << 49n,
 };
 
 /**
