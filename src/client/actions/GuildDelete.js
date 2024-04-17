@@ -33,7 +33,6 @@ class GuildDeleteAction extends Action {
         };
       }
 
-      for (const channel of guild.channels.cache.values()) this.client.channels._remove(channel.id);
       client.voice.adapters.get(data.id)?.destroy();
 
       // Delete guild
@@ -45,6 +44,8 @@ class GuildDeleteAction extends Action {
        * @param {Guild} guild The guild that was deleted
        */
       client.emit(Events.GUILD_DELETE, guild);
+      for (const channel of guild.channels.cache.values()) this.client.channels._remove(channel.id);
+      // Delete the channels from the cache after the event gets emitted.
 
       this.deleted.set(guild.id, guild);
       this.scheduleForDeletion(guild.id);
