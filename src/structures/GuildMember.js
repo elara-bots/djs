@@ -1,6 +1,7 @@
 'use strict';
 
 const Base = require('./Base');
+const { Presence } = require('./Presence');
 const VoiceState = require('./VoiceState');
 const TextBasedChannel = require('./interfaces/TextBasedChannel');
 const { Error } = require('../errors');
@@ -187,11 +188,18 @@ class GuildMember extends Base {
 
   /**
    * The presence of this guild member
-   * @type {?Presence}
+   * @type {Presence}
    * @readonly
    */
   get presence() {
-    return this.guild.presences.resolve(this.id);
+    return (
+      this.guild.presences.resolve(this.id) ||
+      new Presence(this.client, {
+        user: this.user,
+        guild: this.guild,
+        status: 'offline',
+      })
+    );
   }
 
   /**

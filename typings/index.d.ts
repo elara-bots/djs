@@ -1151,7 +1151,7 @@ export class GuildMember extends PartialTextBasedChannel(Base) {
   public readonly permissions: Readonly<Permissions>;
   public readonly premiumSince: Date | null;
   public premiumSinceTimestamp: number | null;
-  public readonly presence: Presence | null;
+  public readonly presence: Presence;
   public readonly roles: GuildMemberRoleManager;
   public user: User;
   public readonly voice: VoiceState;
