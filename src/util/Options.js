@@ -156,11 +156,11 @@ class Options extends null {
           browser: 'discord.js',
           device: 'discord.js',
         },
-        version: 9,
+        version: 10,
       },
       http: {
         agent: {},
-        version: 9,
+        version: 10,
         api: 'https://discord.com/api',
         cdn: 'https://cdn.discordapp.com',
         invite: 'https://discord.gg',

@@ -15,7 +15,7 @@ const Util = require('../util/Util');
 
 /**
  * @external MessageActivityType
- * @see {@link https://discord-api-types.dev/api/discord-api-types-v9/enum/MessageActivityType}
+ * @see {@link https://discord-api-types.dev/api/discord-api-types-v10/enum/MessageActivityType}
  */
 
 /**

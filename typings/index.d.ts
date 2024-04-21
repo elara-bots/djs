@@ -52,7 +52,7 @@ import {
   Snowflake,
   LocalizationMap,
   LocaleString,
-} from 'discord-api-types/v9';
+} from 'discord-api-types/v10';
 import { ChildProcess } from 'node:child_process';
 import { EventEmitter } from 'node:events';
 import { AgentOptions } from 'node:https';
