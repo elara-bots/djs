@@ -5892,6 +5892,7 @@ export type PermissionString =
   | 'VIEW_CREATOR_MONETIZATION_ANALYTICS'
   | 'USE_SOUNDBOARD'
   | 'SEND_VOICE_MESSAGES'
+  | 'SET_VOICE_CHANNEL_STATUS'
   | 'SEND_POLLS';
 
 export type RecursiveArray<T> = ReadonlyArray<T | RecursiveArray<T>>;
