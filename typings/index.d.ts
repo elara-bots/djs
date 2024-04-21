@@ -488,6 +488,7 @@ export class BaseGuildVoiceChannel extends TextBasedChannelMixin(GuildChannel) {
   public nsfw: boolean;
   public rtcRegion: string | null;
   public rateLimitPerUser: number | null;
+  public status: string | null;
   public userLimit: number;
   public videoQualityMode: VideoQualityMode | null;
   public createInvite(options?: CreateInviteOptions): Promise<Invite>;
@@ -4424,6 +4425,7 @@ export interface ClientEvents extends BaseClientEvents {
   ];
   threadUpdate: [oldThread: ThreadChannel, newThread: ThreadChannel];
   userUpdate: [oldUser: User | PartialUser, newUser: User];
+  voiceChannelStatusUpdate: [oldChannel: BaseGuildVoiceChannel, newChannel: BaseGuildVoiceChannel];
   voiceStateUpdate: [oldState: VoiceState, newState: VoiceState];
   webhookUpdate: [channel: TextChannel | NewsChannel | VoiceChannel | ForumChannel | StageChannel];
   interactionCreate: [interaction: Interaction];
@@ -4674,6 +4676,7 @@ export interface ConstantsEvents {
   THREAD_MEMBERS_UPDATE: 'threadMembersUpdate';
   USER_UPDATE: 'userUpdate';
   PRESENCE_UPDATE: 'presenceUpdate';
+  VOICE_CHANNEL_STATUS_UPDATE: 'voiceChannelStatusUpdate';
   VOICE_SERVER_UPDATE: 'voiceServerUpdate';
   VOICE_STATE_UPDATE: 'voiceStateUpdate';
   WEBHOOKS_UPDATE: 'webhookUpdate';

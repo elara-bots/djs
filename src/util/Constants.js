@@ -221,6 +221,7 @@ exports.Opcodes = {
  * * THREAD_MEMBERS_UPDATE: threadMembersUpdate
  * * USER_UPDATE: userUpdate
  * * PRESENCE_UPDATE: presenceUpdate
+ * * VOICE_CHANNEL_STATUS_UPDATE: voiceChannelStatusUpdate
  * * VOICE_SERVER_UPDATE: voiceServerUpdate
  * * VOICE_STATE_UPDATE: voiceStateUpdate
  * * WEBHOOKS_UPDATE: webhookUpdate
@@ -307,6 +308,7 @@ exports.Events = {
   THREAD_MEMBERS_UPDATE: 'threadMembersUpdate',
   USER_UPDATE: 'userUpdate',
   PRESENCE_UPDATE: 'presenceUpdate',
+  VOICE_CHANNEL_STATUS_UPDATE: 'voiceChannelStatusUpdate',
   VOICE_SERVER_UPDATE: 'voiceServerUpdate',
   VOICE_STATE_UPDATE: 'voiceStateUpdate',
   WEBHOOKS_UPDATE: 'webhookUpdate',
