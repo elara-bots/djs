@@ -46,6 +46,7 @@ const handlers = Object.fromEntries([
   ['THREAD_MEMBERS_UPDATE', require('./THREAD_MEMBERS_UPDATE')],
   ['USER_UPDATE', require('./USER_UPDATE')],
   ['PRESENCE_UPDATE', require('./PRESENCE_UPDATE')],
+  ['VOICE_CHANNEL_STATUS_UPDATE', require('./VOICE_CHANNEL_STATUS_UPDATE')],
   ['VOICE_STATE_UPDATE', require('./VOICE_STATE_UPDATE')],
   ['VOICE_SERVER_UPDATE', require('./VOICE_SERVER_UPDATE')],
   ['WEBHOOKS_UPDATE', require('./WEBHOOKS_UPDATE')],
