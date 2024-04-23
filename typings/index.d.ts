@@ -588,7 +588,6 @@ export class Client<Ready extends boolean = boolean> extends BaseClient {
   public destroy(): void;
   public fetchGuildPreview(guild: GuildResolvable): Promise<GuildPreview>;
   public fetchInvite(invite: InviteResolvable, options?: ClientFetchInviteOptions): Promise<Invite>;
-  public fetchSticker(id: Snowflake): Promise<Sticker>;
   public fetchWebhook(id: Snowflake, token?: string): Promise<Webhook>;
   public generateInvite(options?: InviteGenerationOptions): string;
   public login(token?: string): Promise<string>;

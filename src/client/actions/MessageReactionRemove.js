@@ -3,14 +3,6 @@
 const Action = require('./Action');
 const { Events } = require('../../util/Constants');
 
-/*
-{ user_id: 'id',
-     message_id: 'id',
-     emoji: { name: '�', id: null },
-     channel_id: 'id',
-     guild_id: 'id' }
-*/
-
 class MessageReactionRemove extends Action {
   handle(data) {
     if (!data.emoji) return false;

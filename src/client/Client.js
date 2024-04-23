@@ -13,7 +13,6 @@ const ShardClientUtil = require('../sharding/ShardClientUtil');
 const ClientPresence = require('../structures/ClientPresence');
 const GuildPreview = require('../structures/GuildPreview');
 const Invite = require('../structures/Invite');
-const { Sticker } = require('../structures/Sticker');
 const Webhook = require('../structures/Webhook');
 const { Events, InviteScopes, Status } = require('../util/Constants');
 const DataResolver = require('../util/DataResolver');
@@ -299,20 +298,6 @@ class Client extends BaseClient {
   async fetchWebhook(id, token) {
     const data = await this.api.webhooks(id, token).get();
     return new Webhook(this, { token, ...data });
-  }
-
-  /**
-   * Obtains a sticker from Discord.
-   * @param {Snowflake} id The sticker's id
-   * @returns {Promise<Sticker>}
-   * @example
-   * client.fetchSticker('id')
-   *   .then(sticker => console.log(`Obtained sticker with name: ${sticker.name}`))
-   *   .catch(console.error);
-   */
-  async fetchSticker(id) {
-    const data = await this.api.stickers(id).get();
-    return new Sticker(this, data);
   }
 
   /**
