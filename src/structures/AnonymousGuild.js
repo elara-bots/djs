@@ -1,7 +1,7 @@
 'use strict';
 
 const BaseGuild = require('./BaseGuild');
-const { VerificationLevels, NSFWLevels } = require('../util/Constants');
+const { VerificationLevels } = require('../util/Constants');
 
 /**
  * Bundles common attributes and methods between {@link Guild} and {@link InviteGuild}
@@ -55,14 +55,6 @@ class AnonymousGuild extends BaseGuild {
        * @type {?string}
        */
       this.vanityURLCode = data.vanity_url_code;
-    }
-
-    if ('nsfw_level' in data) {
-      /**
-       * The NSFW level of this guild
-       * @type {NSFWLevel}
-       */
-      this.nsfwLevel = NSFWLevels[data.nsfw_level];
     }
 
     if ('premium_subscription_count' in data) {

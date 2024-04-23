@@ -1,6 +1,5 @@
 'use strict';
 
-const { setTimeout } = require('node:timers');
 const { Collection } = require('@discordjs/collection');
 const CachedManager = require('./CachedManager');
 const { Guild } = require('../structures/Guild');
@@ -10,19 +9,6 @@ const { GuildMember } = require('../structures/GuildMember');
 const Invite = require('../structures/Invite');
 const OAuth2Guild = require('../structures/OAuth2Guild');
 const { Role } = require('../structures/Role');
-const {
-  ChannelTypes,
-  Events,
-  OverwriteTypes,
-  VerificationLevels,
-  DefaultMessageNotificationLevels,
-  ExplicitContentFilterLevels,
-  VideoQualityModes,
-} = require('../util/Constants');
-const DataResolver = require('../util/DataResolver');
-const Permissions = require('../util/Permissions');
-const SystemChannelFlags = require('../util/SystemChannelFlags');
-const { resolveColor } = require('../util/Util');
 
 /**
  * Manages API methods for Guilds and stores their cache.
@@ -131,126 +117,6 @@ class GuildManager extends CachedManager {
       return super.resolveId(guild.guild.id);
     }
     return super.resolveId(guild);
-  }
-
-  /**
-   * Options used to create a guild.
-   * @typedef {Object} GuildCreateOptions
-   * @property {Snowflake|number} [afkChannelId] The AFK channel's id
-   * @property {number} [afkTimeout] The AFK timeout in seconds
-   * @property {PartialChannelData[]} [channels=[]] The channels for this guild
-   * @property {DefaultMessageNotificationLevel|number} [defaultMessageNotifications] The default message notifications
-   * for the guild
-   * @property {ExplicitContentFilterLevel} [explicitContentFilter] The explicit content filter level for the guild
-   * @property {?(BufferResolvable|Base64Resolvable)} [icon=null] The icon for the guild
-   * @property {PartialRoleData[]} [roles=[]] The roles for this guild,
-   * the first element of this array is used to change properties of the guild's everyone role.
-   * @property {Snowflake|number} [systemChannelId] The system channel's id
-   * @property {SystemChannelFlagsResolvable} [systemChannelFlags] The flags of the system channel
-   * @property {VerificationLevel} [verificationLevel] The verification level for the guild
-   */
-
-  /**
-   * Creates a guild.
-   * <warn>This is only available to bots in fewer than 10 guilds.</warn>
-   * @param {string} name The name of the guild
-   * @param {GuildCreateOptions} [options] Options for creating the guild
-   * @returns {Promise<Guild>} The guild that was created
-   */
-  async create(
-    name,
-    {
-      afkChannelId,
-      afkTimeout,
-      channels = [],
-      defaultMessageNotifications,
-      explicitContentFilter,
-      icon = null,
-      roles = [],
-      systemChannelId,
-      systemChannelFlags,
-      verificationLevel,
-    } = {},
-  ) {
-    icon = await DataResolver.resolveImage(icon);
-    if (typeof verificationLevel === 'string') {
-      verificationLevel = VerificationLevels[verificationLevel];
-    }
-    if (typeof defaultMessageNotifications === 'string') {
-      defaultMessageNotifications = DefaultMessageNotificationLevels[defaultMessageNotifications];
-    }
-    if (typeof explicitContentFilter === 'string') {
-      explicitContentFilter = ExplicitContentFilterLevels[explicitContentFilter];
-    }
-    for (const channel of channels) {
-      channel.type &&= typeof channel.type === 'number' ? channel.type : ChannelTypes[channel.type];
-      channel.parent_id = channel.parentId;
-      delete channel.parentId;
-      channel.user_limit = channel.userLimit;
-      delete channel.userLimit;
-      channel.rate_limit_per_user = channel.rateLimitPerUser;
-      delete channel.rateLimitPerUser;
-      channel.rtc_region = channel.rtcRegion;
-      delete channel.rtcRegion;
-      channel.video_quality_mode =
-        typeof channel.videoQualityMode === 'string'
-          ? VideoQualityModes[channel.videoQualityMode]
-          : channel.videoQualityMode;
-      delete channel.videoQualityMode;
-
-      if (!channel.permissionOverwrites) continue;
-      for (const overwrite of channel.permissionOverwrites) {
-        if (typeof overwrite.type === 'string') {
-          overwrite.type = OverwriteTypes[overwrite.type];
-        }
-        overwrite.allow &&= Permissions.resolve(overwrite.allow).toString();
-        overwrite.deny &&= Permissions.resolve(overwrite.deny).toString();
-      }
-      channel.permission_overwrites = channel.permissionOverwrites;
-      delete channel.permissionOverwrites;
-    }
-    for (const role of roles) {
-      role.color &&= resolveColor(role.color);
-      role.permissions &&= Permissions.resolve(role.permissions).toString();
-    }
-    systemChannelFlags &&= SystemChannelFlags.resolve(systemChannelFlags);
-
-    const data = await this.client.api.guilds.post({
-      data: {
-        name,
-        icon,
-        verification_level: verificationLevel,
-        default_message_notifications: defaultMessageNotifications,
-        explicit_content_filter: explicitContentFilter,
-        roles,
-        channels,
-        afk_channel_id: afkChannelId,
-        afk_timeout: afkTimeout,
-        system_channel_id: systemChannelId,
-        system_channel_flags: systemChannelFlags,
-      },
-    });
-
-    if (this.client.guilds.cache.has(data.id)) return this.client.guilds.cache.get(data.id);
-
-    return new Promise(resolve => {
-      const handleGuild = guild => {
-        if (guild.id === data.id) {
-          clearTimeout(timeout);
-          this.client.removeListener(Events.GUILD_CREATE, handleGuild);
-          this.client.decrementMaxListeners();
-          resolve(guild);
-        }
-      };
-      this.client.incrementMaxListeners();
-      this.client.on(Events.GUILD_CREATE, handleGuild);
-
-      const timeout = setTimeout(() => {
-        this.client.removeListener(Events.GUILD_CREATE, handleGuild);
-        this.client.decrementMaxListeners();
-        resolve(this.client.guilds._add(data));
-      }, 10_000).unref();
-    });
   }
 
   /**

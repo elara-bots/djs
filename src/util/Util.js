@@ -492,25 +492,6 @@ class Util extends null {
   }
 
   /**
-   * Sets the position of a Channel or Role.
-   * @param {Channel|Role} item Object to set the position of
-   * @param {number} position New position for the object
-   * @param {boolean} relative Whether `position` is relative to its current position
-   * @param {Collection<string, Channel|Role>} sorted A collection of the objects sorted properly
-   * @param {APIRouter} route Route to call PATCH on
-   * @param {string} [reason] Reason for the change
-   * @returns {Promise<Channel[]|Role[]>} Updated item list, with `id` and `position` properties
-   * @private
-   */
-  static async setPosition(item, position, relative, sorted, route, reason) {
-    let updatedItems = [...sorted.values()];
-    Util.moveElementInArray(updatedItems, item, position, relative);
-    updatedItems = updatedItems.map((r, i) => ({ id: r.id, position: i }));
-    await route.patch({ data: updatedItems, reason });
-    return updatedItems;
-  }
-
-  /**
    * Alternative to Node's `path.basename`, removing query string after the extension if it exists.
    * @param {string} path Path to get the basename of
    * @param {string} [ext] File extension to remove

@@ -318,28 +318,6 @@ class GuildChannel extends Channel {
   }
 
   /**
-   * Options used to set the position of a channel.
-   * @typedef {Object} SetChannelPositionOptions
-   * @property {boolean} [relative=false] Whether or not to change the position relative to its current value
-   * @property {string} [reason] The reason for changing the position
-   */
-
-  /**
-   * Sets a new position for the guild channel.
-   * @param {number} position The new position for the guild channel
-   * @param {SetChannelPositionOptions} [options] Options for setting position
-   * @returns {Promise<GuildChannel>}
-   * @example
-   * // Set a new channel position
-   * channel.setPosition(2)
-   *   .then(newChannel => console.log(`Channel's new position is ${newChannel.position}`))
-   *   .catch(console.error);
-   */
-  setPosition(position, options = {}) {
-    return this.guild.channels.setPosition(this, position, options);
-  }
-
-  /**
    * Options used to clone a guild channel.
    * @typedef {GuildChannelCreateOptions} GuildChannelCloneOptions
    * @property {string} [name=this.name] Name of the new channel

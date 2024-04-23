@@ -1407,26 +1407,6 @@ exports.MessageComponentTypes = createEnum([null, 'ACTION_ROW', 'BUTTON', 'SELEC
 exports.MessageButtonStyles = createEnum([null, 'PRIMARY', 'SECONDARY', 'SUCCESS', 'DANGER', 'LINK']);
 
 /**
- * The required MFA level for a guild
- * * NONE
- * * ELEVATED
- * @typedef {string} MFALevel
- * @see {@link https://discord.com/developers/docs/resources/guild#guild-object-mfa-level}
- */
-exports.MFALevels = createEnum(['NONE', 'ELEVATED']);
-
-/**
- * NSFW level of a Guild:
- * * DEFAULT
- * * EXPLICIT
- * * SAFE
- * * AGE_RESTRICTED
- * @typedef {string} NSFWLevel
- * @see {@link https://discord.com/developers/docs/resources/guild#guild-object-guild-nsfw-level}
- */
-exports.NSFWLevels = createEnum(['DEFAULT', 'EXPLICIT', 'SAFE', 'AGE_RESTRICTED']);
-
-/**
  * Privacy level of a {@link StageInstance} object:
  * * PUBLIC
  * * GUILD_ONLY
@@ -1577,8 +1557,6 @@ function createEnum(keys) {
  * @property {Object<MessageButtonStyle, number>} MessageButtonStyles The style of a message button.
  * @property {Object<MessageComponentType, number>} MessageComponentTypes The type of a message component.
  * @property {MessageType[]} MessageTypes The type of a {@link Message} object.
- * @property {Object<MFALevel, number>} MFALevels The required MFA level for a guild.
- * @property {Object<NSFWLevel, number>} NSFWLevels NSFW level of a guild.
  * @property {Opcodes} Opcodes The types of Opcodes sent to the Gateway.
  * @property {Object<OverwriteType, number>} OverwriteTypes An overwrite type.
  * @property {Object} Package The package.json of the library.

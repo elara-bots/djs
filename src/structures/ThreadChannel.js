@@ -318,24 +318,6 @@ class ThreadChannel extends Channel {
   }
 
   /**
-   * Pins this thread from the forum channel.
-   * @param {string} [reason] Reason for pinning
-   * @returns {Promise<ThreadChannel>}
-   */
-  pin(reason) {
-    return this.edit({ flags: this.flags.add(ChannelFlags.FLAGS.PINNED) }, reason);
-  }
-
-  /**
-   * Unpins this thread from the forum channel.
-   * @param {string} [reason] Reason for unpinning
-   * @returns {Promise<ThreadChannel>}
-   */
-  unpin(reason) {
-    return this.edit({ flags: this.flags.remove(ChannelFlags.FLAGS.PINNED) }, reason);
-  }
-
-  /**
    * Whether the client user is a member of the thread.
    * @type {boolean}
    * @readonly

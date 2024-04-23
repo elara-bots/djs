@@ -17,7 +17,6 @@ const {
   ForumLayoutTypes,
 } = require('../util/Constants');
 const DataResolver = require('../util/DataResolver');
-const Util = require('../util/Util');
 const { resolveAutoArchiveMaxLimit, transformGuildForumTag, transformGuildDefaultReaction } = require('../util/Util');
 
 /**
@@ -269,8 +268,6 @@ class GuildChannelManager extends CachedManager {
 
     const parent = data.parent && this.client.channels.resolveId(data.parent);
 
-    if (typeof data.position !== 'undefined') await this.setPosition(channel, data.position, { reason });
-
     let permission_overwrites = data.permissionOverwrites?.map(o => PermissionOverwrites.resolve(o, this.guild));
 
     if (data.lockPermissions) {
@@ -318,37 +315,6 @@ class GuildChannelManager extends CachedManager {
     });
 
     return this.client.actions.ChannelUpdate.handle(newData).updated;
-  }
-
-  /**
-   * Sets a new position for the guild channel.
-   * @param {GuildChannelResolvable} channel The channel to set the position for
-   * @param {number} position The new position for the guild channel
-   * @param {SetChannelPositionOptions} [options] Options for setting position
-   * @returns {Promise<GuildChannel>}
-   * @example
-   * // Set a new channel position
-   * guild.channels.setPosition('222078374472843266', 2)
-   *   .then(newChannel => console.log(`Channel's new position is ${newChannel.position}`))
-   *   .catch(console.error);
-   */
-  async setPosition(channel, position, { relative, reason } = {}) {
-    channel = this.resolve(channel);
-    if (!channel) throw new TypeError('INVALID_TYPE', 'channel', 'GuildChannelResolvable');
-    const updatedChannels = await Util.setPosition(
-      channel,
-      position,
-      relative,
-      this.guild._sortedChannels(channel),
-      this.client.api.guilds(this.guild.id).channels,
-      reason,
-    );
-
-    this.client.actions.GuildChannelsPositionUpdate.handle({
-      guild_id: this.guild.id,
-      channels: updatedChannels,
-    });
-    return channel;
   }
 
   /**
@@ -401,47 +367,6 @@ class GuildChannelManager extends CachedManager {
     if (!id) throw new TypeError('INVALID_TYPE', 'channel', 'GuildChannelResolvable');
     const data = await this.client.api.channels[id].webhooks.get();
     return data.reduce((hooks, hook) => hooks.set(hook.id, new Webhook(this.client, hook)), new Collection());
-  }
-
-  /**
-   * Data that can be resolved to give a Category Channel object. This can be:
-   * * A CategoryChannel object
-   * * A Snowflake
-   * @typedef {CategoryChannel|Snowflake} CategoryChannelResolvable
-   */
-
-  /**
-   * The data needed for updating a channel's position.
-   * @typedef {Object} ChannelPosition
-   * @property {GuildChannel|Snowflake} channel Channel to update
-   * @property {number} [position] New position for the channel
-   * @property {CategoryChannelResolvable} [parent] Parent channel for this channel
-   * @property {boolean} [lockPermissions] If the overwrites should be locked to the parents overwrites
-   */
-
-  /**
-   * Batch-updates the guild's channels' positions.
-   * <info>Only one channel's parent can be changed at a time</info>
-   * @param {ChannelPosition[]} channelPositions Channel positions to update
-   * @returns {Promise<Guild>}
-   * @example
-   * guild.channels.setPositions([{ channel: channelId, position: newChannelIndex }])
-   *   .then(guild => console.log(`Updated channel positions for ${guild}`))
-   *   .catch(console.error);
-   */
-  async setPositions(channelPositions) {
-    channelPositions = channelPositions.map(r => ({
-      id: this.client.channels.resolveId(r.channel),
-      position: r.position,
-      lock_permissions: r.lockPermissions,
-      parent_id: typeof r.parent !== 'undefined' ? this.resolveId(r.parent) : undefined,
-    }));
-
-    await this.client.api.guilds(this.guild.id).channels.patch({ data: channelPositions });
-    return this.client.actions.GuildChannelsPositionUpdate.handle({
-      guild_id: this.guild.id,
-      channels: channelPositions,
-    }).guild;
   }
 
   /**

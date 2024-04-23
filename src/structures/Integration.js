@@ -69,16 +69,6 @@ class Integration extends Base {
      */
     this.role = this.guild.roles.cache.get(data.role_id);
 
-    if ('enable_emoticons' in data) {
-      /**
-       * Whether emoticons should be synced for this integration (twitch only currently)
-       * @type {?boolean}
-       */
-      this.enableEmoticons = data.enable_emoticons;
-    } else {
-      this.enableEmoticons ??= null;
-    }
-
     if (data.user) {
       /**
        * The user for this integration
@@ -135,22 +125,6 @@ class Integration extends Base {
   }
 
   _patch(data) {
-    if ('expire_behavior' in data) {
-      /**
-       * The behavior of expiring subscribers
-       * @type {?number}
-       */
-      this.expireBehavior = data.expire_behavior;
-    }
-
-    if ('expire_grace_period' in data) {
-      /**
-       * The grace period before expiring subscribers
-       * @type {?number}
-       */
-      this.expireGracePeriod = data.expire_grace_period;
-    }
-
     if ('application' in data) {
       if (this.application) {
         this.application._patch(data.application);

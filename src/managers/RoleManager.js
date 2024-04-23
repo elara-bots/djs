@@ -7,7 +7,6 @@ const { Role } = require('../structures/Role');
 const DataResolver = require('../util/DataResolver');
 const Permissions = require('../util/Permissions');
 const { resolveColor } = require('../util/Util');
-const Util = require('../util/Util');
 
 /**
  * Manages API methods for roles and stores their cache.
@@ -125,7 +124,7 @@ class RoleManager extends CachedManager {
    *   .catch(console.error);
    */
   async create(options = {}) {
-    let { name, color, hoist, permissions, position, mentionable, reason, icon, unicodeEmoji } = options;
+    let { name, color, hoist, permissions, mentionable, reason, icon, unicodeEmoji } = options;
     color &&= resolveColor(color);
     if (typeof permissions !== 'undefined') permissions = new Permissions(permissions);
     if (icon) {
@@ -150,7 +149,6 @@ class RoleManager extends CachedManager {
       guild_id: this.guild.id,
       role: data,
     });
-    if (position) return this.setPosition(role, position, { reason });
     return role;
   }
 
@@ -169,9 +167,6 @@ class RoleManager extends CachedManager {
   async edit(role, data, reason) {
     role = this.resolve(role);
     if (!role) throw new TypeError('INVALID_TYPE', 'role', 'RoleResolvable');
-
-    if (typeof data.position === 'number') await this.setPosition(role, data.position, { reason });
-
     let icon = data.icon;
     if (icon) {
       const guildEmojiURL = this.guild.emojis.resolve(icon)?.url;
@@ -211,70 +206,6 @@ class RoleManager extends CachedManager {
     const id = this.resolveId(role);
     await this.client.api.guilds[this.guild.id].roles[id].delete({ reason });
     this.client.actions.GuildRoleDelete.handle({ guild_id: this.guild.id, role_id: id });
-  }
-
-  /**
-   * Sets the new position of the role.
-   * @param {RoleResolvable} role The role to change the position of
-   * @param {number} position The new position for the role
-   * @param {SetRolePositionOptions} [options] Options for setting the position
-   * @returns {Promise<Role>}
-   * @example
-   * // Set the position of the role
-   * guild.roles.setPosition('222197033908436994', 1)
-   *   .then(updated => console.log(`Role position: ${updated.position}`))
-   *   .catch(console.error);
-   */
-  async setPosition(role, position, { relative, reason } = {}) {
-    role = this.resolve(role);
-    if (!role) throw new TypeError('INVALID_TYPE', 'role', 'RoleResolvable');
-    const updatedRoles = await Util.setPosition(
-      role,
-      position,
-      relative,
-      this.guild._sortedRoles(),
-      this.client.api.guilds(this.guild.id).roles,
-      reason,
-    );
-
-    this.client.actions.GuildRolesPositionUpdate.handle({
-      guild_id: this.guild.id,
-      roles: updatedRoles,
-    });
-    return role;
-  }
-
-  /**
-   * The data needed for updating a guild role's position
-   * @typedef {Object} GuildRolePosition
-   * @property {RoleResolvable} role The role's id
-   * @property {number} position The position to update
-   */
-
-  /**
-   * Batch-updates the guild's role positions
-   * @param {GuildRolePosition[]} rolePositions Role positions to update
-   * @returns {Promise<Guild>}
-   * @example
-   * guild.roles.setPositions([{ role: roleId, position: updatedRoleIndex }])
-   *  .then(guild => console.log(`Role positions updated for ${guild}`))
-   *  .catch(console.error);
-   */
-  async setPositions(rolePositions) {
-    // Make sure rolePositions are prepared for API
-    rolePositions = rolePositions.map(o => ({
-      id: this.resolveId(o.role),
-      position: o.position,
-    }));
-
-    // Call the API to update role positions
-    await this.client.api.guilds(this.guild.id).roles.patch({
-      data: rolePositions,
-    });
-    return this.client.actions.GuildRolesPositionUpdate.handle({
-      guild_id: this.guild.id,
-      roles: rolePositions,
-    }).guild;
   }
 
   /**

@@ -1,7 +1,6 @@
 'use strict';
 
 const Base = require('./Base');
-const { Error } = require('../errors');
 const Permissions = require('../util/Permissions');
 const RoleFlags = require('../util/RoleFlags');
 const SnowflakeUtil = require('../util/SnowflakeUtil');
@@ -250,90 +249,6 @@ class Role extends Base {
    */
   edit(data, reason) {
     return this.guild.roles.edit(this, data, reason);
-  }
-
-  /**
-   * Returns `channel.permissionsFor(role)`. Returns permissions for a role in a guild channel,
-   * taking into account permission overwrites.
-   * @param {GuildChannel|Snowflake} channel The guild channel to use as context
-   * @param {boolean} [checkAdmin=true] Whether having `ADMINISTRATOR` will return all permissions
-   * @returns {Readonly<Permissions>}
-   */
-  permissionsIn(channel, checkAdmin = true) {
-    channel = this.guild.channels.resolve(channel);
-    if (!channel) throw new Error('GUILD_CHANNEL_RESOLVE');
-    return channel.rolePermissions(this, checkAdmin);
-  }
-
-  /**
-   * Sets a new color for the role.
-   * @param {ColorResolvable} color The color of the role
-   * @param {string} [reason] Reason for changing the role's color
-   * @returns {Promise<Role>}
-   * @example
-   * // Set the color of a role
-   * role.setColor('#FF0000')
-   *   .then(updated => console.log(`Set color of role to ${updated.color}`))
-   *   .catch(console.error);
-   */
-  setColor(color, reason) {
-    return this.edit({ color }, reason);
-  }
-  /**
-   * Sets the permissions of the role.
-   * @param {PermissionResolvable} permissions The permissions of the role
-   * @param {string} [reason] Reason for changing the role's permissions
-   * @returns {Promise<Role>}
-   * @example
-   * // Set the permissions of the role
-   * role.setPermissions([Permissions.FLAGS.KICK_MEMBERS, Permissions.FLAGS.BAN_MEMBERS])
-   *   .then(updated => console.log(`Updated permissions to ${updated.permissions.bitfield}`))
-   *   .catch(console.error);
-   * @example
-   * // Remove all permissions from a role
-   * role.setPermissions(0n)
-   *   .then(updated => console.log(`Updated permissions to ${updated.permissions.bitfield}`))
-   *   .catch(console.error);
-   */
-  setPermissions(permissions, reason) {
-    return this.edit({ permissions }, reason);
-  }
-
-  /**
-   * Sets a new unicode emoji for the role.
-   * @param {?string} unicodeEmoji The new unicode emoji for the role
-   * @param {string} [reason] Reason for changing the role's unicode emoji
-   * @returns {Promise<Role>}
-   * @example
-   * // Set a new unicode emoji for the role
-   * role.setUnicodeEmoji('🤖')
-   *   .then(updated => console.log(`Set unicode emoji for the role to ${updated.unicodeEmoji}`))
-   *   .catch(console.error);
-   */
-  setUnicodeEmoji(unicodeEmoji, reason) {
-    return this.edit({ unicodeEmoji }, reason);
-  }
-
-  /**
-   * Options used to set the position of a role.
-   * @typedef {Object} SetRolePositionOptions
-   * @property {boolean} [relative=false] Whether to change the position relative to its current value or not
-   * @property {string} [reason] The reason for changing the position
-   */
-
-  /**
-   * Sets the new position of the role.
-   * @param {number} position The new position for the role
-   * @param {SetRolePositionOptions} [options] Options for setting the position
-   * @returns {Promise<Role>}
-   * @example
-   * // Set the position of the role
-   * role.setPosition(1)
-   *   .then(updated => console.log(`Role position: ${updated.position}`))
-   *   .catch(console.error);
-   */
-  setPosition(position, options = {}) {
-    return this.guild.roles.setPosition(this, position, options);
   }
 
   /**

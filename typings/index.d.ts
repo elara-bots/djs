@@ -79,7 +79,6 @@ import {
   MessageButtonStyles,
   MessageComponentTypes,
   MessageTypes,
-  MFALevels,
   NSFWLevels,
   OverwriteTypes,
   PremiumTiers,
@@ -202,7 +201,6 @@ export abstract class AnonymousGuild extends BaseGuild {
   protected constructor(client: Client, data: RawAnonymousGuildData, immediatePatch?: boolean);
   public banner: string | null;
   public description: string | null;
-  public nsfwLevel: NSFWLevel;
   public premiumSubscriptionCount: number | null;
   public splash: string | null;
   public vanityURLCode: string | null;
@@ -219,8 +217,6 @@ export abstract class Application extends Base {
   public icon: string | null;
   public id: Snowflake;
   public name: string | null;
-  public roleConnectionsVerificationURL: string | null;
-  public coverURL(options?: StaticImageURLOptions): string | null;
   public fetchAssets(): Promise<ApplicationAsset[]>;
   public iconURL(options?: StaticImageURLOptions): string | null;
   public toJSON(): unknown;
@@ -664,40 +660,25 @@ export class Client<Ready extends boolean = boolean> extends BaseClient {
 export class ClientApplication extends Application {
   private constructor(client: Client, data: RawClientApplicationData);
   public approximateGuildCount: number | null;
-  public botPublic: boolean | null;
-  public botRequireCodeGrant: boolean | null;
   public commands: ApplicationCommandManager;
-  public cover: string | null;
   public flags: Readonly<ApplicationFlags>;
   public guildId: Snowflake | null;
   public readonly guild: Guild | null;
   public tags: string[];
-  public installParams: ClientApplicationInstallParams | null;
-  public customInstallURL: string | null;
   public owner: User | Team | null;
   public readonly partial: boolean;
-  public rpcOrigins: string[];
   public fetch(): Promise<ClientApplication>;
 }
 
 export class ClientPresence extends Presence {
   private constructor(client: Client, data: RawPresenceData);
   private _parse(data: PresenceData): RawPresenceData;
-
   public set(presence: PresenceData): ClientPresence;
 }
 
 export class ClientUser extends User {
-  public mfaEnabled: boolean;
   public readonly presence: ClientPresence;
-  public verified: boolean;
   public edit(data: ClientUserEditData): Promise<this>;
-  public setActivity(options?: ActivityOptions): ClientPresence;
-  public setActivity(name: string, options?: Omit<ActivityOptions, 'name'>): ClientPresence;
-  public setAvatar(avatar: BufferResolvable | Base64Resolvable | null): Promise<this>;
-  public setPresence(data: PresenceData): ClientPresence;
-  public setStatus(status: PresenceStatusData, shardId?: number | number[]): ClientPresence;
-  public setUsername(username: string): Promise<this>;
 }
 
 export class Options extends null {
@@ -954,8 +935,6 @@ export class Guild extends AnonymousGuild {
 
   public afkChannelId: Snowflake | null;
   public afkTimeout: number;
-  public applicationId: Snowflake | null;
-  public maxVideoChannelUsers: number | null;
   public approximateMemberCount: number | null;
   public approximatePresenceCount: number | null;
   public autoModerationRules: AutoModerationRuleManager;
@@ -977,7 +956,6 @@ export class Guild extends AnonymousGuild {
   public readonly me: GuildMember | null;
   public memberCount: number;
   public members: GuildMemberManager;
-  public mfaLevel: MFALevel;
   public ownerId: Snowflake;
   public preferredLocale: string;
   public premiumProgressBarEnabled: boolean;
@@ -1108,7 +1086,6 @@ export abstract class GuildChannel extends Channel {
     checkAdmin?: boolean,
   ): Readonly<Permissions> | null;
   public setParent(channel: CategoryChannelResolvable | null, options?: SetParentOptions): Promise<this>;
-  public setPosition(position: number, options?: SetChannelPositionOptions): Promise<this>;
   public isText(): this is GuildTextBasedChannel;
 }
 
@@ -1296,13 +1273,10 @@ export class Integration extends Base {
   public account: IntegrationAccount;
   public application: IntegrationApplication | null;
   public enabled: boolean;
-  public expireBehavior: number | undefined;
-  public expireGracePeriod: number | undefined;
   public guild: Guild;
   public id: Snowflake | string;
   public name: string;
   public role: Role | undefined;
-  public enableEmoticons: boolean | null;
   public readonly roles: Collection<Snowflake, Role>;
   public syncedAt: number | undefined;
   public syncing: boolean | undefined;
@@ -1318,10 +1292,6 @@ export class IntegrationApplication extends Application {
   public bot: User | null;
   public termsOfServiceURL: string | null;
   public privacyPolicyURL: string | null;
-  public rpcOrigins: string[];
-  public hook: boolean | null;
-  public cover: string | null;
-  public verifyKey: string | null;
 }
 
 export class Intents extends BitField<IntentsString> {
@@ -1582,14 +1552,12 @@ export class Message<Cached extends boolean = boolean> extends Base {
   public fetchWebhook(): Promise<Webhook>;
   public crosspost(): Promise<Message>;
   public fetch(force?: boolean): Promise<Message>;
-  public pin(reason?: string): Promise<Message>;
   public react(emoji: EmojiIdentifierResolvable): Promise<MessageReaction>;
   public reply(options: string | MessagePayload | ReplyMessageOptions): Promise<Message>;
   public resolveComponent(customId: string): MessageActionRowComponent | null;
   public startThread(options: StartThreadOptions): Promise<ThreadChannel>;
   public toJSON(): unknown;
   public toString(): string;
-  public unpin(reason?: string): Promise<Message>;
   public inGuild(): this is Message<true> & this;
 }
 
@@ -2083,11 +2051,6 @@ export class Role extends Base {
   public edit(data: RoleData, reason?: string): Promise<Role>;
   public equals(role: Role): boolean;
   public iconURL(options?: StaticImageURLOptions): string | null;
-  public permissionsIn(channel: NonThreadGuildBasedChannel | Snowflake, checkAdmin?: boolean): Readonly<Permissions>;
-  public setColor(color: ColorResolvable, reason?: string): Promise<Role>;
-  public setPermissions(permissions: PermissionResolvable, reason?: string): Promise<Role>;
-  public setPosition(position: number, options?: SetRolePositionOptions): Promise<Role>;
-  public setUnicodeEmoji(unicodeEmoji: string | null, reason?: string): Promise<Role>;
   public toJSON(): unknown;
   public toString(): RoleMention;
   public static comparePositions(role1: Role, role2: Role): number;
@@ -2522,8 +2485,6 @@ export class ThreadChannel extends TextBasedChannelMixin(Channel, ['fetchWebhook
   ): Readonly<Permissions> | null;
   public fetchOwner(options?: BaseFetchOptions): Promise<ThreadMember | null>;
   public fetchStarterMessage(options?: BaseFetchOptions): Promise<Message | null>;
-  public pin(reason?: string): Promise<ThreadChannel>;
-  public unpin(reason?: string): Promise<ThreadChannel>;
 }
 
 export class ThreadMember<HasMemberData extends boolean = boolean> extends Base {
@@ -2639,14 +2600,6 @@ export class Util extends null {
   public static resolveColor(color: ColorResolvable): number;
   public static resolvePartialEmoji(emoji: EmojiIdentifierResolvable): Partial<APIPartialEmoji> | null;
   public static verifyString(data: string, error?: typeof Error, errorMessage?: string, allowEmpty?: boolean): string;
-  public static setPosition<T extends AnyChannel | Role>(
-    item: T,
-    position: number,
-    relative: boolean,
-    sorted: Collection<Snowflake, T>,
-    route: unknown,
-    reason?: string,
-  ): Promise<{ id: Snowflake; position: number }[]>;
   public static resolveAutoArchiveMaxLimit(guild: Guild): Exclude<ThreadAutoArchiveDuration, 60>;
   public static calculateUserDefaultAvatarIndex(userId: Snowflake): number;
 }
@@ -2993,7 +2946,6 @@ export const Constants: {
   MessageButtonStyles: EnumHolder<typeof MessageButtonStyles>;
   MessageComponentTypes: EnumHolder<typeof MessageComponentTypes>;
   MessageTypes: MessageType[];
-  MFALevels: EnumHolder<typeof MFALevels>;
   NSFWLevels: EnumHolder<typeof NSFWLevels>;
   Opcodes: ConstantsOpcodes;
   OverwriteTypes: EnumHolder<typeof OverwriteTypes>;
@@ -3239,12 +3191,6 @@ export class GuildChannelManager extends CachedManager<Snowflake, GuildBasedChan
     options?: BaseFetchOptions,
   ): Promise<Collection<Snowflake, NonThreadGuildBasedChannel | null>>;
   public fetchWebhooks(channel: GuildChannelResolvable): Promise<Collection<Snowflake, Webhook>>;
-  public setPosition(
-    channel: GuildChannelResolvable,
-    position: number,
-    options?: SetChannelPositionOptions,
-  ): Promise<GuildChannel>;
-  public setPositions(channelPositions: readonly ChannelPosition[]): Promise<Guild>;
   public fetchActiveThreads(cache?: boolean): Promise<FetchedThreads>;
   public delete(channel: GuildChannelResolvable, reason?: string): Promise<void>;
 }
@@ -3279,7 +3225,6 @@ export class GuildEmojiRoleManager extends DataManager<Snowflake, Role, RoleReso
 
 export class GuildManager extends CachedManager<Snowflake, Guild, GuildResolvable> {
   private constructor(client: Client, iterable?: Iterable<RawGuildData>);
-  public create(name: string, options?: GuildCreateOptions): Promise<Guild>;
   public fetch(options: Snowflake | FetchGuildOptions): Promise<Guild>;
   public fetch(options?: FetchGuildsOptions): Promise<Collection<Snowflake, OAuth2Guild>>;
 }
@@ -3404,8 +3349,6 @@ export class MessageManager extends CachedManager<Snowflake, Message, MessageRes
     cacheOptions?: BaseFetchOptions,
   ): Promise<Collection<Snowflake, Message>>;
   public react(message: MessageResolvable, emoji: EmojiIdentifierResolvable): Promise<void>;
-  public pin(message: MessageResolvable, reason?: string): Promise<void>;
-  public unpin(message: MessageResolvable, reason?: string): Promise<void>;
 }
 
 export class PermissionOverwriteManager extends CachedManager<
@@ -3466,8 +3409,6 @@ export class RoleManager extends CachedManager<Snowflake, Role, RoleResolvable> 
   public create(options?: CreateRoleOptions): Promise<Role>;
   public edit(role: RoleResolvable, options: RoleData, reason?: string): Promise<Role>;
   public delete(role: RoleResolvable, reason?: string): Promise<void>;
-  public setPosition(role: RoleResolvable, position: number, options?: SetRolePositionOptions): Promise<Role>;
-  public setPositions(rolePositions: readonly RolePosition[]): Promise<Guild>;
   public comparePositions(role1: RoleResolvable, role2: RoleResolvable): number;
 }
 
@@ -3652,11 +3593,6 @@ export type AllowedPartial = User | Channel | GuildMember | Message | MessageRea
 export type AllowedThreadTypeForNewsChannel = 'GUILD_NEWS_THREAD' | 10;
 
 export type AllowedThreadTypeForTextChannel = 'GUILD_PUBLIC_THREAD' | 'GUILD_PRIVATE_THREAD' | 11 | 12;
-
-export interface ClientApplicationInstallParams {
-  scopes: InviteScope[];
-  permissions: Readonly<Permissions>;
-}
 
 export interface APIErrors {
   UNKNOWN_ACCOUNT: 10001;
@@ -4489,6 +4425,7 @@ export interface ClientPresenceStatusData {
 export interface ClientUserEditData {
   username?: string;
   avatar?: BufferResolvable | Base64Resolvable | null;
+  banner?: BufferResolvable | Base64Resolvable | null;
 }
 
 export interface CloseEvent {
@@ -5189,19 +5126,6 @@ export interface GuildChannelOverwriteOptions {
   type?: number;
 }
 
-export interface GuildCreateOptions {
-  afkChannelId?: Snowflake | number;
-  afkTimeout?: number;
-  channels?: PartialChannelData[];
-  defaultMessageNotifications?: DefaultMessageNotificationLevel | number;
-  explicitContentFilter?: ExplicitContentFilterLevel | number;
-  icon?: BufferResolvable | Base64Resolvable | null;
-  roles?: PartialRoleData[];
-  systemChannelFlags?: SystemChannelFlagsResolvable;
-  systemChannelId?: Snowflake | number;
-  verificationLevel?: VerificationLevel | number;
-}
-
 export interface GuildWidgetSettings {
   enabled: boolean;
   channel: NonThreadGuildBasedChannel | null;
@@ -5787,8 +5711,6 @@ export type MessageTarget =
 
 export type MessageType = keyof typeof MessageTypes;
 
-export type MFALevel = keyof typeof MFALevels;
-
 export interface ModalOptions {
   components:
     | MessageActionRow<ModalActionRowComponent>[]
@@ -5813,8 +5735,6 @@ export interface MultipleShardSpawnOptions {
   delay?: number;
   timeout?: number;
 }
-
-export type NSFWLevel = keyof typeof NSFWLevels;
 
 export interface OverwriteData {
   allow?: PermissionResolvable;

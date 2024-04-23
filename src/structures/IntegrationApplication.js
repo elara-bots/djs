@@ -40,26 +40,6 @@ class IntegrationApplication extends Application {
       this.privacyPolicyURL ??= null;
     }
 
-    if ('rpc_origins' in data) {
-      /**
-       * The Array of RPC origin URLs
-       * @type {string[]}
-       */
-      this.rpcOrigins = data.rpc_origins;
-    } else {
-      this.rpcOrigins ??= [];
-    }
-
-    if ('hook' in data) {
-      /**
-       * Whether the application can be default hooked by the client
-       * @type {?boolean}
-       */
-      this.hook = data.hook;
-    } else {
-      this.hook ??= null;
-    }
-
     if ('cover_image' in data) {
       /**
        * The hash of the application's cover image
@@ -68,16 +48,6 @@ class IntegrationApplication extends Application {
       this.cover = data.cover_image;
     } else {
       this.cover ??= null;
-    }
-
-    if ('verify_key' in data) {
-      /**
-       * The hex-encoded key for verification in interactions and the GameSDK's GetTicket
-       * @type {?string}
-       */
-      this.verifyKey = data.verify_key;
-    } else {
-      this.verifyKey ??= null;
     }
   }
 }

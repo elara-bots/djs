@@ -185,11 +185,6 @@ export const enum MessageComponentTypes {
   TEXT_INPUT = 4,
 }
 
-export const enum MFALevels {
-  NONE = 0,
-  ELEVATED = 1,
-}
-
 export const enum NSFWLevels {
   DEFAULT = 0,
   EXPLICIT = 1,

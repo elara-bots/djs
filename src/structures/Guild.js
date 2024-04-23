@@ -25,7 +25,6 @@ const {
   VerificationLevels,
   ExplicitContentFilterLevels,
   Status,
-  MFALevels,
   PremiumTiers,
 } = require('../util/Constants');
 const DataResolver = require('../util/DataResolver');
@@ -218,14 +217,6 @@ class Guild extends AnonymousGuild {
      * @see {@link https://discord.com/developers/docs/resources/guild#guild-object-guild-features}
      */
 
-    if ('application_id' in data) {
-      /**
-       * The id of the application that created this guild (if applicable)
-       * @type {?Snowflake}
-       */
-      this.applicationId = data.application_id;
-    }
-
     if ('afk_timeout' in data) {
       /**
        * The time in seconds before a user is counted as "away from keyboard"
@@ -282,14 +273,6 @@ class Guild extends AnonymousGuild {
       this.explicitContentFilter = ExplicitContentFilterLevels[data.explicit_content_filter];
     }
 
-    if ('mfa_level' in data) {
-      /**
-       * The required MFA level for this guild
-       * @type {MFALevel}
-       */
-      this.mfaLevel = MFALevels[data.mfa_level];
-    }
-
     if ('joined_at' in data) {
       /**
        * The timestamp the client user joined the guild at
@@ -333,16 +316,6 @@ class Guild extends AnonymousGuild {
       this.maximumPresences = data.max_presences ?? 25_000;
     } else {
       this.maximumPresences ??= null;
-    }
-
-    if ('max_video_channel_users' in data) {
-      /**
-       * The maximum amount of users allowed in a video channel.
-       * @type {?number}
-       */
-      this.maxVideoChannelUsers = data.max_video_channel_users;
-    } else {
-      this.maxVideoChannelUsers ??= null;
     }
 
     if ('approximate_member_count' in data) {

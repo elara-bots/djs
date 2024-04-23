@@ -4,13 +4,6 @@ const Team = require('./Team');
 const Application = require('./interfaces/Application');
 const ApplicationCommandManager = require('../managers/ApplicationCommandManager');
 const ApplicationFlags = require('../util/ApplicationFlags');
-const Permissions = require('../util/Permissions');
-
-/**
- * @typedef {Object} ClientApplicationInstallParams
- * @property {InviteScope[]} scopes The scopes to add the application to the server with
- * @property {Readonly<Permissions>} permissions The permissions this bot will request upon joining
- */
 
 /**
  * Represents a client application.
@@ -35,29 +28,6 @@ class ClientApplication extends Application {
      * @type {string[]}
      */
     this.tags = data.tags ?? [];
-
-    if ('install_params' in data) {
-      /**
-       * Settings for this application's default in-app authorization
-       * @type {?ClientApplicationInstallParams}
-       */
-      this.installParams = {
-        scopes: data.install_params.scopes,
-        permissions: new Permissions(data.install_params.permissions).freeze(),
-      };
-    } else {
-      this.installParams ??= null;
-    }
-
-    if ('custom_install_url' in data) {
-      /**
-       * This application's custom installation URL
-       * @type {?string}
-       */
-      this.customInstallURL = data.custom_install_url;
-    } else {
-      this.customInstallURL = null;
-    }
 
     if ('flags' in data) {
       /**
@@ -85,46 +55,6 @@ class ClientApplication extends Application {
       this.guildId = data.guild_id;
     } else {
       this.guildId ??= null;
-    }
-
-    if ('cover_image' in data) {
-      /**
-       * The hash of the application's cover image
-       * @type {?string}
-       */
-      this.cover = data.cover_image;
-    } else {
-      this.cover ??= null;
-    }
-
-    if ('rpc_origins' in data) {
-      /**
-       * The application's RPC origins, if enabled
-       * @type {string[]}
-       */
-      this.rpcOrigins = data.rpc_origins;
-    } else {
-      this.rpcOrigins ??= [];
-    }
-
-    if ('bot_require_code_grant' in data) {
-      /**
-       * If this application's bot requires a code grant when using the OAuth2 flow
-       * @type {?boolean}
-       */
-      this.botRequireCodeGrant = data.bot_require_code_grant;
-    } else {
-      this.botRequireCodeGrant ??= null;
-    }
-
-    if ('bot_public' in data) {
-      /**
-       * If this application's bot is public
-       * @type {?boolean}
-       */
-      this.botPublic = data.bot_public;
-    } else {
-      this.botPublic ??= null;
     }
 
     /**

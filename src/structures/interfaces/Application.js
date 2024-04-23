@@ -1,6 +1,6 @@
 'use strict';
 
-const { ClientApplicationAssetTypes, Endpoints } = require('../../util/Constants');
+const { ClientApplicationAssetTypes } = require('../../util/Constants');
 const SnowflakeUtil = require('../../util/SnowflakeUtil');
 const Base = require('../Base');
 
@@ -53,16 +53,6 @@ class Application extends Base {
     } else {
       this.icon ??= null;
     }
-
-    if ('role_connections_verification_url' in data) {
-      /**
-       * This application's role connection verification entry point URL
-       * @type {?string}
-       */
-      this.roleConnectionsVerificationURL = data.role_connections_verification_url;
-    } else {
-      this.roleConnectionsVerificationURL ??= null;
-    }
   }
 
   /**
@@ -91,16 +81,6 @@ class Application extends Base {
   iconURL({ format, size } = {}) {
     if (!this.icon) return null;
     return this.client.rest.cdn.AppIcon(this.id, this.icon, { format, size });
-  }
-
-  /**
-   * A link to this application's cover image.
-   * @param {StaticImageURLOptions} [options={}] Options for the Image URL
-   * @returns {?string}
-   */
-  coverURL({ format, size } = {}) {
-    if (!this.cover) return null;
-    return Endpoints.CDN(this.client.options.http.cdn).AppIcon(this.id, this.cover, { format, size });
   }
 
   /**
