@@ -246,51 +246,6 @@ class GuildScheduledEventManager extends CachedManager {
 
     await this.client.api.guilds(this.guild.id, 'scheduled-events', guildScheduledEventId).delete();
   }
-
-  /**
-   * Options used to fetch subscribers of a guild scheduled event
-   * @typedef {Object} FetchGuildScheduledEventSubscribersOptions
-   * @property {number} [limit] The maximum numbers of users to fetch
-   * @property {boolean} [withMember] Whether to fetch guild member data of the users
-   * @property {Snowflake} [before] Consider only users before this user id
-   * @property {Snowflake} [after] Consider only users after this user id
-   * <warn>If both `before` and `after` are provided, only `before` is respected</warn>
-   */
-
-  /**
-   * Represents a subscriber of a {@link GuildScheduledEvent}
-   * @typedef {Object} GuildScheduledEventUser
-   * @property {Snowflake} guildScheduledEventId The id of the guild scheduled event which the user subscribed to
-   * @property {User} user The user that subscribed to the guild scheduled event
-   * @property {?GuildMember} member The guild member associated with the user, if any
-   */
-
-  /**
-   * Fetches subscribers of a guild scheduled event.
-   * @param {GuildScheduledEventResolvable} guildScheduledEvent The guild scheduled event to fetch subscribers of
-   * @param {FetchGuildScheduledEventSubscribersOptions} [options={}] Options for fetching the subscribers
-   * @returns {Promise<Collection<Snowflake, GuildScheduledEventUser>>}
-   */
-  async fetchSubscribers(guildScheduledEvent, options = {}) {
-    const guildScheduledEventId = this.resolveId(guildScheduledEvent);
-    if (!guildScheduledEventId) throw new Error('GUILD_SCHEDULED_EVENT_RESOLVE');
-
-    let { limit, withMember, before, after } = options;
-
-    const data = await this.client.api.guilds(this.guild.id, 'scheduled-events', guildScheduledEventId).users.get({
-      query: { limit, with_member: withMember, before, after },
-    });
-
-    return data.reduce(
-      (coll, rawData) =>
-        coll.set(rawData.user.id, {
-          guildScheduledEventId: rawData.guild_scheduled_event_id,
-          user: this.client.users._add(rawData.user),
-          member: rawData.member ? this.guild.members._add({ ...rawData.member, user: rawData.user }) : null,
-        }),
-      new Collection(),
-    );
-  }
 }
 
 module.exports = GuildScheduledEventManager;

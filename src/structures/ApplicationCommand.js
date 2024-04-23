@@ -27,12 +27,6 @@ class ApplicationCommand extends Base {
     this.applicationId = data.application_id;
 
     /**
-     * The guild this command is part of
-     * @type {?Guild}
-     */
-    this.guild = guild ?? null;
-
-    /**
      * The guild's id this command is part of, this may be non-null when `guild` is `null` if the command
      * was fetched from the `ApplicationCommandManager`
      * @type {?Snowflake}
@@ -52,6 +46,13 @@ class ApplicationCommand extends Base {
     this.type = ApplicationCommandTypes[data.type];
 
     this._patch(data);
+  }
+  /**
+   * The guild this command is part of
+   * @type {?Guild}
+   */
+  get guild() {
+    return this.client.guilds.resolve(this.guildId) ?? null;
   }
 
   _patch(data) {

@@ -18,12 +18,13 @@ class GuildMemberRoleManager extends DataManager {
      * @type {GuildMember}
      */
     this.member = member;
-
-    /**
-     * The Guild this manager belongs to
-     * @type {Guild}
-     */
-    this.guild = member.guild;
+  }
+  /**
+   * The Guild this manager belongs to
+   * @type {Guild}
+   */
+  get guild() {
+    return this.member.guild;
   }
 
   /**

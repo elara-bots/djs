@@ -20,7 +20,6 @@ const RoleManager = require('../managers/RoleManager');
 const StageInstanceManager = require('../managers/StageInstanceManager');
 const VoiceStateManager = require('../managers/VoiceStateManager');
 const {
-  ChannelTypes,
   DefaultMessageNotificationLevels,
   VerificationLevels,
   ExplicitContentFilterLevels,
@@ -28,7 +27,6 @@ const {
 } = require('../util/Constants');
 const DataResolver = require('../util/DataResolver');
 const SystemChannelFlags = require('../util/SystemChannelFlags');
-const { discordSort } = require('../util/Util');
 
 /**
  * Represents a guild (or a server) on Discord.
@@ -277,50 +275,6 @@ class Guild extends AnonymousGuild {
        */
       this.systemChannelFlags = new SystemChannelFlags(data.system_channel_flags).freeze();
     }
-
-    if ('max_members' in data) {
-      /**
-       * The maximum amount of members the guild can have
-       * @type {?number}
-       */
-      this.maximumMembers = data.max_members;
-    } else {
-      this.maximumMembers ??= null;
-    }
-
-    if ('max_presences' in data) {
-      /**
-       * The maximum amount of presences the guild can have
-       * <info>You will need to fetch the guild using {@link Guild#fetch} if you want to receive this parameter</info>
-       * @type {?number}
-       */
-      this.maximumPresences = data.max_presences ?? 25_000;
-    } else {
-      this.maximumPresences ??= null;
-    }
-
-    if ('approximate_member_count' in data) {
-      /**
-       * The approximate amount of members the guild has
-       * <info>You will need to fetch the guild using {@link Guild#fetch} if you want to receive this parameter</info>
-       * @type {?number}
-       */
-      this.approximateMemberCount = data.approximate_member_count;
-    } else {
-      this.approximateMemberCount ??= null;
-    }
-
-    if ('approximate_presence_count' in data) {
-      /**
-       * The approximate amount of presences the guild has
-       * <info>You will need to fetch the guild using {@link Guild#fetch} if you want to receive this parameter</info>
-       * @type {?number}
-       */
-      this.approximatePresenceCount = data.approximate_presence_count;
-    } else {
-      this.approximatePresenceCount ??= null;
-    }
-
     /**
      * The use count of the vanity URL code of the guild, if any
      * <info>You will need to fetch this parameter using {@link Guild#fetchVanityData} if you want to receive it</info>
@@ -468,16 +422,6 @@ class Guild extends AnonymousGuild {
    */
   discoverySplashURL({ format, size } = {}) {
     return this.discoverySplash && this.client.rest.cdn.DiscoverySplash(this.id, this.discoverySplash, format, size);
-  }
-
-  /**
-   * Fetches the owner of the guild.
-   * If the member object isn't needed, use {@link Guild#ownerId} instead.
-   * @param {BaseFetchOptions} [options] The options for fetching the member
-   * @returns {Promise<GuildMember>}
-   */
-  fetchOwner(options) {
-    return this.members.fetch({ ...options, user: this.ownerId });
   }
 
   /**
@@ -765,33 +709,6 @@ class Guild extends AnonymousGuild {
     json.discoverySplashURL = this.discoverySplashURL();
     json.bannerURL = this.bannerURL();
     return json;
-  }
-  /**
-   * Creates a collection of this guild's roles, sorted by their position and ids.
-   * @returns {Collection<Snowflake, Role>}
-   * @private
-   */
-  _sortedRoles() {
-    return discordSort(this.roles.cache);
-  }
-
-  /**
-   * Creates a collection of this guild's or a specific category's channels, sorted by their position and ids.
-   * @param {GuildChannel} [channel] Category to get the channels of
-   * @returns {Collection<Snowflake, GuildChannel>}
-   * @private
-   */
-  _sortedChannels(channel) {
-    const category = channel.type === ChannelTypes.GUILD_CATEGORY;
-    return discordSort(
-      this.channels.cache.filter(
-        c =>
-          (['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_STORE'].includes(channel.type)
-            ? ['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_STORE'].includes(c.type)
-            : c.type === channel.type) &&
-          (category || c.parent === channel.parent),
-      ),
-    );
   }
 }
 

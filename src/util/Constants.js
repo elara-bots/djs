@@ -754,17 +754,6 @@ exports.ThreadChannelTypes = ['GUILD_NEWS_THREAD', 'GUILD_PUBLIC_THREAD', 'GUILD
 exports.VoiceBasedChannelTypes = ['GUILD_VOICE', 'GUILD_STAGE_VOICE'];
 
 /**
- * The types of assets of an application:
- * * SMALL: 1
- * * BIG: 2
- * @typedef {Object<string, number>} ClientApplicationAssetTypes
- */
-exports.ClientApplicationAssetTypes = {
-  SMALL: 1,
-  BIG: 2,
-};
-
-/**
  * A commonly used color:
  * * DEFAULT
  * * WHITE
@@ -1516,7 +1505,6 @@ function createEnum(keys) {
  * @property {Object<AutoModerationRuleTriggerType, number>} AutoModerationRuleTriggerTypes Characterizes the type
  * of content which can trigger the rule.
  * @property {Object<ChannelType, number>} ChannelTypes All available channel types.
- * @property {ClientApplicationAssetTypes} ClientApplicationAssetTypes The types of an {@link ApplicationAsset} object.
  * @property {Object<Color, number>} Colors An object with regularly used colors.
  * @property {Object<DefaultMessageNotificationLevel, number>} DefaultMessageNotificationLevels
  * The value set for a guilds default message notifications.

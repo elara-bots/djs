@@ -1,10 +1,7 @@
 'use strict';
 
-const { ClientApplicationAssetTypes } = require('../../util/Constants');
 const SnowflakeUtil = require('../../util/SnowflakeUtil');
 const Base = require('../Base');
-
-const AssetTypes = Object.keys(ClientApplicationAssetTypes);
 
 /**
  * Represents an OAuth2 Application.
@@ -81,27 +78,6 @@ class Application extends Base {
   iconURL({ format, size } = {}) {
     if (!this.icon) return null;
     return this.client.rest.cdn.AppIcon(this.id, this.icon, { format, size });
-  }
-
-  /**
-   * Asset data.
-   * @typedef {Object} ApplicationAsset
-   * @property {Snowflake} id The asset's id
-   * @property {string} name The asset's name
-   * @property {string} type The asset's type
-   */
-
-  /**
-   * Gets the application's rich presence assets.
-   * @returns {Promise<Array<ApplicationAsset>>}
-   */
-  async fetchAssets() {
-    const assets = await this.client.api.oauth2.applications(this.id).assets.get();
-    return assets.map(a => ({
-      id: a.id,
-      name: a.name,
-      type: AssetTypes[a.type - 1],
-    }));
   }
 
   /**

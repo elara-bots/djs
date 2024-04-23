@@ -293,15 +293,6 @@ class GuildScheduledEvent extends Base {
   }
 
   /**
-   * Fetches subscribers of this guild scheduled event.
-   * @param {FetchGuildScheduledEventSubscribersOptions} [options] Options for fetching the subscribers
-   * @returns {Promise<Collection<Snowflake, GuildScheduledEventUser>>}
-   */
-  fetchSubscribers(options) {
-    return this.guild.scheduledEvents.fetchSubscribers(this.id, options);
-  }
-
-  /**
    * When concatenated with a string, this automatically concatenates the event's URL instead of the object.
    * @returns {string}
    * @example

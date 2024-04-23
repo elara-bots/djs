@@ -436,16 +436,6 @@ class GuildAuditLogsEntry {
     this.executorId = data.user_id;
 
     /**
-     * The user that executed this entry
-     * @type {?User}
-     */
-    this.executor = data.user_id
-      ? guild.client.options.partials.includes(PartialTypes.USER)
-        ? guild.client.users._add({ id: data.user_id })
-        : guild.client.users.resolve(data.user_id) ?? null
-      : null;
-
-    /**
      * An entry in the audit log representing a specific change.
      * @typedef {Object} AuditLogChange
      * @property {string} key The property that was changed, e.g. `nick` for nickname changes
@@ -697,6 +687,17 @@ class GuildAuditLogsEntry {
     } else if (data.target_id) {
       this.target = guild[`${targetType.toLowerCase()}s`]?.resolve(data.target_id) ?? { id: data.target_id };
     }
+  }
+  /**
+   * The user that executed this entry
+   * @type {?User}
+   */
+  get executor() {
+    return this.executorId
+      ? this.client.options.partials.includes(PartialTypes.USER)
+        ? this.client.users._add({ id: this.executorId })
+        : this.client.users.resolve(this.executorId) ?? null
+      : null;
   }
 
   /**

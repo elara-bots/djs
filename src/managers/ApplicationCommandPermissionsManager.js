@@ -21,12 +21,6 @@ class ApplicationCommandPermissionsManager extends BaseManager {
     this.manager = manager;
 
     /**
-     * The guild that this manager acts on
-     * @type {?Guild}
-     */
-    this.guild = manager.guild ?? null;
-
-    /**
      * The id of the guild that this manager acts on
      * @type {?Snowflake}
      */
@@ -37,6 +31,10 @@ class ApplicationCommandPermissionsManager extends BaseManager {
      * @type {?Snowflake}
      */
     this.commandId = manager.id ?? null;
+  }
+
+  get guild() {
+    return this.manager.guild ?? this.manager.client.guilds.resolve(this.guildId) ?? null;
   }
 
   /**

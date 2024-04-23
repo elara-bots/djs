@@ -240,23 +240,6 @@ class ThreadChannel extends Channel {
   }
 
   /**
-   * Fetches the owner of this thread. If the thread member object isn't needed,
-   * use {@link ThreadChannel#ownerId} instead.
-   * @param {BaseFetchOptions} [options] The options for fetching the member
-   * @returns {Promise<?ThreadMember>}
-   */
-  async fetchOwner({ cache = true, force = false } = {}) {
-    if (!force) {
-      const existing = this.members.resolve(this.ownerId);
-      if (existing) return existing;
-    }
-
-    // We cannot fetch a single thread member, as of this commit's date, Discord API responds with 405
-    const members = await this.members.fetch(cache);
-    return members.get(this.ownerId) ?? null;
-  }
-
-  /**
    * Fetches the message that started this thread, if any.
    * <info>The `Promise` will reject if the original message in a forum post is deleted
    * or when the original message in the parent channel is deleted.

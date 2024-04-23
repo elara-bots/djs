@@ -205,7 +205,6 @@ export abstract class Application extends Base {
   public icon: string | null;
   public id: Snowflake;
   public name: string | null;
-  public fetchAssets(): Promise<ApplicationAsset[]>;
   public iconURL(options?: StaticImageURLOptions): string | null;
   public toJSON(): unknown;
   public toString(): string | null;
@@ -557,6 +556,7 @@ export abstract class Channel extends Base {
   public delete(): Promise<this>;
   public fetch(force?: boolean): Promise<this>;
   public isText(): this is TextBasedChannel;
+  public isTextBased(): this is TextBasedChannel;
   public isVoice(): this is BaseGuildVoiceChannel;
   public isThread(): this is ThreadChannel;
   public toString(): ChannelMention;
@@ -887,13 +887,9 @@ export class Emoji extends Base {
 
 export class Guild extends AnonymousGuild {
   private constructor(client: Client, data: RawGuildData);
-  private _sortedRoles(): Collection<Snowflake, Role>;
-  private _sortedChannels(channel: NonThreadGuildBasedChannel): Collection<Snowflake, NonThreadGuildBasedChannel>;
 
   public afkChannelId: Snowflake | null;
   public afkTimeout: number;
-  public approximateMemberCount: number | null;
-  public approximatePresenceCount: number | null;
   public autoModerationRules: AutoModerationRuleManager;
   public available: boolean;
   public bans: GuildBanManager;
@@ -907,8 +903,6 @@ export class Guild extends AnonymousGuild {
   public readonly joinedAt: Date;
   public joinedTimestamp: number;
   public large: boolean;
-  public maximumMembers: number | null;
-  public maximumPresences: number | null;
   public readonly me: GuildMember | null;
   public memberCount: number;
   public members: GuildMemberManager;
@@ -939,7 +933,6 @@ export class Guild extends AnonymousGuild {
     options?: GuildAuditLogsFetchOptions<T>,
   ): Promise<GuildAuditLogs<T>>;
   public fetchIntegrations(): Promise<Collection<Snowflake | string, Integration>>;
-  public fetchOwner(options?: BaseFetchOptions): Promise<GuildMember>;
   public fetchVanityData(): Promise<Vanity>;
   public fetchWebhooks(): Promise<Collection<Snowflake, Webhook>>;
   public leave(): Promise<Guild>;
@@ -1065,6 +1058,7 @@ export class GuildMember extends PartialTextBasedChannel(Base) {
   public readonly displayName: string;
   public flags: Readonly<GuildMemberFlags>;
   public guild: Guild;
+  public guildId: Snowflake | null;
   public readonly id: Snowflake;
   public pending: boolean;
   public readonly communicationDisabledUntil: Date | null;
@@ -1162,9 +1156,6 @@ export class GuildScheduledEvent<S extends GuildScheduledEventStatus = GuildSche
     options: GuildScheduledEventEditOptions<S, T>,
   ): Promise<GuildScheduledEvent<T>>;
   public delete(): Promise<GuildScheduledEvent<S>>;
-  public fetchSubscribers<T extends FetchGuildScheduledEventSubscribersOptions>(
-    options?: T,
-  ): Promise<GuildScheduledEventManagerFetchSubscribersResult<T>>;
   public toString(): string;
   public isActive(): this is GuildScheduledEvent<'ACTIVE'>;
   public isCanceled(): this is GuildScheduledEvent<'CANCELED'>;
@@ -2310,14 +2301,11 @@ export class ForumChannel extends TextBasedChannelMixin(GuildChannel, [
   public type: 'GUILD_FORUM';
   public threads: GuildForumThreadManager;
   public availableTags: GuildForumTag[];
-  public defaultReactionEmoji: DefaultReactionEmoji | null;
   public defaultThreadRateLimitPerUser: number | null;
   public rateLimitPerUser: number | null;
   public defaultAutoArchiveDuration: ThreadAutoArchiveDuration | null;
   public nsfw: boolean;
   public topic: string | null;
-  public defaultSortOrder: SortOrderType | null;
-  public defaultForumLayout: ForumLayoutType;
   public createInvite(options?: CreateInviteOptions): Promise<Invite>;
   public fetchInvites(cache?: boolean): Promise<Collection<string, Invite>>;
 }
@@ -2389,7 +2377,6 @@ export class ThreadChannel extends TextBasedChannelMixin(Channel, ['fetchWebhook
     memberOrRole: GuildMemberResolvable | RoleResolvable,
     checkAdmin?: boolean,
   ): Readonly<Permissions> | null;
-  public fetchOwner(options?: BaseFetchOptions): Promise<ThreadMember | null>;
   public fetchStarterMessage(options?: BaseFetchOptions): Promise<Message | null>;
 }
 
@@ -2732,7 +2719,6 @@ export const Constants: {
   AutoModerationRuleKeywordPresetTypes: EnumHolder<typeof AutoModerationRuleKeywordPresetTypes>;
   AutoModerationRuleTriggerTypes: EnumHolder<typeof AutoModerationRuleTriggerTypes>;
   ChannelTypes: EnumHolder<typeof ChannelTypes>;
-  ClientApplicationAssetTypes: ConstantsClientApplicationAssetTypes;
   Colors: ConstantsColors;
   DefaultMessageNotificationLevels: EnumHolder<typeof DefaultMessageNotificationLevels>;
   Endpoints: {
@@ -3148,10 +3134,6 @@ export class GuildScheduledEventManager extends CachedManager<
     options: GuildScheduledEventEditOptions<S, T>,
   ): Promise<GuildScheduledEvent<T>>;
   public delete(guildScheduledEvent: GuildScheduledEventResolvable): Promise<void>;
-  public fetchSubscribers<T extends FetchGuildScheduledEventSubscribersOptions>(
-    guildScheduledEvent: GuildScheduledEventResolvable,
-    options?: T,
-  ): Promise<GuildScheduledEventManagerFetchSubscribersResult<T>>;
 }
 
 export class GuildStickerManager extends CachedManager<Snowflake, Sticker, StickerResolvable> {
@@ -3612,12 +3594,6 @@ export interface APIRequest {
   route: string;
 }
 
-export interface ApplicationAsset {
-  name: string;
-  id: Snowflake;
-  type: 'BIG' | 'SMALL';
-}
-
 export interface BaseApplicationCommandData {
   name: string;
   nameLocalizations?: LocalizationMap;
@@ -3816,6 +3792,7 @@ export type AutoModerationRuleEventType = keyof typeof AutoModerationRuleEventTy
 
 export class AutoModerationActionExecution {
   private constructor(data: GatewayAutoModerationActionExecutionDispatchData, guild: Guild);
+  public guildId: Snowflake | null;
   public guild: Guild;
   public action: AutoModerationAction;
   public ruleId: Snowflake;
@@ -3833,6 +3810,7 @@ export class AutoModerationActionExecution {
 export class AutoModerationRule extends Base {
   private constructor(client: Client<true>, data: APIAutoModerationRule, guild: Guild);
   public id: Snowflake;
+  public guildId: Snowflake | null;
   public guild: Guild;
   public name: string;
   public creatorId: Snowflake;
@@ -4356,11 +4334,6 @@ export interface CommandInteractionResolvedData<Cached extends CacheType = Cache
   attachments?: Collection<Snowflake, MessageAttachment>;
 }
 
-export interface ConstantsClientApplicationAssetTypes {
-  SMALL: 1;
-  BIG: 2;
-}
-
 export type AutocompleteFocusedOption = Pick<CommandInteractionOption, 'name'> & {
   focused: true;
   type:
@@ -4676,11 +4649,6 @@ export interface FetchGuildScheduledEventOptions extends BaseFetchOptions {
 export interface FetchGuildScheduledEventsOptions {
   cache?: boolean;
   withUserCount?: boolean;
-}
-
-export interface FetchGuildScheduledEventSubscribersOptions {
-  limit?: number;
-  withMember?: boolean;
 }
 
 interface FetchInviteOptions extends BaseFetchOptions {
@@ -5135,11 +5103,6 @@ export type GuildScheduledEventManagerFetchResult<
 > = T extends GuildScheduledEventResolvable | FetchGuildScheduledEventOptions
   ? GuildScheduledEvent
   : Collection<Snowflake, GuildScheduledEvent>;
-
-export type GuildScheduledEventManagerFetchSubscribersResult<T extends FetchGuildScheduledEventSubscribersOptions> =
-  T extends { withMember: true }
-    ? Collection<Snowflake, GuildScheduledEventUser<true>>
-    : Collection<Snowflake, GuildScheduledEventUser<false>>;
 
 export type GuildScheduledEventPrivacyLevel = keyof typeof GuildScheduledEventPrivacyLevels;
 

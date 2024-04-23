@@ -23,12 +23,6 @@ class GuildChannel extends Channel {
     super(guild?.client ?? client, data, false);
 
     /**
-     * The guild the channel is in
-     * @type {Guild}
-     */
-    this.guild = guild;
-
-    /**
      * The id of the guild the channel is in
      * @type {Snowflake}
      */
@@ -42,6 +36,13 @@ class GuildChannel extends Channel {
     this.permissionOverwrites = new PermissionOverwriteManager(this);
 
     if (data && immediatePatch) this._patch(data);
+  }
+  /**
+   * The guild the channel is in
+   * @type {Guild}
+   */
+  get guild() {
+    return this.client.guilds.resolve(this.guildId) ?? null;
   }
 
   _patch(data) {

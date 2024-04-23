@@ -3,8 +3,7 @@
 const GuildChannel = require('./GuildChannel');
 const TextBasedChannel = require('./interfaces/TextBasedChannel');
 const GuildForumThreadManager = require('../managers/GuildForumThreadManager');
-const { SortOrderTypes, ForumLayoutTypes } = require('../util/Constants');
-const { transformAPIGuildForumTag, transformAPIGuildDefaultReaction } = require('../util/Util');
+const { transformAPIGuildForumTag } = require('../util/Util');
 
 /**
  * @typedef {Object} GuildForumTagEmoji
@@ -66,17 +65,6 @@ class ForumChannel extends GuildChannel {
       this.availableTags ??= [];
     }
 
-    if ('default_reaction_emoji' in data) {
-      /**
-       * The emoji to show in the add reaction button on a thread in a guild forum channel
-       * @type {?DefaultReactionEmoji}
-       */
-      this.defaultReactionEmoji =
-        data.default_reaction_emoji && transformAPIGuildDefaultReaction(data.default_reaction_emoji);
-    } else {
-      this.defaultReactionEmoji ??= null;
-    }
-
     if ('default_thread_rate_limit_per_user' in data) {
       /**
        * The initial rate limit per user (slowmode) to set on newly created threads in a channel.
@@ -124,22 +112,6 @@ class ForumChannel extends GuildChannel {
        */
       this.topic = data.topic;
     }
-
-    if ('default_sort_order' in data) {
-      /**
-       * The default sort order mode used to order posts
-       * @type {?SortOrderType}
-       */
-      this.defaultSortOrder = SortOrderTypes[data.default_sort_order];
-    } else {
-      this.defaultSortOrder ??= null;
-    }
-
-    /**
-     * The default layout type used to display posts
-     * @type {ForumLayoutType}
-     */
-    this.defaultForumLayout = ForumLayoutTypes[data.default_forum_layout];
   }
 
   /**

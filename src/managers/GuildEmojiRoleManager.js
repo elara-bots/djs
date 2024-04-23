@@ -18,11 +18,10 @@ class GuildEmojiRoleManager extends DataManager {
      * @type {GuildEmoji}
      */
     this.emoji = emoji;
-    /**
-     * The guild belonging to this manager
-     * @type {Guild}
-     */
-    this.guild = emoji.guild;
+  }
+
+  get guild() {
+    return this.emoji.guild;
   }
 
   /**

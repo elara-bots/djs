@@ -65,9 +65,7 @@ class GuildDeleteAction extends Action {
     }
     const cleanCache = name => {
       if (guild[name].cache.size) {
-        for (const key of guild[name].cache.keys()) {
-          guild[name].cache.delete(key);
-        }
+        guild[name].cache.clear();
       }
     };
     if (guild.channels.cache.size) {

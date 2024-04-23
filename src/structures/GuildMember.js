@@ -18,11 +18,7 @@ class GuildMember extends Base {
   constructor(client, data, guild) {
     super(client);
 
-    /**
-     * The guild that this member is part of
-     * @type {Guild}
-     */
-    this.guild = guild;
+    this.guildId = guild?.id ?? null;
 
     /**
      * The timestamp the member joined the guild at
@@ -61,6 +57,14 @@ class GuildMember extends Base {
      */
     this._roles = [];
     if (data) this._patch(data);
+  }
+
+  /**
+   * The guild that this member is part of
+   * @type {Guild}
+   */
+  get guild() {
+    return this.client.guilds.resolve(this.guildId) ?? null;
   }
 
   _patch(data) {

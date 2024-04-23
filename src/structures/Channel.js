@@ -22,12 +22,11 @@ class Channel extends Base {
   constructor(client, data, immediatePatch = true) {
     super(client);
 
-    const type = ChannelTypes[data?.type];
     /**
      * The type of the channel
      * @type {ChannelType}
      */
-    this.type = type ?? 'UNKNOWN';
+    this.type = ChannelTypes[data?.type] ?? 'UNKNOWN';
 
     if (data && immediatePatch) this._patch(data);
   }
@@ -114,6 +113,13 @@ class Channel extends Base {
    * @returns {boolean}
    */
   isText() {
+    return 'messages' in this;
+  }
+  /**
+   * Indicates whether this channel is {@link TextBasedChannels text-based}.
+   * @returns {boolean}
+   */
+  isTextBased() {
     return 'messages' in this;
   }
 

@@ -7,12 +7,7 @@ const { AutoModerationRuleTriggerTypes } = require('../util/Constants');
  */
 class AutoModerationActionExecution {
   constructor(data, guild) {
-    /**
-     * The guild where this action was executed from.
-     * @type {Guild}
-     */
-    this.guild = guild;
-
+    this.guildId = guild?.id ?? null;
     /**
      * The action that was executed.
      * @type {AutoModerationAction}
@@ -74,6 +69,13 @@ class AutoModerationActionExecution {
      * @type {?string}
      */
     this.matchedContent = data.matched_content ?? null;
+  }
+  /**
+   * The guild where this action was executed from.
+   * @type {Guild}
+   */
+  get guild() {
+    return this.client.guilds.resolve(this.guildId);
   }
 
   /**

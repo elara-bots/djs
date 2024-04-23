@@ -23,11 +23,7 @@ class AutoModerationRule extends Base {
      */
     this.id = data.id;
 
-    /**
-     * The guild this auto moderation rule is for.
-     * @type {Guild}
-     */
-    this.guild = guild;
+    this.guildId = guild?.id ?? null;
 
     /**
      * The user that created this auto moderation rule.
@@ -42,6 +38,14 @@ class AutoModerationRule extends Base {
     this.triggerType = AutoModerationRuleTriggerTypes[data.trigger_type];
 
     this._patch(data);
+  }
+
+  /**
+   * The guild this auto moderation rule is for.
+   * @type {Guild}
+   */
+  get guild() {
+    return this.client.guilds.resolve(this.guildId);
   }
 
   _patch(data) {
