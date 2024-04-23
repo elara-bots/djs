@@ -11,7 +11,7 @@ const { Sticker } = require('./Sticker');
 const Webhook = require('./Webhook');
 const { OverwriteTypes, PartialTypes, AutoModerationRuleTriggerTypes } = require('../util/Constants');
 const SnowflakeUtil = require('../util/SnowflakeUtil');
-const Util = require('../util/Util');
+const { flatten } = require('../util/Util');
 
 /**
  * The target type of an entry. Here are the available types:
@@ -395,7 +395,7 @@ class GuildAuditLogs {
   }
 
   toJSON() {
-    return Util.flatten(this);
+    return flatten(this);
   }
 }
 
@@ -718,7 +718,7 @@ class GuildAuditLogsEntry {
   }
 
   toJSON() {
-    return Util.flatten(this, { createdTimestamp: true });
+    return flatten(this, { createdTimestamp: true });
   }
 }
 

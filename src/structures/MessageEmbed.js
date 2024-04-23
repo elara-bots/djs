@@ -1,7 +1,7 @@
 'use strict';
 
 const { RangeError } = require('../errors');
-const Util = require('../util/Util');
+const { verifyString, resolveColor, cloneObject } = require('../util/Util');
 
 /**
  * Represents an embed in a message (image/video preview, rich embed, etc.)
@@ -75,7 +75,7 @@ class MessageEmbed {
      * The color of this embed
      * @type {?number}
      */
-    this.color = 'color' in data ? Util.resolveColor(data.color) : null;
+    this.color = 'color' in data ? resolveColor(data.color) : null;
 
     /**
      * The timestamp of this embed
@@ -97,7 +97,7 @@ class MessageEmbed {
      */
     this.fields = [];
     if (data.fields) {
-      this.fields = skipValidation ? data.fields.map(Util.cloneObject) : this.constructor.normalizeFields(data.fields);
+      this.fields = skipValidation ? data.fields.map(cloneObject) : this.constructor.normalizeFields(data.fields);
     }
 
     /**
@@ -374,7 +374,7 @@ class MessageEmbed {
     }
 
     const { name, url, iconURL } = options;
-    this.author = { name: Util.verifyString(name, RangeError, 'EMBED_AUTHOR_NAME'), url, iconURL };
+    this.author = { name: verifyString(name, RangeError, 'EMBED_AUTHOR_NAME'), url, iconURL };
     return this;
   }
 
@@ -384,7 +384,7 @@ class MessageEmbed {
    * @returns {MessageEmbed}
    */
   setColor(color) {
-    this.color = Util.resolveColor(color);
+    this.color = resolveColor(color);
     return this;
   }
 
@@ -394,7 +394,7 @@ class MessageEmbed {
    * @returns {MessageEmbed}
    */
   setDescription(description) {
-    this.description = Util.verifyString(description, RangeError, 'EMBED_DESCRIPTION');
+    this.description = verifyString(description, RangeError, 'EMBED_DESCRIPTION');
     return this;
   }
 
@@ -424,7 +424,7 @@ class MessageEmbed {
     }
 
     const { text, iconURL } = options;
-    this.footer = { text: Util.verifyString(text, RangeError, 'EMBED_FOOTER_TEXT'), iconURL };
+    this.footer = { text: verifyString(text, RangeError, 'EMBED_FOOTER_TEXT'), iconURL };
     return this;
   }
 
@@ -466,7 +466,7 @@ class MessageEmbed {
    * @returns {MessageEmbed}
    */
   setTitle(title) {
-    this.title = Util.verifyString(title, RangeError, 'EMBED_TITLE');
+    this.title = verifyString(title, RangeError, 'EMBED_TITLE');
     return this;
   }
 
@@ -516,8 +516,8 @@ class MessageEmbed {
    */
   static normalizeField(name, value, inline = false) {
     return {
-      name: Util.verifyString(name, RangeError, 'EMBED_FIELD_NAME', false),
-      value: Util.verifyString(value, RangeError, 'EMBED_FIELD_VALUE', false),
+      name: verifyString(name, RangeError, 'EMBED_FIELD_NAME', false),
+      value: verifyString(value, RangeError, 'EMBED_FIELD_VALUE', false),
       inline,
     };
   }

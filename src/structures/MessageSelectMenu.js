@@ -2,7 +2,7 @@
 
 const BaseMessageComponent = require('./BaseMessageComponent');
 const { MessageComponentTypes } = require('../util/Constants');
-const Util = require('../util/Util');
+const { verifyString, resolvePartialEmoji } = require('../util/Util');
 
 /**
  * Represents a select menu message component
@@ -90,7 +90,7 @@ class MessageSelectMenu extends BaseMessageComponent {
    * @returns {MessageSelectMenu}
    */
   setCustomId(customId) {
-    this.customId = Util.verifyString(customId, RangeError, 'SELECT_MENU_CUSTOM_ID');
+    this.customId = verifyString(customId, RangeError, 'SELECT_MENU_CUSTOM_ID');
     return this;
   }
 
@@ -131,7 +131,7 @@ class MessageSelectMenu extends BaseMessageComponent {
    * @returns {MessageSelectMenu}
    */
   setPlaceholder(placeholder) {
-    this.placeholder = Util.verifyString(placeholder, RangeError, 'SELECT_MENU_PLACEHOLDER');
+    this.placeholder = verifyString(placeholder, RangeError, 'SELECT_MENU_PLACEHOLDER');
     return this;
   }
 
@@ -191,10 +191,10 @@ class MessageSelectMenu extends BaseMessageComponent {
   static normalizeOption(option) {
     let { label, value, description, emoji } = option;
 
-    label = Util.verifyString(label, RangeError, 'SELECT_OPTION_LABEL');
-    value = Util.verifyString(value, RangeError, 'SELECT_OPTION_VALUE');
-    emoji = emoji ? Util.resolvePartialEmoji(emoji) : null;
-    description = description ? Util.verifyString(description, RangeError, 'SELECT_OPTION_DESCRIPTION', true) : null;
+    label = verifyString(label, RangeError, 'SELECT_OPTION_LABEL');
+    value = verifyString(value, RangeError, 'SELECT_OPTION_VALUE');
+    emoji = emoji ? resolvePartialEmoji(emoji) : null;
+    description = description ? verifyString(description, RangeError, 'SELECT_OPTION_DESCRIPTION', true) : null;
 
     return { label, value, description, emoji, default: option.default ?? false };
   }

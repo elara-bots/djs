@@ -18,7 +18,7 @@ const { InteractionTypes, MessageTypes, SystemMessageTypes, MaxBulkDeletableMess
 const MessageFlags = require('../util/MessageFlags');
 const Permissions = require('../util/Permissions');
 const SnowflakeUtil = require('../util/SnowflakeUtil');
-const Util = require('../util/Util');
+const { cleanContent, resolvePartialEmoji } = require('../util/Util');
 
 /**
  * Represents a message on Discord.
@@ -458,7 +458,7 @@ class Message extends Base {
    */
   get cleanContent() {
     // eslint-disable-next-line eqeqeq
-    return this.content != null ? Util.cleanContent(this.content, this.channel) : null;
+    return this.content != null ? cleanContent(this.content, this.channel) : null;
   }
 
   /**
@@ -744,7 +744,7 @@ class Message extends Base {
         [this.client.actions.injectedUser]: this.client.user,
         [this.client.actions.injectedChannel]: this.channel,
         [this.client.actions.injectedMessage]: this,
-        emoji: Util.resolvePartialEmoji(emoji),
+        emoji: resolvePartialEmoji(emoji),
       },
       true,
     ).reaction;

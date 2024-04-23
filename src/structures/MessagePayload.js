@@ -6,7 +6,7 @@ const MessageEmbed = require('./MessageEmbed');
 const { RangeError } = require('../errors');
 const DataResolver = require('../util/DataResolver');
 const MessageFlags = require('../util/MessageFlags');
-const Util = require('../util/Util');
+const { verifyString, cloneObject, basename, resolvePartialEmoji } = require('../util/Util');
 
 /**
  * Represents a message to be sent to the API.
@@ -111,7 +111,7 @@ class MessagePayload {
     if (this.options.content === null) {
       content = '';
     } else if (typeof this.options.content !== 'undefined') {
-      content = Util.verifyString(this.options.content, RangeError, 'MESSAGE_CONTENT_TYPE', false);
+      content = verifyString(this.options.content, RangeError, 'MESSAGE_CONTENT_TYPE', false);
     }
 
     return content;
@@ -169,7 +169,7 @@ class MessagePayload {
         : this.options.allowedMentions;
 
     if (allowedMentions) {
-      allowedMentions = Util.cloneObject(allowedMentions);
+      allowedMentions = cloneObject(allowedMentions);
       allowedMentions.replied_user = allowedMentions.repliedUser;
       delete allowedMentions.repliedUser;
     }
@@ -203,7 +203,7 @@ class MessagePayload {
           text: this.options.poll.question,
         },
         answers: this.options.poll.answers.map(answer => ({
-          poll_media: { text: answer.text, emoji: Util.resolvePartialEmoji(answer.emoji) },
+          poll_media: { text: answer.text, emoji: resolvePartialEmoji(answer.emoji) },
         })),
         duration: this.options.poll.duration,
         allow_multiselect: this.options.poll.allowMultiselect,
@@ -253,11 +253,11 @@ class MessagePayload {
 
     const findName = thing => {
       if (typeof thing === 'string') {
-        return Util.basename(thing);
+        return basename(thing);
       }
 
       if (thing.path) {
-        return Util.basename(thing.path);
+        return basename(thing.path);
       }
 
       return 'file.jpg';

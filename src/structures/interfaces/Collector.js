@@ -4,7 +4,7 @@ const EventEmitter = require('node:events');
 const { setTimeout } = require('node:timers');
 const { Collection } = require('@discordjs/collection');
 const { TypeError } = require('../../errors');
-const Util = require('../../util/Util');
+const { flatten } = require('../../util/Util');
 
 /**
  * Filter to be applied to the collector.
@@ -263,7 +263,7 @@ class Collector extends EventEmitter {
   }
 
   toJSON() {
-    return Util.flatten(this);
+    return flatten(this);
   }
 
   /* eslint-disable no-empty-function */

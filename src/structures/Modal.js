@@ -1,7 +1,7 @@
 'use strict';
 
 const BaseMessageComponent = require('./BaseMessageComponent');
-const Util = require('../util/Util');
+const { verifyString } = require('../util/Util');
 
 /**
  * Represents a modal (form) to be shown in response to an interaction
@@ -65,7 +65,7 @@ class Modal {
    * @returns {Modal}
    */
   setCustomId(customId) {
-    this.customId = Util.verifyString(customId, RangeError, 'MODAL_CUSTOM_ID');
+    this.customId = verifyString(customId, RangeError, 'MODAL_CUSTOM_ID');
     return this;
   }
 
@@ -87,7 +87,7 @@ class Modal {
    * @returns {Modal}
    */
   setTitle(title) {
-    this.title = Util.verifyString(title, RangeError, 'MODAL_TITLE');
+    this.title = verifyString(title, RangeError, 'MODAL_TITLE');
     return this;
   }
 

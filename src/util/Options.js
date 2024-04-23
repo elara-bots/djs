@@ -1,6 +1,7 @@
 'use strict';
 
 const process = require('node:process');
+const { archivedThreadSweepFilter } = require('./Util');
 
 /**
  * Rate limit data
@@ -261,15 +262,15 @@ class Options extends null {
       MessageManager: 200,
       ChannelManager: {
         sweepInterval: 3600,
-        sweepFilter: require('./Util').archivedThreadSweepFilter(),
+        sweepFilter: archivedThreadSweepFilter(),
       },
       GuildChannelManager: {
         sweepInterval: 3600,
-        sweepFilter: require('./Util').archivedThreadSweepFilter(),
+        sweepFilter: archivedThreadSweepFilter(),
       },
       ThreadManager: {
         sweepInterval: 3600,
-        sweepFilter: require('./Util').archivedThreadSweepFilter(),
+        sweepFilter: archivedThreadSweepFilter(),
       },
     };
   }

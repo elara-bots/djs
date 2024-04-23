@@ -3,7 +3,7 @@
 const GuildEmoji = require('./GuildEmoji');
 const ReactionEmoji = require('./ReactionEmoji');
 const ReactionUserManager = require('../managers/ReactionUserManager');
-const Util = require('../util/Util');
+const { flatten } = require('../util/Util');
 
 /**
  * Represents a reaction to a message.
@@ -107,7 +107,7 @@ class MessageReaction {
   }
 
   toJSON() {
-    return Util.flatten(this, { emoji: 'emojiId', message: 'messageId' });
+    return flatten(this, { emoji: 'emojiId', message: 'messageId' });
   }
 
   _add(user) {

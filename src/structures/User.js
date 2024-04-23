@@ -5,7 +5,7 @@ const TextBasedChannel = require('./interfaces/TextBasedChannel');
 const { Error } = require('../errors');
 const SnowflakeUtil = require('../util/SnowflakeUtil');
 const UserFlags = require('../util/UserFlags');
-const Util = require('../util/Util');
+const { calculateUserDefaultAvatarIndex } = require('../util/Util');
 
 /**
  * Represents a user on Discord.
@@ -167,7 +167,7 @@ class User extends Base {
    * @readonly
    */
   get defaultAvatarURL() {
-    const index = this.discriminator === '0' ? Util.calculateUserDefaultAvatarIndex(this.id) : this.discriminator % 5;
+    const index = this.discriminator === '0' ? calculateUserDefaultAvatarIndex(this.id) : this.discriminator % 5;
     return this.client.rest.cdn.DefaultAvatar(index);
   }
 

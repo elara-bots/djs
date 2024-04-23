@@ -2,7 +2,7 @@
 
 const { Collection } = require('@discordjs/collection');
 const { ChannelTypes } = require('../util/Constants');
-const Util = require('../util/Util');
+const { flatten } = require('../util/Util');
 
 /**
  * Keeps track of mentions in a {@link Message}.
@@ -239,7 +239,7 @@ class MessageMentions {
   }
 
   toJSON() {
-    return Util.flatten(this, {
+    return flatten(this, {
       members: true,
       channels: true,
     });

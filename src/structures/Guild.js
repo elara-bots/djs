@@ -29,7 +29,7 @@ const {
 } = require('../util/Constants');
 const DataResolver = require('../util/DataResolver');
 const SystemChannelFlags = require('../util/SystemChannelFlags');
-const Util = require('../util/Util');
+const { discordSort } = require('../util/Util');
 
 /**
  * Represents a guild (or a server) on Discord.
@@ -834,7 +834,7 @@ class Guild extends AnonymousGuild {
    * @private
    */
   _sortedRoles() {
-    return Util.discordSort(this.roles.cache);
+    return discordSort(this.roles.cache);
   }
 
   /**
@@ -845,7 +845,7 @@ class Guild extends AnonymousGuild {
    */
   _sortedChannels(channel) {
     const category = channel.type === ChannelTypes.GUILD_CATEGORY;
-    return Util.discordSort(
+    return discordSort(
       this.channels.cache.filter(
         c =>
           (['GUILD_TEXT', 'GUILD_NEWS', 'GUILD_STORE'].includes(channel.type)

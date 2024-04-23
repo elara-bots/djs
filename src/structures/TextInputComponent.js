@@ -3,7 +3,7 @@
 const BaseMessageComponent = require('./BaseMessageComponent');
 const { RangeError } = require('../errors');
 const { TextInputStyles, MessageComponentTypes } = require('../util/Constants');
-const Util = require('../util/Util');
+const { verifyString } = require('../util/Util');
 
 /**
  * Represents a text input component in a modal
@@ -88,7 +88,7 @@ class TextInputComponent extends BaseMessageComponent {
    * @returns {TextInputComponent}
    */
   setCustomId(customId) {
-    this.customId = Util.verifyString(customId, RangeError, 'TEXT_INPUT_CUSTOM_ID');
+    this.customId = verifyString(customId, RangeError, 'TEXT_INPUT_CUSTOM_ID');
     return this;
   }
 
@@ -98,7 +98,7 @@ class TextInputComponent extends BaseMessageComponent {
    * @returns {TextInputComponent}
    */
   setLabel(label) {
-    this.label = Util.verifyString(label, RangeError, 'TEXT_INPUT_LABEL');
+    this.label = verifyString(label, RangeError, 'TEXT_INPUT_LABEL');
     return this;
   }
 
@@ -138,7 +138,7 @@ class TextInputComponent extends BaseMessageComponent {
    * @returns {TextInputComponent}
    */
   setPlaceholder(placeholder) {
-    this.placeholder = Util.verifyString(placeholder, RangeError, 'TEXT_INPUT_PLACEHOLDER');
+    this.placeholder = verifyString(placeholder, RangeError, 'TEXT_INPUT_PLACEHOLDER');
     return this;
   }
 
@@ -158,7 +158,7 @@ class TextInputComponent extends BaseMessageComponent {
    * @returns {TextInputComponent}
    */
   setValue(value) {
-    this.value = Util.verifyString(value, RangeError, 'TEXT_INPUT_VALUE');
+    this.value = verifyString(value, RangeError, 'TEXT_INPUT_VALUE');
     return this;
   }
 
