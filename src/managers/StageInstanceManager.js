@@ -138,7 +138,7 @@ class StageInstanceManager extends CachedManager {
     });
 
     if (this.cache.has(data.id)) {
-      const clone = this.cache.get(data.id)._clone();
+      const clone = this.resolve(data.id)._clone();
       clone._patch(data);
       return clone;
     }

@@ -6,7 +6,7 @@ const { Events } = require('../../util/Constants');
 class WebhooksUpdate extends Action {
   handle(data) {
     const client = this.client;
-    const channel = client.channels.cache.get(data.channel_id);
+    const channel = client.channels.resolve(data.channel_id);
     /**
      * Emitted whenever a channel has its webhooks changed.
      * @event Client#webhookUpdate

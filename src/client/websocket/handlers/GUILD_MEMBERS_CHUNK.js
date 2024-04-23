@@ -4,7 +4,7 @@ const { Collection } = require('@discordjs/collection');
 const { Events } = require('../../../util/Constants');
 
 module.exports = (client, { d: data }) => {
-  const guild = client.guilds.cache.get(data.guild_id);
+  const guild = client.guilds.resolve(data.guild_id);
   if (!guild) return;
   const members = new Collection();
 

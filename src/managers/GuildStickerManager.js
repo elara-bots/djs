@@ -110,7 +110,7 @@ class GuildStickerManager extends CachedManager {
       reason,
     });
 
-    const existing = this.cache.get(stickerId);
+    const existing = this.resolve(stickerId);
     if (existing) {
       const clone = existing._clone();
       clone._patch(d);
@@ -151,7 +151,7 @@ class GuildStickerManager extends CachedManager {
   async fetch(id, { cache = true, force = false } = {}) {
     if (id) {
       if (!force) {
-        const existing = this.cache.get(id);
+        const existing = this.resolve(id);
         if (existing) return existing;
       }
       const sticker = await this.client.api.guilds(this.guild.id).stickers(id).get();

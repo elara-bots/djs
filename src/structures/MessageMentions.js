@@ -71,7 +71,7 @@ class MessageMentions {
       const guild = message.guild;
       if (guild) {
         for (const mention of roles) {
-          const role = guild.roles.cache.get(mention);
+          const role = guild.roles.resolve(mention);
           if (role) this.roles.set(role.id, role);
         }
       }
@@ -169,7 +169,7 @@ class MessageMentions {
     this._channels = new Collection();
     let matches;
     while ((matches = this.constructor.CHANNELS_PATTERN.exec(this._content)) !== null) {
-      const chan = this.client.channels.cache.get(matches[1]);
+      const chan = this.client.channels.resolve(matches[1]);
       if (chan) this._channels.set(chan.id, chan);
     }
     return this._channels;
@@ -186,7 +186,7 @@ class MessageMentions {
     this._parsedUsers = new Collection();
     let matches;
     while ((matches = this.constructor.USERS_PATTERN.exec(this._content)) !== null) {
-      const user = this.client.users.cache.get(matches[1]);
+      const user = this.client.users.resolve(matches[1]);
       if (user) this._parsedUsers.set(user.id, user);
     }
     return this._parsedUsers;

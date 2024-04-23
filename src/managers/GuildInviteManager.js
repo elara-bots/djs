@@ -143,7 +143,7 @@ class GuildInviteManager extends CachedManager {
 
   async _fetchSingle({ code, cache, force = false }) {
     if (!force) {
-      const existing = this.cache.get(code);
+      const existing = this.resolve(code);
       if (existing) return existing;
     }
 

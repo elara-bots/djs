@@ -114,8 +114,8 @@ class GuildChannel extends Channel {
 
     // Compare all overwrites
     return [...overwriteIds].every(key => {
-      const channelVal = this.permissionOverwrites.cache.get(key);
-      const parentVal = this.parent.permissionOverwrites.cache.get(key);
+      const channelVal = this.permissionOverwrites.resolve(key);
+      const parentVal = this.parent.permissionOverwrites.resolve(key);
 
       // Handle empty overwrite
       if (
@@ -242,8 +242,8 @@ class GuildChannel extends Channel {
       return new Permissions(Permissions.ALL).freeze();
     }
 
-    const everyoneOverwrites = this.permissionOverwrites.cache.get(this.guild.id);
-    const roleOverwrites = this.permissionOverwrites.cache.get(role.id);
+    const everyoneOverwrites = this.permissionOverwrites.resolve(this.guild.id);
+    const roleOverwrites = this.permissionOverwrites.resolve(role.id);
 
     return role.permissions
       .remove(everyoneOverwrites?.deny ?? Permissions.defaultBit)

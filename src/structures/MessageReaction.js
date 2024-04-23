@@ -100,7 +100,7 @@ class MessageReaction {
    */
   async fetch() {
     const message = await this.message.fetch();
-    const existing = message.reactions.cache.get(this.emoji.id ?? this.emoji.name);
+    const existing = message.reactions.resolve(this.emoji.id ?? this.emoji.name);
     // The reaction won't get set when it has been completely removed
     this._patch(existing ?? { count: 0 });
     return this;

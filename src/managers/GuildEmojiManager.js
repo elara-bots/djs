@@ -89,7 +89,7 @@ class GuildEmojiManager extends BaseGuildEmojiManager {
   async fetch(id, { cache = true, force = false } = {}) {
     if (id) {
       if (!force) {
-        const existing = this.cache.get(id);
+        const existing = this.resolve(id);
         if (existing) return existing;
       }
       const emoji = await this.client.api.guilds(this.guild.id).emojis(id).get();
@@ -135,7 +135,7 @@ class GuildEmojiManager extends BaseGuildEmojiManager {
         },
         reason,
       });
-    const existing = this.cache.get(id);
+    const existing = this.resolve(id);
     if (existing) {
       const clone = existing._clone();
       clone._patch(newData);

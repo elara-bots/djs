@@ -10,7 +10,7 @@ class MessageCreateAction extends Action {
     if (channel) {
       if (!channel.isText()) return {};
 
-      const existing = channel.messages.cache.get(data.id);
+      const existing = channel.messages.resolve(data.id);
       if (existing && existing.author?.id !== this.client.user.id) return { message: existing };
       const message = existing ?? channel.messages._add(data);
 

@@ -11,13 +11,12 @@ class IntegrationApplication extends Application {
     super._patch(data);
 
     if ('bot' in data) {
-      /**
-       * The bot user for this application
-       * @type {?User}
-       */
-      this.bot = this.client.users._add(data.bot);
+      this.botId = data.bot?.id;
+      if (!this.client.users.cache.has(this.botId)) {
+        this.client.users._add(data.bot);
+      }
     } else {
-      this.bot ??= null;
+      this.botId ??= null;
     }
 
     if ('terms_of_service_url' in data) {
@@ -49,6 +48,10 @@ class IntegrationApplication extends Application {
     } else {
       this.cover ??= null;
     }
+  }
+
+  get bot() {
+    return this.client.users.resolve(this.botId);
   }
 }
 

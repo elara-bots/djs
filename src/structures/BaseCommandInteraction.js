@@ -66,7 +66,7 @@ class BaseCommandInteraction extends Interaction {
    */
   get command() {
     const id = this.commandId;
-    return this.guild?.commands.cache.get(id) ?? this.client.application.commands.cache.get(id) ?? null;
+    return this.guild?.commands.resolve(id) ?? this.client.application.commands.resolve(id) ?? null;
   }
 
   /**

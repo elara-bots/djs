@@ -1,6 +1,5 @@
 'use strict';
 
-const Team = require('./Team');
 const Application = require('./interfaces/Application');
 const ApplicationCommandManager = require('../managers/ApplicationCommandManager');
 const ApplicationFlags = require('../util/ApplicationFlags');
@@ -61,11 +60,7 @@ class ClientApplication extends Application {
      * The owner of this OAuth application
      * @type {?(User|Team)}
      */
-    this.owner = data.team
-      ? new Team(this.client, data.team)
-      : data.owner
-      ? this.client.users._add(data.owner)
-      : this.owner ?? null;
+    this.owner = data.team ? null : data.owner ? this.client.users._add(data.owner) : this.owner ?? null;
   }
 
   /**
@@ -74,7 +69,7 @@ class ClientApplication extends Application {
    * @readonly
    */
   get guild() {
-    return this.client.guilds.cache.get(this.guildId) ?? null;
+    return this.client.guilds.resolve(this.guildId) ?? null;
   }
 
   /**

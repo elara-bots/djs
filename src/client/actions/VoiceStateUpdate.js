@@ -7,16 +7,16 @@ const { Events } = require('../../util/Constants');
 class VoiceStateUpdate extends Action {
   handle(data) {
     const client = this.client;
-    const guild = client.guilds.cache.get(data.guild_id);
+    const guild = client.guilds.resolve(data.guild_id);
     if (guild) {
       // Update the state
       const oldState =
-        guild.voiceStates.cache.get(data.user_id)?._clone() ?? new VoiceState(guild, { user_id: data.user_id });
+        guild.voiceStates.resolve(data.user_id)?._clone() ?? new VoiceState(guild, { user_id: data.user_id });
 
       const newState = guild.voiceStates._add(data);
 
       // Get the member
-      let member = guild.members.cache.get(data.user_id);
+      let member = guild.members.resolve(data.user_id);
       if (member && data.member) {
         member._patch(data.member);
       } else if (data.member?.user && data.member.joined_at) {

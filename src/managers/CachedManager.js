@@ -51,7 +51,7 @@ class CachedManager extends DataManager {
   }
 
   _add(data, cache = true, { id, extras = [] } = {}) {
-    const existing = this.cache.get(id ?? data.id);
+    const existing = this.resolve(id ?? data.id);
     if (existing) {
       if (cache) {
         existing._patch(data);

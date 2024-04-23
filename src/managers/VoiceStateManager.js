@@ -25,7 +25,7 @@ class VoiceStateManager extends CachedManager {
    */
 
   _add(data, cache = true) {
-    const existing = this.cache.get(data.user_id);
+    const existing = this.resolve(data.user_id);
     if (existing) return existing._patch(data);
 
     const entry = new this.holds(this.guild, data);

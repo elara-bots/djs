@@ -247,7 +247,7 @@ class ThreadChannel extends Channel {
    */
   async fetchOwner({ cache = true, force = false } = {}) {
     if (!force) {
-      const existing = this.members.cache.get(this.ownerId);
+      const existing = this.members.resolve(this.ownerId);
       if (existing) return existing;
     }
 

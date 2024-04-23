@@ -8,8 +8,6 @@ const { Error } = require('../errors');
 const { Endpoints } = require('../util/Constants');
 const Permissions = require('../util/Permissions');
 
-// TODO: Convert `inviter` and `channel` in this class to a getter.
-
 /**
  * Represents an invitation to a guild channel.
  * @extends {Base}
@@ -115,17 +113,11 @@ class Invite extends Base {
        * @type {?Snowflake}
        */
       this.inviterId = data.inviter_id;
-      this.inviter = this.client.users.resolve(data.inviter_id);
     } else {
       this.inviterId ??= null;
     }
 
     if ('inviter' in data) {
-      /**
-       * The user who created this invite
-       * @type {?User}
-       */
-      this.inviter ??= this.client.users._add(data.inviter);
       this.inviterId = data.inviter.id;
     } else {
       this.inviter ??= null;
@@ -175,15 +167,10 @@ class Invite extends Base {
        * @type {Snowflake}
        */
       this.channelId = data.channel_id;
-      this.channel = this.client.channels.cache.get(data.channel_id);
+      this.channel = this.client.channels.resolve(data.channel_id);
     }
 
     if ('channel' in data) {
-      /**
-       * The channel this invite is for
-       * @type {Channel}
-       */
-      this.channel ??= this.client.channels._add(data.channel, this.guild, { cache: false });
       this.channelId ??= data.channel.id;
     }
 
@@ -222,6 +209,21 @@ class Invite extends Base {
     } else {
       this.guildScheduledEvent ??= null;
     }
+  }
+  /**
+   * The channel this invite is for
+   * @type {Channel}
+   */
+  get channel() {
+    return this.client.channels.resolve(this.channelId);
+  }
+
+  /**
+   * The user who created this invite
+   * @type {?User}
+   */
+  get inviter() {
+    return this.client.users.resolve(this.inviterId);
   }
 
   /**

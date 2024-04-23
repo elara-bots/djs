@@ -28,8 +28,6 @@ class User extends Base {
 
     this.flags = null;
 
-    this.premiumType = 0;
-
     this._patch(data);
   }
 
@@ -42,16 +40,6 @@ class User extends Base {
       this.username = data.username;
     } else {
       this.username ??= null;
-    }
-
-    if ('premium_type' in data) {
-      /**
-       * The Nitro type for the user.
-       * @type {number}
-       */
-      this.premiumType = data.premium_type;
-    } else {
-      this.premiumType ??= 0;
     }
 
     if ('global_name' in data) {
@@ -194,17 +182,6 @@ class User extends Base {
   }
 
   /**
-   * The hexadecimal version of the user accent color, with a leading hash
-   * <info>The user must be force fetched for this property to be present</info>
-   * @type {?string}
-   * @readonly
-   */
-  get hexAccentColor() {
-    if (typeof this.accentColor !== 'number') return this.accentColor;
-    return `#${this.accentColor.toString(16).padStart(6, '0')}`;
-  }
-
-  /**
    * A link to the user's banner.
    * <info>This method will throw an error if called before the user is force fetched.
    * See {@link User#banner} for more info</info>
@@ -257,14 +234,6 @@ class User extends Base {
    */
   createDM(force = false) {
     return this.client.users.createDM(this.id, force);
-  }
-
-  /**
-   * Deletes a DM channel (if one exists) between the client and the user. Resolves with the channel if successful.
-   * @returns {Promise<DMChannel>}
-   */
-  deleteDM() {
-    return this.client.users.deleteDM(this.id);
   }
 
   /**
@@ -332,7 +301,6 @@ class User extends Base {
       {
         createdTimestamp: true,
         defaultAvatarURL: true,
-        hexAccentColor: true,
         tag: true,
       },
       ...props,

@@ -197,7 +197,7 @@ class Webhook {
       query: { thread_id: messagePayload.options.threadId, wait: true },
       auth: false,
     });
-    return this.client.channels?.cache.get(d.channel_id)?.messages._add(d, false) ?? d;
+    return this.client.channels?.resolve(d.channel_id)?.messages._add(d, false) ?? d;
   }
 
   /**
@@ -264,7 +264,7 @@ class Webhook {
         },
         auth: false,
       });
-    return this.client.channels?.cache.get(data.channel_id)?.messages._add(data, cacheOrOptions.cache) ?? data;
+    return this.client.channels?.resolve(data.channel_id)?.messages._add(data, cacheOrOptions.cache) ?? data;
   }
 
   /**
@@ -296,10 +296,10 @@ class Webhook {
         auth: false,
       });
 
-    const messageManager = this.client.channels?.cache.get(d.channel_id)?.messages;
+    const messageManager = this.client.channels?.resolve(d.channel_id)?.messages;
     if (!messageManager) return d;
 
-    const existing = messageManager.cache.get(d.id);
+    const existing = messageManager.resolve(d.id);
     if (!existing) return messageManager._add(d);
 
     const clone = existing._clone();

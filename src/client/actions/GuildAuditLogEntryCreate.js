@@ -7,7 +7,7 @@ const { Events } = require('../../util/Constants');
 class GuildAuditLogEntryCreateAction extends Action {
   handle(data) {
     const client = this.client;
-    const guild = client.guilds.cache.get(data.guild_id);
+    const guild = client.guilds.resolve(data.guild_id);
     let auditLogEntry;
 
     if (guild) {

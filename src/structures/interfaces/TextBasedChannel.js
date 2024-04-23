@@ -128,7 +128,7 @@ class TextBasedChannel {
     const { data, files } = await messagePayload.resolveFiles();
     const d = await this.client.api.channels[this.id].messages.post({ data, files });
 
-    return this.messages.cache.get(d.id) ?? this.messages._add(d);
+    return this.messages.resolve(d.id) ?? this.messages._add(d);
   }
 
   /**

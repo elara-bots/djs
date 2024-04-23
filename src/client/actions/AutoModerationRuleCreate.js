@@ -6,7 +6,7 @@ const { Events } = require('../../util/Constants');
 class AutoModerationRuleCreateAction extends Action {
   handle(data) {
     const { client } = this;
-    const guild = client.guilds.cache.get(data.guild_id);
+    const guild = client.guilds.resolve(data.guild_id);
 
     if (guild) {
       const autoModerationRule = guild.autoModerationRules._add(data);

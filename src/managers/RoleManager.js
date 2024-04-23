@@ -51,7 +51,7 @@ class RoleManager extends CachedManager {
    */
   async fetch(id, { cache = true, force = false } = {}) {
     if (id && !force) {
-      const existing = this.cache.get(id);
+      const existing = this.resolve(id);
       if (existing) return existing;
     }
 
@@ -248,7 +248,7 @@ class RoleManager extends CachedManager {
    * @readonly
    */
   get everyone() {
-    return this.cache.get(this.guild.id);
+    return this.resolve(this.guild.id);
   }
 
   /**

@@ -132,7 +132,7 @@ class VoiceState extends Base {
    * @readonly
    */
   get member() {
-    return this.guild.members.cache.get(this.id) ?? null;
+    return this.guild.members.resolve(this.id) ?? null;
   }
 
   /**
@@ -141,7 +141,7 @@ class VoiceState extends Base {
    * @readonly
    */
   get channel() {
-    return this.guild.channels.cache.get(this.channelId) ?? null;
+    return this.guild.channels.resolve(this.channelId) ?? null;
   }
 
   /**

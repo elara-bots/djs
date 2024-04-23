@@ -136,7 +136,7 @@ class GuildMember extends Base {
    * @readonly
    */
   get voice() {
-    return this.guild.voiceStates.cache.get(this.id) ?? new VoiceState(this.guild, { user_id: this.id });
+    return this.guild.voiceStates.resolve(this.id) ?? new VoiceState(this.guild, { user_id: this.id });
   }
 
   /**
@@ -350,14 +350,6 @@ class GuildMember extends Base {
    */
   createDM(force = false) {
     return this.user.createDM(force);
-  }
-
-  /**
-   * Deletes any DMs with this member.
-   * @returns {Promise<DMChannel>}
-   */
-  deleteDM() {
-    return this.user.deleteDM();
   }
 
   /**

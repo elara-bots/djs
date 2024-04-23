@@ -6,8 +6,8 @@ const { Events } = require('../../util/Constants');
 class InviteCreateAction extends Action {
   handle(data) {
     const client = this.client;
-    const channel = client.channels.cache.get(data.channel_id);
-    const guild = client.guilds.cache.get(data.guild_id);
+    const channel = client.channels.resolve(data.channel_id);
+    const guild = client.guilds.resolve(data.guild_id);
     if (!channel) return false;
 
     const inviteData = Object.assign(data, { channel, guild });

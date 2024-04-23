@@ -264,7 +264,7 @@ class AutoModerationRuleManager extends CachedManager {
 
   async _fetchSingle({ autoModerationRule, cache, force = false }) {
     if (!force) {
-      const existing = this.cache.get(autoModerationRule);
+      const existing = this.resolve(autoModerationRule);
       if (existing) return existing;
     }
 

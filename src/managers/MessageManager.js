@@ -112,7 +112,7 @@ class MessageManager extends CachedManager {
       .resolveFiles();
     const d = await this.client.api.channels[this.channel.id].messages[messageId].patch({ data, files });
 
-    const existing = this.cache.get(messageId);
+    const existing = this.resolve(messageId);
     if (existing) {
       const clone = existing._clone();
       clone._patch(d);
@@ -131,7 +131,7 @@ class MessageManager extends CachedManager {
     if (!message) throw new TypeError('INVALID_TYPE', 'message', 'MessageResolvable');
 
     const data = await this.client.api.channels(this.channel.id).messages(message).crosspost.post();
-    return this.cache.get(data.id) ?? this._add(data);
+    return this.resolve(data.id) ?? this._add(data);
   }
 
   /**
@@ -169,7 +169,7 @@ class MessageManager extends CachedManager {
 
   async _fetchId(messageId, cache, force) {
     if (!force) {
-      const existing = this.cache.get(messageId);
+      const existing = this.resolve(messageId);
       if (existing && !existing.partial) return existing;
     }
 

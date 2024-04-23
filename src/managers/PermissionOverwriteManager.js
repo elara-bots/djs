@@ -110,7 +110,7 @@ class PermissionOverwriteManager extends CachedManager {
    * message.channel.permissionOverwrites.create(message.author, {
    *   SEND_MESSAGES: false
    * })
-   *   .then(channel => console.log(channel.permissionOverwrites.cache.get(message.author.id)))
+   *   .then(channel => console.log(channel.permissionOverwrites.resolve(message.author.id)))
    *   .catch(console.error);
    */
   create(userOrRole, options, overwriteOptions) {
@@ -128,11 +128,11 @@ class PermissionOverwriteManager extends CachedManager {
    * message.channel.permissionOverwrites.edit(message.author, {
    *   SEND_MESSAGES: false
    * })
-   *   .then(channel => console.log(channel.permissionOverwrites.cache.get(message.author.id)))
+   *   .then(channel => console.log(channel.permissionOverwrites.resolve(message.author.id)))
    *   .catch(console.error);
    */
   edit(userOrRole, options, overwriteOptions) {
-    const existing = this.cache.get(
+    const existing = this.resolve(
       this.channel.guild.roles.resolveId(userOrRole) ?? this.client.users.resolveId(userOrRole),
     );
     return this.upsert(userOrRole, options, overwriteOptions, existing);

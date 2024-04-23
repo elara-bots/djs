@@ -154,7 +154,7 @@ class Interaction extends Base {
    * @readonly
    */
   get channel() {
-    return this.client.channels.cache.get(this.channelId) ?? null;
+    return this.client.channels.resolve(this.channelId) ?? null;
   }
 
   /**
@@ -163,7 +163,7 @@ class Interaction extends Base {
    * @readonly
    */
   get guild() {
-    return this.client.guilds.cache.get(this.guildId) ?? null;
+    return this.client.guilds.resolve(this.guildId) ?? null;
   }
 
   /**

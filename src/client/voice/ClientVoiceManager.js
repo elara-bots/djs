@@ -23,7 +23,7 @@ class ClientVoiceManager {
 
     client.on(Events.SHARD_DISCONNECT, (_, shardId) => {
       for (const [guildId, adapter] of this.adapters.entries()) {
-        if (client.guilds.cache.get(guildId)?.shardId === shardId) {
+        if (client.guilds.resolve(guildId)?.shardId === shardId) {
           adapter.destroy();
         }
       }

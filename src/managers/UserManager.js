@@ -1,7 +1,6 @@
 'use strict';
 
 const CachedManager = require('./CachedManager');
-const { Error } = require('../errors');
 const { GuildMember } = require('../structures/GuildMember');
 const { Message } = require('../structures/Message');
 const ThreadMember = require('../structures/ThreadMember');
@@ -65,20 +64,6 @@ class UserManager extends CachedManager {
   }
 
   /**
-   * Deletes a {@link DMChannel} (if one exists) between the client and a user. Resolves with the channel if successful.
-   * @param {UserResolvable} user The UserResolvable to identify
-   * @returns {Promise<DMChannel>}
-   */
-  async deleteDM(user) {
-    const id = this.resolveId(user);
-    const dmChannel = this.dmChannel(id);
-    if (!dmChannel) throw new Error('USER_NO_DM_CHANNEL');
-    await this.client.api.channels(dmChannel.id).delete();
-    this.client.channels._remove(dmChannel.id);
-    return dmChannel;
-  }
-
-  /**
    * Obtains a user from Discord, or the user cache if it's already available.
    * @param {UserResolvable} user The user to fetch
    * @param {BaseFetchOptions} [options] Additional options for this fetch
@@ -87,7 +72,7 @@ class UserManager extends CachedManager {
   async fetch(user, { cache = true, force = false } = {}) {
     const id = this.resolveId(user);
     if (!force) {
-      const existing = this.cache.get(id);
+      const existing = this.resolve(id);
       if (existing && !existing.partial) return existing;
     }
 

@@ -54,7 +54,7 @@ class GuildChannelManager extends CachedManager {
    */
 
   _add(channel) {
-    const existing = this.cache.get(channel.id);
+    const existing = this.resolve(channel.id);
     if (existing) return existing;
     this.cache.set(channel.id, channel);
     return channel;
@@ -335,7 +335,7 @@ class GuildChannelManager extends CachedManager {
    */
   async fetch(id, { cache = true, force = false } = {}) {
     if (id && !force) {
-      const existing = this.cache.get(id);
+      const existing = this.resolve(id);
       if (existing) return existing;
     }
 

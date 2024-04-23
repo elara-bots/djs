@@ -7,7 +7,7 @@ class GuildMemberUpdateAction extends Action {
   handle(data, shard) {
     const { client } = this;
     if (data.user.username) {
-      const user = client.users.cache.get(data.user.id);
+      const user = client.users.resolve(data.user.id);
       if (!user) {
         client.users._add(data.user);
       } else if (!user._equals(data.user)) {
@@ -15,7 +15,7 @@ class GuildMemberUpdateAction extends Action {
       }
     }
 
-    const guild = client.guilds.cache.get(data.guild_id);
+    const guild = client.guilds.resolve(data.guild_id);
     if (guild) {
       const member = this.getMember({ user: data.user }, guild);
       if (member) {

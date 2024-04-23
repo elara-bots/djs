@@ -6,10 +6,10 @@ const { Events } = require('../../util/Constants');
 class AutoModerationRuleDeleteAction extends Action {
   handle(data) {
     const { client } = this;
-    const guild = client.guilds.cache.get(data.guild_id);
+    const guild = client.guilds.resolve(data.guild_id);
 
     if (guild) {
-      const autoModerationRule = guild.autoModerationRules.cache.get(data.id);
+      const autoModerationRule = guild.autoModerationRules.resolve(data.id);
 
       if (autoModerationRule) {
         guild.autoModerationRules.cache.delete(autoModerationRule.id);

@@ -27,7 +27,7 @@ class ThreadManager extends CachedManager {
    */
 
   _add(thread) {
-    const existing = this.cache.get(thread.id);
+    const existing = this.resolve(thread.id);
     if (existing) return existing;
     this.cache.set(thread.id, thread);
     return thread;
@@ -161,7 +161,7 @@ class ThreadManager extends CachedManager {
       return coll.set(thread.id, thread);
     }, new Collection());
     // Discord sends the thread id as id in this object
-    for (const rawMember of rawThreads.members) client.channels.cache.get(rawMember.id)?.members._add(rawMember);
+    for (const rawMember of rawThreads.members) client.channels.resolve(rawMember.id)?.members._add(rawMember);
     return {
       threads,
       hasMore: rawThreads.has_more ?? false,

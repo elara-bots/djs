@@ -9,7 +9,7 @@ class StageInstanceUpdateAction extends Action {
     const channel = this.getChannel(data);
 
     if (channel) {
-      const oldStageInstance = channel.guild.stageInstances.cache.get(data.id)?._clone() ?? null;
+      const oldStageInstance = channel.guild.stageInstances.resolve(data.id)?._clone() ?? null;
       const newStageInstance = channel.guild.stageInstances._add(data);
 
       /**

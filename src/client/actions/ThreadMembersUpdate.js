@@ -6,7 +6,7 @@ const { Events } = require('../../util/Constants');
 class ThreadMembersUpdateAction extends Action {
   handle(data) {
     const client = this.client;
-    const thread = client.channels.cache.get(data.id);
+    const thread = client.channels.resolve(data.id);
     if (thread) {
       const old = thread.members.cache.clone();
       thread.memberCount = data.member_count;

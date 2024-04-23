@@ -671,7 +671,6 @@ exports.ActivityTypes = createEnum(['PLAYING', 'STREAMING', 'LISTENING', 'WATCHI
  * * `GUILD_TEXT` - a guild text channel
  * * `DM` - a DM channel
  * * `GUILD_VOICE` - a guild voice channel
- * * `GROUP_DM` - a group DM channel
  * * `GUILD_CATEGORY` - a guild category channel
  * * `GUILD_NEWS` - a guild news channel
  * * `GUILD_NEWS_THREAD` - a guild news channel's public thread channel
@@ -688,7 +687,7 @@ exports.ChannelTypes = createEnum([
   'GUILD_TEXT',
   'DM',
   'GUILD_VOICE',
-  'GROUP_DM',
+  null,
   'GUILD_CATEGORY',
   'GUILD_NEWS',
   ...Array(4).fill(null),

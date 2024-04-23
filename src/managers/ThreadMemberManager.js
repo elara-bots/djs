@@ -27,7 +27,7 @@ class ThreadMemberManager extends CachedManager {
    */
 
   _add(data, cache = true) {
-    const existing = this.cache.get(data.user_id);
+    const existing = this.resolve(data.user_id);
     if (cache) existing?._patch(data, { cache });
     if (existing) return existing;
 
@@ -112,7 +112,7 @@ class ThreadMemberManager extends CachedManager {
 
   async _fetchOne(memberId, { cache, force = false, withMember }) {
     if (!force) {
-      const existing = this.cache.get(memberId);
+      const existing = this.resolve(memberId);
       if (existing) return existing;
     }
 

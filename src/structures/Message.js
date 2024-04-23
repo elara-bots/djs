@@ -731,7 +731,7 @@ class Message extends Base {
    *   .catch(console.error);
    * @example
    * // React to a message with a custom emoji
-   * message.react(message.guild.emojis.cache.get('123456789012345678'))
+   * message.react(message.guild.emojis.resolve('123456789012345678'))
    *   .then(console.log)
    *   .catch(console.error);
    */

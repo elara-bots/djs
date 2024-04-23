@@ -98,7 +98,7 @@ class ApplicationCommandManager extends CachedManager {
       ({ guildId, cache = true, locale, withLocalizations } = id);
     } else if (id) {
       if (!force) {
-        const existing = this.cache.get(id);
+        const existing = this.resolve(id);
         if (existing) return existing;
       }
       const command = await this.commandPath({ id, guildId }).get();
@@ -208,7 +208,7 @@ class ApplicationCommandManager extends CachedManager {
 
     await this.commandPath({ id, guildId }).delete();
 
-    const cached = this.cache.get(id);
+    const cached = this.resolve(id);
     this.cache.delete(id);
     return cached ?? null;
   }

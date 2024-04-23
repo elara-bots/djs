@@ -520,25 +520,25 @@ class Util extends null {
       .replace(/<@!?[0-9]+>/g, input => {
         const id = input.replace(/<|!|>|@/g, '');
         if (channel.type === 'DM') {
-          const user = channel.client.users.cache.get(id);
+          const user = channel.client.users.resolve(id);
           return user ? Util._removeMentions(`@${user.username}`) : input;
         }
 
-        const member = channel.guild.members.cache.get(id);
+        const member = channel.guild.members.resolve(id);
         if (member) {
           return Util._removeMentions(`@${member.displayName}`);
         } else {
-          const user = channel.client.users.cache.get(id);
+          const user = channel.client.users.resolve(id);
           return user ? Util._removeMentions(`@${user.username}`) : input;
         }
       })
       .replace(/<#[0-9]+>/g, input => {
-        const mentionedChannel = channel.client.channels.cache.get(input.replace(/<|#|>/g, ''));
+        const mentionedChannel = channel.client.channels.resolve(input.replace(/<|#|>/g, ''));
         return mentionedChannel ? `#${mentionedChannel.name}` : input;
       })
       .replace(/<@&[0-9]+>/g, input => {
         if (channel.type === 'DM') return input;
-        const role = channel.guild.roles.cache.get(input.replace(/<|@|>|&/g, ''));
+        const role = channel.guild.roles.resolve(input.replace(/<|@|>|&/g, ''));
         return role ? `@${role.name}` : input;
       });
     return str;

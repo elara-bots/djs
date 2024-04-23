@@ -13,7 +13,7 @@ class GuildDeleteAction extends Action {
   handle(data) {
     const client = this.client;
 
-    let guild = client.guilds.cache.get(data.id);
+    let guild = client.guilds.resolve(data.id);
     if (guild) {
       if (data.unavailable) {
         // Guild is unavailable

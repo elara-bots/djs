@@ -134,7 +134,6 @@ import {
   RawMessageSelectMenuInteractionData,
   RawModalSubmitInteractionData,
   RawOAuth2GuildData,
-  RawPartialGroupDMChannelData,
   RawPartialMessageData,
   RawPermissionOverwriteData,
   RawPresenceData,
@@ -144,8 +143,6 @@ import {
   RawStageInstanceData,
   RawStickerData,
   RawStickerPackData,
-  RawTeamData,
-  RawTeamMemberData,
   RawTextInputComponentData,
   RawThreadChannelData,
   RawThreadMemberData,
@@ -554,7 +551,6 @@ export type MappedChannelCategoryTypes = EnumValueMapped<
 export type CategoryChannelTypes = ExcludeEnum<
   typeof ChannelTypes,
   | 'DM'
-  | 'GROUP_DM'
   | 'UNKNOWN'
   | 'GUILD_PUBLIC_THREAD'
   | 'GUILD_NEWS_THREAD'
@@ -665,7 +661,7 @@ export class ClientApplication extends Application {
   public guildId: Snowflake | null;
   public readonly guild: Guild | null;
   public tags: string[];
-  public owner: User | Team | null;
+  public owner: User | null;
   public readonly partial: boolean;
   public fetch(): Promise<ClientApplication>;
 }
@@ -1072,7 +1068,7 @@ export abstract class GuildChannel extends Channel {
   public readonly permissionsLocked: boolean | null;
   public readonly position: number;
   public rawPosition: number;
-  public type: Exclude<keyof typeof ChannelTypes, 'DM' | 'GROUP_DM' | 'UNKNOWN'>;
+  public type: Exclude<keyof typeof ChannelTypes, 'DM' | 'UNKNOWN'>;
   public flags: Readonly<ChannelFlags>;
   public readonly viewable: boolean;
   public clone(options?: GuildChannelCloneOptions): Promise<this>;
@@ -1139,7 +1135,6 @@ export class GuildMember extends PartialTextBasedChannel(Base) {
   public timeout(timeout: number | null, reason?: string): Promise<GuildMember>;
   public fetch(force?: boolean): Promise<GuildMember>;
   public createDM(force?: boolean): Promise<DMChannel>;
-  public deleteDM(): Promise<DMChannel>;
   public displayAvatarURL(options?: ImageURLOptions): string;
   public edit(data: GuildMemberEditData, reason?: string): Promise<GuildMember>;
   public isCommunicationDisabled(): this is GuildMember & {
@@ -1276,20 +1271,23 @@ export class Integration extends Base {
   public guild: Guild;
   public id: Snowflake | string;
   public name: string;
-  public role: Role | undefined;
+  public roleId: Snowflake | string;
   public readonly roles: Collection<Snowflake, Role>;
   public syncedAt: number | undefined;
   public syncing: boolean | undefined;
   public type: IntegrationType;
-  public user: User | null;
+  public userId: Snowflake | string;
   public subscriberCount: number | null;
   public revoked: boolean | null;
+  public get user(): User | undefined;
+  public get role(): Role | undefined;
   public delete(reason?: string): Promise<Integration>;
 }
 
 export class IntegrationApplication extends Application {
   private constructor(client: Client, data: RawIntegrationApplicationData);
-  public bot: User | null;
+  public get bot(): User | null | undefined;
+  public botId: Snowflake | string | null;
   public termsOfServiceURL: string | null;
   public privacyPolicyURL: string | null;
 }
@@ -1394,7 +1392,7 @@ export class InteractionWebhook extends PartialWebhookMixin() {
 
 export class Invite extends Base {
   private constructor(client: Client, data: RawInviteData);
-  public channel: NonThreadGuildBasedChannel | PartialGroupDMChannel;
+  public channel: NonThreadGuildBasedChannel;
   public channelId: Snowflake;
   public code: string;
   public readonly deletable: boolean;
@@ -1925,15 +1923,6 @@ export class OAuth2Guild extends BaseGuild {
   public permissions: Readonly<Permissions>;
 }
 
-export class PartialGroupDMChannel extends Channel {
-  private constructor(client: Client, data: RawPartialGroupDMChannelData);
-  public name: string | null;
-  public icon: string | null;
-  public flags: null;
-  public recipients: PartialRecipient[];
-  public iconURL(options?: StaticImageURLOptions): string | null;
-}
-
 export class PermissionOverwrites extends Base {
   private constructor(client: Client, data: RawPermissionOverwriteData, channel: NonThreadGuildBasedChannel);
   public allow: Readonly<Permissions>;
@@ -2339,34 +2328,6 @@ export class SystemChannelFlags extends BitField<SystemChannelFlagsString> {
   public static resolve(bit?: BitFieldResolvable<SystemChannelFlagsString, number>): number;
 }
 
-export class Team extends Base {
-  private constructor(client: Client, data: RawTeamData);
-  public id: Snowflake;
-  public name: string;
-  public icon: string | null;
-  public ownerId: Snowflake | null;
-  public members: Collection<Snowflake, TeamMember>;
-
-  public readonly owner: TeamMember | null;
-  public readonly createdAt: Date;
-  public readonly createdTimestamp: number;
-
-  public iconURL(options?: StaticImageURLOptions): string | null;
-  public toJSON(): unknown;
-  public toString(): string;
-}
-
-export class TeamMember extends Base {
-  private constructor(team: Team, data: RawTeamMemberData);
-  public team: Team;
-  public readonly id: Snowflake;
-  public permissions: string[];
-  public membershipState: MembershipState;
-  public user: User;
-
-  public toString(): UserMention;
-}
-
 export class TextChannel extends BaseGuildTextChannel {
   public rateLimitPerUser: number;
   public threads: GuildTextThreadManager<AllowedThreadTypeForTextChannel>;
@@ -2527,7 +2488,6 @@ export class User extends PartialTextBasedChannel(Base) {
   public accentColor: number | null | undefined;
   public avatar: string | null;
   public banner: string | null | undefined;
-  public premiumType: number;
   public bot: boolean;
   public readonly createdAt: Date;
   public readonly createdTimestamp: number;
@@ -2537,7 +2497,6 @@ export class User extends PartialTextBasedChannel(Base) {
   public readonly dmChannel: DMChannel | null;
   public flags: Readonly<UserFlags> | null;
   public globalName: string | null;
-  public readonly hexAccentColor: HexColorString | null | undefined;
   public id: Snowflake;
   public readonly partial: false;
   public system: boolean;
@@ -2546,7 +2505,6 @@ export class User extends PartialTextBasedChannel(Base) {
   public avatarURL(options?: ImageURLOptions): string | null;
   public bannerURL(options?: ImageURLOptions): string | null;
   public createDM(force?: boolean): Promise<DMChannel>;
-  public deleteDM(): Promise<DMChannel>;
   public displayAvatarURL(options?: ImageURLOptions): string;
   public equals(user: User): boolean;
   public fetch(force?: boolean): Promise<User>;
@@ -3472,7 +3430,6 @@ export class UserManager extends CachedManager<Snowflake, User, UserResolvable> 
   private constructor(client: Client, iterable?: Iterable<RawUserData>);
   private dmChannel(userId: Snowflake): DMChannel | null;
   public createDM(user: UserResolvable, options?: BaseFetchOptions): Promise<DMChannel>;
-  public deleteDM(user: UserResolvable): Promise<DMChannel>;
   public fetch(user: UserResolvable, options?: BaseFetchOptions): Promise<User>;
   public send(user: UserResolvable, options: string | MessagePayload | MessageOptions): Promise<Message>;
 }
@@ -4207,13 +4164,7 @@ export interface CategoryCreateChannelOptions {
   topic?: string;
   type?: ExcludeEnum<
     typeof ChannelTypes,
-    | 'DM'
-    | 'GROUP_DM'
-    | 'UNKNOWN'
-    | 'GUILD_PUBLIC_THREAD'
-    | 'GUILD_NEWS_THREAD'
-    | 'GUILD_PRIVATE_THREAD'
-    | 'GUILD_CATEGORY'
+    'DM' | 'UNKNOWN' | 'GUILD_PUBLIC_THREAD' | 'GUILD_NEWS_THREAD' | 'GUILD_PRIVATE_THREAD' | 'GUILD_CATEGORY'
   >;
   nsfw?: boolean;
   bitrate?: number;
@@ -5113,7 +5064,7 @@ export interface GuildChannelCreateOptions extends Omit<CategoryCreateChannelOpt
   parent?: CategoryChannelResolvable;
   type?: ExcludeEnum<
     typeof ChannelTypes,
-    'DM' | 'GROUP_DM' | 'UNKNOWN' | 'GUILD_PUBLIC_THREAD' | 'GUILD_NEWS_THREAD' | 'GUILD_PRIVATE_THREAD'
+    'DM' | 'UNKNOWN' | 'GUILD_PUBLIC_THREAD' | 'GUILD_NEWS_THREAD' | 'GUILD_PRIVATE_THREAD'
   >;
 }
 
@@ -5819,10 +5770,6 @@ export type RecursiveArray<T> = ReadonlyArray<T | RecursiveArray<T>>;
 
 export type RecursiveReadonlyArray<T> = ReadonlyArray<T | RecursiveReadonlyArray<T>>;
 
-export interface PartialRecipient {
-  username: string;
-}
-
 export type PremiumTier = keyof typeof PremiumTiers;
 
 export interface PresenceData {
@@ -5840,7 +5787,6 @@ export interface PartialChannelData {
   type?: ExcludeEnum<
     typeof ChannelTypes,
     | 'DM'
-    | 'GROUP_DM'
     | 'GUILD_NEWS'
     | 'GUILD_STORE'
     | 'UNKNOWN'

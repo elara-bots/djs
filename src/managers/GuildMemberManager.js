@@ -95,7 +95,7 @@ class GuildMemberManager extends CachedManager {
     const userId = this.client.users.resolveId(user);
     if (!userId) throw new TypeError('INVALID_TYPE', 'user', 'UserResolvable');
     if (!options.force) {
-      const cachedUser = this.cache.get(userId);
+      const cachedUser = this.resolve(userId);
       if (cachedUser) return cachedUser;
     }
     const resolvedOptions = {
@@ -307,7 +307,7 @@ class GuildMemberManager extends CachedManager {
     }
     const d = await endpoint.patch({ data: _data, reason });
 
-    const clone = this.cache.get(id)?._clone();
+    const clone = this.resolve(id)?._clone();
     clone?._patch(d);
     return clone ?? this._add(d, false);
   }
@@ -370,7 +370,7 @@ class GuildMemberManager extends CachedManager {
 
   async _fetchSingle({ user, cache, force = false }) {
     if (!force) {
-      const existing = this.cache.get(user);
+      const existing = this.resolve(user);
       if (existing && !existing.partial) return existing;
     }
 

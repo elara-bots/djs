@@ -6,10 +6,10 @@ const { Events } = require('../../util/Constants');
 class GuildScheduledEventUpdateAction extends Action {
   handle(data) {
     const client = this.client;
-    const guild = client.guilds.cache.get(data.guild_id);
+    const guild = client.guilds.resolve(data.guild_id);
 
     if (guild) {
-      const oldGuildScheduledEvent = guild.scheduledEvents.cache.get(data.id)?._clone() ?? null;
+      const oldGuildScheduledEvent = guild.scheduledEvents.resolve(data.id)?._clone() ?? null;
       const newGuildScheduledEvent = guild.scheduledEvents._add(data);
 
       /**

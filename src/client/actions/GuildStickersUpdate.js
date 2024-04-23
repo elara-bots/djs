@@ -4,14 +4,14 @@ const Action = require('./Action');
 
 class GuildStickersUpdateAction extends Action {
   handle(data) {
-    const guild = this.client.guilds.cache.get(data.guild_id);
+    const guild = this.client.guilds.resolve(data.guild_id);
     if (!guild?.stickers) return;
 
     const deletions = new Map(guild.stickers.cache);
 
     for (const sticker of data.stickers) {
       // Determine type of sticker event
-      const cachedSticker = guild.stickers.cache.get(sticker.id);
+      const cachedSticker = guild.stickers.resolve(sticker.id);
       if (cachedSticker) {
         deletions.delete(sticker.id);
         if (!cachedSticker.equals(sticker)) {

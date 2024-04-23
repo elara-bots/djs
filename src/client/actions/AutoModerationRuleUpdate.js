@@ -6,10 +6,10 @@ const { Events } = require('../../util/Constants');
 class AutoModerationRuleUpdateAction extends Action {
   handle(data) {
     const { client } = this;
-    const guild = client.guilds.cache.get(data.guild_id);
+    const guild = client.guilds.resolve(data.guild_id);
 
     if (guild) {
-      const oldAutoModerationRule = guild.autoModerationRules.cache.get(data.id)?._clone() ?? null;
+      const oldAutoModerationRule = guild.autoModerationRules.resolve(data.id)?._clone() ?? null;
       const newAutoModerationRule = guild.autoModerationRules._add(data);
 
       /**

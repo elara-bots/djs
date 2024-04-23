@@ -63,20 +63,19 @@ class Integration extends Base {
      */
     this.syncing = data.syncing;
 
-    /**
-     * The role that this integration uses for subscribers
-     * @type {?Role}
-     */
-    this.role = this.guild.roles.cache.get(data.role_id);
-
-    if (data.user) {
-      /**
-       * The user for this integration
-       * @type {?User}
-       */
-      this.user = this.client.users._add(data.user);
+    if ('role_id' in data) {
+      this.roleId = data.role_id;
     } else {
-      this.user = null;
+      this.roleId ??= null;
+    }
+
+    if ('user' in data) {
+      this.userId = data.user?.id ?? null;
+      if (!this.client.users.cache.has(this.userId)) {
+        this.client.users._add(data.user);
+      }
+    } else {
+      this.userId ??= null;
     }
 
     /**
@@ -112,6 +111,21 @@ class Integration extends Base {
     }
 
     this._patch(data);
+  }
+  /**
+   * The user for this integration
+   * @type {?User}
+   */
+  get user() {
+    return this.client.users.resolve(this.userId);
+  }
+
+  /**
+   * The role that this integration uses for subscribers
+   * @type {?Role}
+   */
+  get role() {
+    return this.guild.roles.resolve(this.roleId);
   }
 
   /**
