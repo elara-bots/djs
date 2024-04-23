@@ -404,6 +404,7 @@ class GuildAuditLogs {
  */
 class GuildAuditLogsEntry {
   constructor(guild, data, logs) {
+    this.client = guild.client;
     const targetType = GuildAuditLogs.targetType(data.action_type);
     /**
      * The target type of this entry
