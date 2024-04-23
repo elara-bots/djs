@@ -22,8 +22,6 @@ class Channel extends Base {
   constructor(client, data, immediatePatch = true) {
     super(client);
 
-    this.deleted = false;
-
     const type = ChannelTypes[data?.type];
     /**
      * The type of the channel

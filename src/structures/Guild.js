@@ -40,8 +40,6 @@ class Guild extends AnonymousGuild {
   constructor(client, data) {
     super(client, data, false);
 
-    this.deleted = false;
-
     /**
      * A manager of the application commands belonging to this guild
      * @type {GuildApplicationCommandManager}
@@ -709,7 +707,8 @@ class Guild extends AnonymousGuild {
   async leave() {
     if (this.ownerId === this.client.user.id) throw new Error('GUILD_OWNED');
     await this.client.api.users('@me').guilds(this.id).delete();
-    return this.client.actions.GuildDelete.handle({ id: this.id }).guild;
+    this.client.actions.GuildDelete.handle({ id: this.id });
+    return this;
   }
 
   /**
@@ -723,7 +722,8 @@ class Guild extends AnonymousGuild {
    */
   async delete() {
     await this.client.api.guilds(this.id).delete();
-    return this.client.actions.GuildDelete.handle({ id: this.id }).guild;
+    this.client.actions.GuildDelete.handle({ id: this.id });
+    return this;
   }
 
   /**

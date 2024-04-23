@@ -28,8 +28,6 @@ class Message extends Base {
   constructor(client, data) {
     super(client);
 
-    this.deleted = false;
-
     /**
      * The id of the channel the message was sent in
      * @type {Snowflake}

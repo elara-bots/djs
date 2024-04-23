@@ -84,26 +84,6 @@ class Webhook {
     } else {
       this.owner ??= null;
     }
-
-    if ('source_guild' in data) {
-      /**
-       * The source guild of the webhook
-       * @type {?(Guild|APIGuild)}
-       */
-      this.sourceGuild = this.client.guilds?.resolve(data.source_guild.id) ?? data.source_guild;
-    } else {
-      this.sourceGuild ??= null;
-    }
-
-    if ('source_channel' in data) {
-      /**
-       * The source channel of the webhook
-       * @type {?(NewsChannel|APIChannel)}
-       */
-      this.sourceChannel = this.client.channels?.resolve(data.source_channel?.id) ?? data.source_channel;
-    } else {
-      this.sourceChannel ??= null;
-    }
   }
 
   /**
@@ -380,22 +360,6 @@ class Webhook {
   avatarURL({ format, size } = {}) {
     if (!this.avatar) return null;
     return this.client.rest.cdn.Avatar(this.id, this.avatar, format, size);
-  }
-
-  /**
-   * Whether or not this webhook is a channel follower webhook.
-   * @returns {boolean}
-   */
-  isChannelFollower() {
-    return this.type === 'Channel Follower';
-  }
-
-  /**
-   * Whether or not this webhook is an incoming webhook.
-   * @returns {boolean}
-   */
-  isIncoming() {
-    return this.type === 'Incoming';
   }
 
   static applyToClass(structure, ignore = []) {

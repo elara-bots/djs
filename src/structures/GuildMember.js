@@ -18,8 +18,6 @@ class GuildMember extends Base {
   constructor(client, data, guild) {
     super(client);
 
-    this.deleted = false;
-
     /**
      * The guild that this member is part of
      * @type {Guild}

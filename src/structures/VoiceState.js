@@ -105,24 +105,6 @@ class VoiceState extends Base {
       this.channelId ??= null;
     }
 
-    if ('suppress' in data) {
-      /**
-       * Whether this member is suppressed from speaking. This property is specific to stage channels only.
-       * @type {boolean}
-       */
-      this.suppress = data.suppress;
-    }
-
-    if ('request_to_speak_timestamp' in data) {
-      /**
-       * The time at which the member requested to speak. This property is specific to stage channels only.
-       * @type {?number}
-       */
-      this.requestToSpeakTimestamp = data.request_to_speak_timestamp && Date.parse(data.request_to_speak_timestamp);
-    } else {
-      this.requestToSpeakTimestamp ??= null;
-    }
-
     return this;
   }
 

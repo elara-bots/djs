@@ -11,9 +11,6 @@ const SnowflakeUtil = require('../util/SnowflakeUtil');
 class Role extends Base {
   constructor(client, data, guild) {
     super(client);
-
-    this.deleted = false;
-
     /**
      * The guild that the role belongs to
      * @type {Guild}

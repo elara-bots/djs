@@ -13,8 +13,6 @@ class Sticker extends Base {
   constructor(client, sticker) {
     super(client);
 
-    this.deleted = false;
-
     this._patch(sticker);
   }
 

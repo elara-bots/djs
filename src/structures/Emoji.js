@@ -35,8 +35,6 @@ class Emoji extends Base {
      * @type {?Snowflake}
      */
     this.id = emoji.id;
-
-    this.deleted = false;
   }
 
   /**

@@ -3,13 +3,22 @@
 const { setTimeout } = require('node:timers');
 const Action = require('./Action');
 const { Events } = require('../../util/Constants');
+const cleanData = [
+  'members',
+  'presences',
+  'stickers',
+  'emojis',
+  'invites',
+  'scheduledEvents',
+  'commands',
+  'autoModerationRules',
+  'bans',
+  'stageInstances',
+  'roles',
+  'voiceStates',
+];
 
 class GuildDeleteAction extends Action {
-  constructor(client) {
-    super(client);
-    this.deleted = new Map();
-  }
-
   handle(data) {
     const client = this.client;
 
@@ -42,21 +51,33 @@ class GuildDeleteAction extends Action {
        * @param {Guild} guild The guild that was deleted
        */
       client.emit(Events.GUILD_DELETE, guild);
-      setTimeout(() => {
-        for (const channel of guild.channels.cache.values()) this.client.channels._remove(channel.id);
-      }, 10_000).unref();
-      // Delete the channels from the cache after the event gets emitted.
-      this.deleted.set(guild.id, guild);
-      this.scheduleForDeletion(guild.id);
-    } else {
-      guild = this.deleted.get(data.id) ?? null;
+      setTimeout(() => this.handleDeletedServer(guild), 10_000).unref();
     }
 
-    return { guild };
+    return { guild: guild ?? null };
   }
 
-  scheduleForDeletion(id) {
-    setTimeout(() => this.deleted.delete(id), this.client.options.restWsBridgeTimeout).unref();
+  handleDeletedServer(guild) {
+    if (this.client.guilds.cache.has(guild.id)) {
+      // If by some reason the bot gets added back within a few seconds
+      // don't run the cleanCache functions on the collections.
+      return;
+    }
+    const cleanCache = name => {
+      if (guild[name].cache.size) {
+        for (const key of guild[name].cache.keys()) {
+          guild[name].cache.delete(key);
+        }
+      }
+    };
+    if (guild.channels.cache.size) {
+      for (const key of guild.channels.cache.keys()) {
+        this.client.channels._remove(key);
+      }
+    }
+    for (const value of cleanData) {
+      cleanCache(value);
+    }
   }
 }
 

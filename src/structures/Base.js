@@ -17,6 +17,14 @@ class Base {
     Object.defineProperty(this, 'client', { value: client });
   }
 
+  get deleted() {
+    return false;
+  }
+
+  set deleted(value) {
+    this.deleted = value;
+  }
+
   _clone() {
     return Object.assign(Object.create(this), this);
   }
