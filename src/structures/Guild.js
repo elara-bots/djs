@@ -249,22 +249,6 @@ class Guild extends AnonymousGuild {
       this.premiumTier = PremiumTiers[data.premium_tier];
     }
 
-    if ('widget_enabled' in data) {
-      /**
-       * Whether widget images are enabled on this guild
-       * @type {?boolean}
-       */
-      this.widgetEnabled = data.widget_enabled;
-    }
-
-    if ('widget_channel_id' in data) {
-      /**
-       * The widget channel's id, if enabled
-       * @type {?string}
-       */
-      this.widgetChannelId = data.widget_channel_id;
-    }
-
     if ('explicit_content_filter' in data) {
       /**
        * The explicit content filter level of the guild
@@ -506,28 +490,6 @@ class Guild extends AnonymousGuild {
    */
   get me() {
     return this.members.me;
-  }
-
-  /**
-   * The maximum bitrate available for this guild
-   * @type {number}
-   * @readonly
-   */
-  get maximumBitrate() {
-    if (this.features.includes('VIP_REGIONS')) {
-      return 384_000;
-    }
-
-    switch (PremiumTiers[this.premiumTier]) {
-      case PremiumTiers.TIER_1:
-        return 128_000;
-      case PremiumTiers.TIER_2:
-        return 256_000;
-      case PremiumTiers.TIER_3:
-        return 384_000;
-      default:
-        return 96_000;
-    }
   }
 
   /**

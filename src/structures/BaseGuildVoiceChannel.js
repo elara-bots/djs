@@ -4,7 +4,6 @@ const { Collection } = require('@discordjs/collection');
 const GuildChannel = require('./GuildChannel');
 const TextBasedChannel = require('./interfaces/TextBasedChannel');
 const MessageManager = require('../managers/MessageManager');
-const { VideoQualityModes } = require('../util/Constants');
 const Permissions = require('../util/Permissions');
 
 /**
@@ -57,18 +56,10 @@ class BaseGuildVoiceChannel extends GuildChannel {
       this.userLimit = data.user_limit;
     }
 
-    if ('video_quality_mode' in data) {
-      /**
-       * The camera video quality mode of the channel.
-       * @type {?VideoQualityMode}
-       */
-      this.videoQualityMode = VideoQualityModes[data.video_quality_mode];
-    } else {
-      this.videoQualityMode ??= null;
-    }
-
     if ('messages' in data) {
-      for (const message of data.messages) this.messages._add(message);
+      for (const message of data.messages) {
+        this.messages._add(message);
+      }
     }
 
     if ('rate_limit_per_user' in data) {

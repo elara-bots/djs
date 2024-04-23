@@ -677,7 +677,6 @@ exports.ActivityTypes = createEnum(['PLAYING', 'STREAMING', 'LISTENING', 'WATCHI
  * * `GUILD_PUBLIC_THREAD` - a guild text channel's public thread channel
  * * `GUILD_PRIVATE_THREAD` - a guild text channel's private thread channel
  * * `GUILD_STAGE_VOICE` - a guild stage voice channel
- * * `GUILD_DIRECTORY` - the channel in a hub containing guilds
  * * `GUILD_FORUM` - a channel that can only contain threads
  * * `UNKNOWN` - a generic channel of unknown type, could be Channel or GuildChannel
  * @typedef {string} ChannelType
@@ -696,7 +695,7 @@ exports.ChannelTypes = createEnum([
   'GUILD_PUBLIC_THREAD',
   'GUILD_PRIVATE_THREAD',
   'GUILD_STAGE_VOICE',
-  'GUILD_DIRECTORY',
+  null,
   'GUILD_FORUM',
 ]);
 
@@ -1466,15 +1465,6 @@ exports.GuildScheduledEventEntityTypes = createEnum([null, 'STAGE_INSTANCE', 'VO
 /* eslint-enable max-len */
 
 /**
- * The camera video quality mode of a {@link VoiceChannel}:
- * * AUTO
- * * FULL
- * @typedef {string} VideoQualityMode
- * @see {@link https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes}
- */
-exports.VideoQualityModes = createEnum([null, 'AUTO', 'FULL']);
-
-/**
  * Sort {@link ForumChannel} posts by creation time or activity
  * * LATEST_ACTIVITY
  * * CREATION_DATE
@@ -1521,8 +1511,6 @@ function createEnum(keys) {
  * The type of an {@link ApplicationCommandPermissions} object.
  * @property {Object<ApplicationCommandType, number>} ApplicationCommandTypes
  * The type of an {@link ApplicationCommand} object.
- * @property {Object<ApplicationRoleConnectionMetadataType, number>} ApplicationRoleConnectionMetadataTypes
- * The type of an {@link ApplicationRoleConnectionMetadata} object.
  * @property {Object<AutoModerationActionType, number>} AutoModerationActionTypes
  * A type of an action which executes whenever a rule is triggered.
  * @property {Object<AutoModerationRuleEventType, number>} AutoModerationRuleEventTypes Indicates in what event context
@@ -1573,8 +1561,6 @@ function createEnum(keys) {
  * @property {string} UserAgent The user agent used for requests.
  * @property {Object<VerificationLevel, number>} VerificationLevels
  * The value set for the verification levels for a guild.
- * @property {Object<VideoQualityMode, number>} VideoQualityModes
- * The camera video quality mode for a {@link VoiceChannel}.
  * @property {Object<WebhookType, number>} WebhookTypes The value set for a webhooks type.
  * @property {WSCodes} WSCodes The types of WebSocket error codes.
  * @property {Object<WSEventType, WSEventType>} WSEvents The type of a WebSocket message event.

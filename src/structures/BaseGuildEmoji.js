@@ -17,7 +17,6 @@ class BaseGuildEmoji extends Emoji {
      */
     this.guild = guild;
 
-    this.requiresColons = null;
     this.managed = null;
     this.available = null;
 
@@ -26,14 +25,6 @@ class BaseGuildEmoji extends Emoji {
 
   _patch(data) {
     if ('name' in data) this.name = data.name;
-
-    if ('require_colons' in data) {
-      /**
-       * Whether or not this emoji requires colons surrounding it
-       * @type {?boolean}
-       */
-      this.requiresColons = data.require_colons;
-    }
 
     if ('managed' in data) {
       /**

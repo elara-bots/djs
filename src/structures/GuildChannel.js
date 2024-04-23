@@ -290,34 +290,6 @@ class GuildChannel extends Channel {
   }
 
   /**
-   * Options used to set the parent of a channel.
-   * @typedef {Object} SetParentOptions
-   * @property {boolean} [lockPermissions=true] Whether to lock the permissions to what the parent's permissions are
-   * @property {string} [reason] The reason for modifying the parent of the channel
-   */
-
-  /**
-   * Sets the parent of this channel.
-   * @param {?CategoryChannelResolvable} channel The category channel to set as the parent
-   * @param {SetParentOptions} [options={}] The options for setting the parent
-   * @returns {Promise<GuildChannel>}
-   * @example
-   * // Add a parent to a channel
-   * message.channel.setParent('355908108431917066', { lockPermissions: false })
-   *   .then(channel => console.log(`New parent of ${message.channel.name}: ${channel.name}`))
-   *   .catch(console.error);
-   */
-  setParent(channel, { lockPermissions = true, reason } = {}) {
-    return this.edit(
-      {
-        parent: channel ?? null,
-        lockPermissions,
-      },
-      reason,
-    );
-  }
-
-  /**
    * Options used to clone a guild channel.
    * @typedef {GuildChannelCreateOptions} GuildChannelCloneOptions
    * @property {string} [name=this.name] Name of the new channel

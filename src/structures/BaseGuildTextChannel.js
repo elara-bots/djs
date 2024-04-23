@@ -69,18 +69,10 @@ class BaseGuildTextChannel extends GuildChannel {
     }
 
     if ('messages' in data) {
-      for (const message of data.messages) this.messages._add(message);
+      for (const message of data.messages) {
+        this.messages._add(message);
+      }
     }
-  }
-
-  /**
-   * Sets the type of this channel (only conversion between text and news is supported)
-   * @param {string} type The new channel type
-   * @param {string} [reason] Reason for changing the channel's type
-   * @returns {Promise<GuildChannel>}
-   */
-  setType(type, reason) {
-    return this.edit({ type }, reason);
   }
 
   /**

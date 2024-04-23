@@ -30,17 +30,6 @@ class CategoryChannel extends GuildChannel {
   }
 
   /**
-   * Sets the category parent of this channel.
-   * <warn>It is not possible to set the parent of a CategoryChannel.</warn>
-   * @method setParent
-   * @memberof CategoryChannel
-   * @instance
-   * @param {?CategoryChannelResolvable} channel The channel to set as parent
-   * @param {SetParentOptions} [options={}] The options for setting the parent
-   * @returns {Promise<GuildChannel>}
-   */
-
-  /**
    * Options for creating a channel using {@link CategoryChannel#createChannel}.
    * @typedef {Object} CategoryCreateChannelOptions
    * @property {string} [name] The name of the new channel
@@ -56,7 +45,6 @@ class CategoryChannel extends GuildChannel {
    * @property {ThreadAutoArchiveDuration} [defaultAutoArchiveDuration]
    * The default auto archive duration for all new threads in this channel
    * @property {?string} [rtcRegion] The specific region of the new channel
-   * @property {?VideoQualityMode|number} [videoQualityMode] The camera video quality mode of the new channel
    * @property {ChannelFlagsResolvable} [flags] The flags to set on the new channel
    * @property {GuildForumTagData[]} [availableTags] The tags to set as available in a forum channel
    * @property {?DefaultReactionEmoji} [defaultReactionEmoji] The emoji to set as the default reaction emoji

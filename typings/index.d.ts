@@ -91,7 +91,6 @@ import {
   GuildScheduledEventEntityTypes,
   GuildScheduledEventStatuses,
   GuildScheduledEventPrivacyLevels,
-  VideoQualityModes,
   SortOrderType,
   ForumLayoutType,
   ApplicationRoleConnectionMetadataTypes,
@@ -266,16 +265,6 @@ export class ApplicationCommand<PermissionsFetchType = {}> extends Base {
   private static transformOption(option: ApplicationCommandOptionData, received?: boolean): unknown;
   private static transformCommand(command: ApplicationCommandData): RESTPostAPIApplicationCommandsJSONBody;
   private static isAPICommandData(command: object): command is RESTPostAPIApplicationCommandsJSONBody;
-}
-
-export class ApplicationRoleConnectionMetadata {
-  private constructor(data: APIApplicationRoleConnectionMetadata);
-  public name: string;
-  public nameLocalizations: LocalizationMap | null;
-  public description: string;
-  public descriptionLocalizations: LocalizationMap | null;
-  public key: string;
-  public type: ApplicationRoleConnectionMetadataTypes;
 }
 
 export type ApplicationResolvable = Application | Activity | Snowflake;
@@ -455,7 +444,6 @@ export class BaseGuildEmoji extends Emoji {
   public guild: Guild | GuildPreview;
   public id: Snowflake;
   public managed: boolean | null;
-  public requiresColons: boolean | null;
 }
 
 export class BaseGuildTextChannel extends TextBasedChannelMixin(GuildChannel) {
@@ -468,8 +456,6 @@ export class BaseGuildTextChannel extends TextBasedChannelMixin(GuildChannel) {
   public topic: string | null;
   public createInvite(options?: CreateInviteOptions): Promise<Invite>;
   public fetchInvites(cache?: boolean): Promise<Collection<string, Invite>>;
-  public setType(type: Pick<typeof ChannelTypes, 'GUILD_TEXT'>, reason?: string): Promise<TextChannel>;
-  public setType(type: Pick<typeof ChannelTypes, 'GUILD_NEWS'>, reason?: string): Promise<NewsChannel>;
 }
 
 export class BaseGuildVoiceChannel extends TextBasedChannelMixin(GuildChannel) {
@@ -483,7 +469,6 @@ export class BaseGuildVoiceChannel extends TextBasedChannelMixin(GuildChannel) {
   public rateLimitPerUser: number | null;
   public status: string | null;
   public userLimit: number;
-  public videoQualityMode: VideoQualityMode | null;
   public createInvite(options?: CreateInviteOptions): Promise<Invite>;
   public fetchInvites(cache?: boolean): Promise<Collection<string, Invite>>;
 }
@@ -550,13 +535,7 @@ export type MappedChannelCategoryTypes = EnumValueMapped<
 
 export type CategoryChannelTypes = ExcludeEnum<
   typeof ChannelTypes,
-  | 'DM'
-  | 'UNKNOWN'
-  | 'GUILD_PUBLIC_THREAD'
-  | 'GUILD_NEWS_THREAD'
-  | 'GUILD_PRIVATE_THREAD'
-  | 'GUILD_CATEGORY'
-  | 'GUILD_DIRECTORY'
+  'DM' | 'UNKNOWN' | 'GUILD_PUBLIC_THREAD' | 'GUILD_NEWS_THREAD' | 'GUILD_PRIVATE_THREAD' | 'GUILD_CATEGORY'
 >;
 
 export class CategoryChannel extends GuildChannel {
@@ -588,7 +567,6 @@ export abstract class Channel extends Base {
   public isText(): this is TextBasedChannel;
   public isVoice(): this is BaseGuildVoiceChannel;
   public isThread(): this is ThreadChannel;
-  public isDirectory(): this is DirectoryChannel;
   public toString(): ChannelMention;
 }
 
@@ -972,9 +950,6 @@ export class Guild extends AnonymousGuild {
   public vanityURLUses: number | null;
   public readonly voiceAdapterCreator: InternalDiscordGatewayAdapterCreator;
   public readonly voiceStates: VoiceStateManager;
-  public widgetChannelId: Snowflake | null;
-  public widgetEnabled: boolean | null;
-  public readonly maximumBitrate: number;
   public delete(): Promise<Guild>;
   public discoverySplashURL(options?: StaticImageURLOptions): string | null;
   public edit(data: GuildEditData, reason?: string): Promise<Guild>;
@@ -1081,7 +1056,6 @@ export abstract class GuildChannel extends Channel {
     memberOrRole: GuildMemberResolvable | RoleResolvable,
     checkAdmin?: boolean,
   ): Readonly<Permissions> | null;
-  public setParent(channel: CategoryChannelResolvable | null, options?: SetParentOptions): Promise<this>;
   public isText(): this is GuildTextBasedChannel;
 }
 
@@ -2200,10 +2174,6 @@ export class StageChannel extends BaseGuildVoiceChannel {
   public type: 'GUILD_STAGE_VOICE';
 }
 
-export class DirectoryChannel extends Channel {
-  public flags: Readonly<ChannelFlags>;
-}
-
 export class StageInstance extends Base {
   private constructor(client: Client, data: RawStageInstanceData, channel: StageChannel);
   public id: Snowflake;
@@ -2940,7 +2910,6 @@ export const Constants: {
   ThreadChannelTypes: ThreadChannelTypes[];
   UserAgent: string;
   VerificationLevels: EnumHolder<typeof VerificationLevels>;
-  VideoQualityModes: EnumHolder<typeof VideoQualityModes>;
   VoiceBasedChannelTypes: VoiceBasedChannelTypes[];
   WebhookTypes: EnumHolder<typeof WebhookTypes>;
   WSCodes: {
@@ -4172,7 +4141,6 @@ export interface CategoryCreateChannelOptions {
   rateLimitPerUser?: number;
   position?: number;
   rtcRegion?: string;
-  videoQualityMode?: VideoQualityMode;
   availableTags?: GuildForumTagData[];
   defaultReactionEmoji?: DefaultReactionEmoji;
   defaultSortOrder?: SortOrderType;
@@ -4201,7 +4169,6 @@ export interface ChannelData {
   permissionOverwrites?: readonly OverwriteResolvable[] | Collection<Snowflake, OverwriteResolvable>;
   defaultAutoArchiveDuration?: ThreadAutoArchiveDuration | 'MAX';
   rtcRegion?: string | null;
-  videoQualityMode?: VideoQualityMode | null;
   availableTags?: GuildForumTagData[];
   defaultReactionEmoji?: DefaultReactionEmoji;
   defaultThreadRateLimitPerUser?: number;
@@ -5801,7 +5768,6 @@ export interface PartialChannelData {
   bitrate?: number;
   userLimit?: number;
   rtcRegion?: string | null;
-  videoQualityMode?: VideoQualityMode;
   permissionOverwrites?: PartialOverwriteData[];
   rateLimitPerUser?: number;
   availableTags?: GuildForumTagData[];
@@ -6199,8 +6165,6 @@ export class PollAnswer extends Base {
 }
 
 export type VerificationLevel = keyof typeof VerificationLevels;
-
-export type VideoQualityMode = keyof typeof VideoQualityModes;
 
 export type VoiceBasedChannelTypes = VoiceBasedChannel['type'];
 

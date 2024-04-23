@@ -9,13 +9,7 @@ const PermissionOverwrites = require('../structures/PermissionOverwrites');
 const ThreadChannel = require('../structures/ThreadChannel');
 const Webhook = require('../structures/Webhook');
 const ChannelFlags = require('../util/ChannelFlags');
-const {
-  ThreadChannelTypes,
-  ChannelTypes,
-  VideoQualityModes,
-  SortOrderTypes,
-  ForumLayoutTypes,
-} = require('../util/Constants');
+const { ThreadChannelTypes, ChannelTypes, SortOrderTypes, ForumLayoutTypes } = require('../util/Constants');
 const DataResolver = require('../util/DataResolver');
 const { resolveAutoArchiveMaxLimit, transformGuildForumTag, transformGuildDefaultReaction } = require('../util/Util');
 
@@ -129,7 +123,6 @@ class GuildChannelManager extends CachedManager {
       position,
       rateLimitPerUser,
       rtcRegion,
-      videoQualityMode,
       availableTags,
       defaultReactionEmoji,
       defaultSortOrder,
@@ -141,8 +134,6 @@ class GuildChannelManager extends CachedManager {
     parent &&= this.client.channels.resolveId(parent);
     permissionOverwrites &&= permissionOverwrites.map(o => PermissionOverwrites.resolve(o, this.guild));
     const intType = typeof type === 'number' ? type : ChannelTypes[type] ?? ChannelTypes.GUILD_TEXT;
-
-    const videoMode = typeof videoQualityMode === 'number' ? videoQualityMode : VideoQualityModes[videoQualityMode];
 
     const sortMode = typeof defaultSortOrder === 'number' ? defaultSortOrder : SortOrderTypes[defaultSortOrder];
 
@@ -162,7 +153,6 @@ class GuildChannelManager extends CachedManager {
         permission_overwrites: permissionOverwrites,
         rate_limit_per_user: rateLimitPerUser,
         rtc_region: rtcRegion,
-        video_quality_mode: videoMode,
         available_tags: availableTags?.map(availableTag => transformGuildForumTag(availableTag)),
         default_reaction_emoji: defaultReactionEmoji && transformGuildDefaultReaction(defaultReactionEmoji),
         default_sort_order: sortMode,
@@ -242,7 +232,6 @@ class GuildChannelManager extends CachedManager {
    * @property {ThreadAutoArchiveDuration} [defaultAutoArchiveDuration]
    * The default auto archive duration for all new threads in this channel
    * @property {?string} [rtcRegion] The RTC region of the channel
-   * @property {?VideoQualityMode|number} [videoQualityMode] The camera video quality mode of the channel
    * @property {ChannelFlagsResolvable} [flags] The flags to set on the channel
    * @property {GuildForumTagData[]} [availableTags] The tags to set as available in a forum channel
    * @property {?DefaultReactionEmoji} [defaultReactionEmoji] The emoji to set as the default reaction emoji
@@ -297,8 +286,6 @@ class GuildChannelManager extends CachedManager {
         bitrate: data.bitrate ?? channel.bitrate,
         user_limit: data.userLimit ?? channel.userLimit,
         rtc_region: 'rtcRegion' in data ? data.rtcRegion : channel.rtcRegion,
-        video_quality_mode:
-          typeof data.videoQualityMode === 'string' ? VideoQualityModes[data.videoQualityMode] : data.videoQualityMode,
         parent_id: parent,
         lock_permissions: data.lockPermissions,
         rate_limit_per_user: data.rateLimitPerUser,

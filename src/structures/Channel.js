@@ -8,7 +8,6 @@ let StageChannel;
 let TextChannel;
 let ThreadChannel;
 let VoiceChannel;
-let DirectoryChannel;
 let ForumChannel;
 const ChannelFlags = require('../util/ChannelFlags');
 const { ChannelTypes, ThreadChannelTypes, VoiceBasedChannelTypes } = require('../util/Constants');
@@ -136,14 +135,6 @@ class Channel extends Base {
     return ThreadChannelTypes.includes(this.type);
   }
 
-  /**
-   * Indicates whether this channel is a {@link DirectoryChannel}
-   * @returns {boolean}
-   */
-  isDirectory() {
-    return this.type === 'GUILD_DIRECTORY';
-  }
-
   static create(client, data, guild, { allowUnknownGuild } = {}) {
     CategoryChannel ??= require('./CategoryChannel');
     DMChannel ??= require('./DMChannel');
@@ -152,7 +143,6 @@ class Channel extends Base {
     TextChannel ??= require('./TextChannel');
     ThreadChannel ??= require('./ThreadChannel');
     VoiceChannel ??= require('./VoiceChannel');
-    DirectoryChannel ??= require('./DirectoryChannel');
     ForumChannel ??= require('./ForumChannel');
 
     let channel;
@@ -192,10 +182,6 @@ class Channel extends Base {
             if (!allowUnknownGuild) channel.parent?.threads.cache.set(channel.id, channel);
             break;
           }
-
-          case ChannelTypes.GUILD_DIRECTORY:
-            channel = new DirectoryChannel(client, data);
-            break;
 
           case ChannelTypes.GUILD_FORUM:
             channel = new ForumChannel(guild, data, client);
