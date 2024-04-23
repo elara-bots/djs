@@ -43,7 +43,6 @@ exports.AutoModerationRuleManager = require('./managers/AutoModerationRuleManage
 exports.BaseGuildEmojiManager = require('./managers/BaseGuildEmojiManager');
 exports.CachedManager = require('./managers/CachedManager');
 exports.ChannelManager = require('./managers/ChannelManager');
-exports.ClientVoiceManager = require('./client/voice/ClientVoiceManager');
 exports.DataManager = require('./managers/DataManager');
 exports.GuildApplicationCommandManager = require('./managers/GuildApplicationCommandManager');
 exports.GuildBanManager = require('./managers/GuildBanManager');

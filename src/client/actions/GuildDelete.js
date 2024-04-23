@@ -33,8 +33,6 @@ class GuildDeleteAction extends Action {
         };
       }
 
-      client.voice.adapters.get(data.id)?.destroy();
-
       // Delete guild
       client.guilds.cache.delete(guild.id);
 

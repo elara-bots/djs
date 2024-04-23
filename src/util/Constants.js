@@ -222,7 +222,6 @@ exports.Opcodes = {
  * * USER_UPDATE: userUpdate
  * * PRESENCE_UPDATE: presenceUpdate
  * * VOICE_CHANNEL_STATUS_UPDATE: voiceChannelStatusUpdate
- * * VOICE_SERVER_UPDATE: voiceServerUpdate
  * * VOICE_STATE_UPDATE: voiceStateUpdate
  * * WEBHOOKS_UPDATE: webhookUpdate
  * * INTERACTION_CREATE: interactionCreate
@@ -309,7 +308,6 @@ exports.Events = {
   USER_UPDATE: 'userUpdate',
   PRESENCE_UPDATE: 'presenceUpdate',
   VOICE_CHANNEL_STATUS_UPDATE: 'voiceChannelStatusUpdate',
-  VOICE_SERVER_UPDATE: 'voiceServerUpdate',
   VOICE_STATE_UPDATE: 'voiceStateUpdate',
   WEBHOOKS_UPDATE: 'webhookUpdate',
   INTERACTION_CREATE: 'interactionCreate',
@@ -419,7 +417,6 @@ exports.PartialTypes = keyMirror(['USER', 'CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 
  * * USER_UPDATE
  * * PRESENCE_UPDATE
  * * VOICE_STATE_UPDATE
- * * VOICE_SERVER_UPDATE
  * * WEBHOOKS_UPDATE
  * * INTERACTION_CREATE
  * * STAGE_INSTANCE_CREATE
@@ -485,7 +482,6 @@ exports.WSEvents = keyMirror([
   'USER_UPDATE',
   'PRESENCE_UPDATE',
   'VOICE_STATE_UPDATE',
-  'VOICE_SERVER_UPDATE',
   'WEBHOOKS_UPDATE',
   'INTERACTION_CREATE',
   'STAGE_INSTANCE_CREATE',

@@ -24,7 +24,6 @@ const {
   DefaultMessageNotificationLevels,
   VerificationLevels,
   ExplicitContentFilterLevels,
-  Status,
   PremiumTiers,
 } = require('../util/Constants');
 const DataResolver = require('../util/DataResolver');
@@ -767,29 +766,6 @@ class Guild extends AnonymousGuild {
     json.bannerURL = this.bannerURL();
     return json;
   }
-
-  /**
-   * The voice state adapter for this guild that can be used with @discordjs/voice to play audio in voice
-   * and stage channels.
-   * @type {Function}
-   * @readonly
-   */
-  get voiceAdapterCreator() {
-    return methods => {
-      this.client.voice.adapters.set(this.id, methods);
-      return {
-        sendPayload: data => {
-          if (this.shard.status !== Status.READY) return false;
-          this.shard.send(data);
-          return true;
-        },
-        destroy: () => {
-          this.client.voice.adapters.delete(this.id);
-        },
-      };
-    };
-  }
-
   /**
    * Creates a collection of this guild's roles, sorted by their position and ids.
    * @returns {Collection<Snowflake, Role>}

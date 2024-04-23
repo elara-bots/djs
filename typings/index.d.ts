@@ -592,7 +592,6 @@ export class Client<Ready extends boolean = boolean> extends BaseClient {
   public uptime: If<Ready, number>;
   public user: If<Ready, ClientUser>;
   public users: UserManager;
-  public voice: ClientVoiceManager;
   public ws: WebSocketManager;
   public destroy(): void;
   public fetchGuildPreview(guild: GuildResolvable): Promise<GuildPreview>;
@@ -662,12 +661,6 @@ export class Options extends null {
   public static createDefault(): ClientOptions;
   public static cacheWithLimits(settings?: CacheWithLimitsOptions): CacheFactory;
   public static cacheEverything(): CacheFactory;
-}
-
-export class ClientVoiceManager {
-  private constructor(client: Client);
-  public readonly client: Client;
-  public adapters: Map<Snowflake, InternalDiscordGatewayAdapterLibraryMethods>;
 }
 
 export { Collection } from '@discordjs/collection';
@@ -948,7 +941,6 @@ export class Guild extends AnonymousGuild {
   public systemChannelFlags: Readonly<SystemChannelFlags>;
   public systemChannelId: Snowflake | null;
   public vanityURLUses: number | null;
-  public readonly voiceAdapterCreator: InternalDiscordGatewayAdapterCreator;
   public readonly voiceStates: VoiceStateManager;
   public delete(): Promise<Guild>;
   public discoverySplashURL(options?: StaticImageURLOptions): string | null;
@@ -4532,7 +4524,6 @@ export interface ConstantsEvents {
   USER_UPDATE: 'userUpdate';
   PRESENCE_UPDATE: 'presenceUpdate';
   VOICE_CHANNEL_STATUS_UPDATE: 'voiceChannelStatusUpdate';
-  VOICE_SERVER_UPDATE: 'voiceServerUpdate';
   VOICE_STATE_UPDATE: 'voiceStateUpdate';
   WEBHOOKS_UPDATE: 'webhookUpdate';
   INTERACTION_CREATE: 'interactionCreate';
@@ -6296,7 +6287,6 @@ export type WSEventType =
   | 'USER_UPDATE'
   | 'PRESENCE_UPDATE'
   | 'VOICE_STATE_UPDATE'
-  | 'VOICE_SERVER_UPDATE'
   | 'WEBHOOKS_UPDATE'
   | 'INTERACTION_CREATE'
   | 'STAGE_INSTANCE_CREATE'
@@ -6315,33 +6305,5 @@ export type Serialized<T> = T extends symbol | bigint | (() => any)
   : T extends ReadonlyMap<unknown, unknown> | ReadonlySet<unknown>
   ? {}
   : { [K in keyof T]: Serialized<T[K]> };
-
-//#endregion
-
-//#region Voice
-
-/**
- * @internal Use `DiscordGatewayAdapterLibraryMethods` from `@discordjs/voice` instead.
- */
-export interface InternalDiscordGatewayAdapterLibraryMethods {
-  onVoiceServerUpdate(data: GatewayVoiceServerUpdateDispatchData): void;
-  onVoiceStateUpdate(data: GatewayVoiceStateUpdateDispatchData): void;
-  destroy(): void;
-}
-
-/**
- * @internal Use `DiscordGatewayAdapterImplementerMethods` from `@discordjs/voice` instead.
- */
-export interface InternalDiscordGatewayAdapterImplementerMethods {
-  sendPayload(payload: unknown): boolean;
-  destroy(): void;
-}
-
-/**
- * @internal Use `DiscordGatewayAdapterCreator` from `@discordjs/voice` instead.
- */
-export type InternalDiscordGatewayAdapterCreator = (
-  methods: InternalDiscordGatewayAdapterLibraryMethods,
-) => InternalDiscordGatewayAdapterImplementerMethods;
 
 //#endregion
