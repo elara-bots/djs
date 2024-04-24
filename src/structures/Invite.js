@@ -120,7 +120,7 @@ class Invite extends Base {
     if ('inviter' in data) {
       this.inviterId = data.inviter.id;
     } else {
-      this.inviter ??= null;
+      this.inviterId ??= null;
     }
 
     if ('target_user' in data) {
