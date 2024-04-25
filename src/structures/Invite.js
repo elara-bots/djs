@@ -167,7 +167,6 @@ class Invite extends Base {
        * @type {Snowflake}
        */
       this.channelId = data.channel_id;
-      this.channel = this.client.channels.resolve(data.channel_id);
     }
 
     if ('channel' in data) {
