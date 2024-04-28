@@ -141,7 +141,6 @@ exports.SelectMenuInteraction = require('./structures/SelectMenuInteraction');
 exports.StageChannel = require('./structures/StageChannel');
 exports.StageInstance = require('./structures/StageInstance').StageInstance;
 exports.Sticker = require('./structures/Sticker').Sticker;
-exports.StickerPack = require('./structures/StickerPack');
 exports.TextChannel = require('./structures/TextChannel');
 exports.TextInputComponent = require('./structures/TextInputComponent');
 exports.ThreadChannel = require('./structures/ThreadChannel');

@@ -1954,9 +1954,9 @@ export class Role extends Base {
   public readonly position: number;
   public rawPosition: number;
   public tags: RoleTagData | null;
-  public comparePositionTo(role: RoleResolvable): number;
   public icon: string | null;
   public unicodeEmoji: string | null;
+  public comparePositionTo(role: RoleResolvable): number;
   public edit(data: RoleData, reason?: string): Promise<Role>;
   public equals(role: Role): boolean;
   public iconURL(options?: StaticImageURLOptions): string | null;
@@ -2159,18 +2159,6 @@ export class Sticker extends Base {
   public fetchUser(): Promise<User | null>;
   public edit(data?: GuildStickerEditData, reason?: string): Promise<Sticker>;
   public equals(other: Sticker | unknown): boolean;
-}
-
-export class StickerPack extends Base {
-  private constructor(client: Client, data: RawStickerPackData);
-  public readonly createdTimestamp: number;
-  public readonly createdAt: Date;
-  public bannerId: Snowflake | null;
-  public description: string;
-  public id: Snowflake;
-  public name: string;
-  public stickers: Collection<Snowflake, Sticker>;
-  public bannerURL(options?: StaticImageURLOptions): string | null;
 }
 
 export class Sweepers {
