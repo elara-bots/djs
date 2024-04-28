@@ -86,20 +86,6 @@ class Channel extends Base {
   }
 
   /**
-   * Deletes this channel.
-   * @returns {Promise<Channel>}
-   * @example
-   * // Delete the channel
-   * channel.delete()
-   *   .then(console.log)
-   *   .catch(console.error);
-   */
-  async delete() {
-    await this.client.api.channels(this.id).delete();
-    return this;
-  }
-
-  /**
    * Fetches this channel.
    * @param {boolean} [force=true] Whether to skip the cache check and request the API
    * @returns {Promise<Channel>}

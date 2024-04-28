@@ -120,19 +120,6 @@ class GuildStickerManager extends CachedManager {
   }
 
   /**
-   * Deletes a sticker.
-   * @param {StickerResolvable} sticker The sticker to delete
-   * @param {string} [reason] Reason for deleting this sticker
-   * @returns {Promise<void>}
-   */
-  async delete(sticker, reason) {
-    sticker = this.resolveId(sticker);
-    if (!sticker) throw new TypeError('INVALID_TYPE', 'sticker', 'StickerResolvable');
-
-    await this.client.api.guilds(this.guild.id).stickers(sticker).delete({ reason });
-  }
-
-  /**
    * Obtains one or more stickers from Discord, or the sticker cache if they're already available.
    * @param {Snowflake} [id] The Sticker's id
    * @param {BaseFetchOptions} [options] Additional options for this fetch

@@ -117,21 +117,6 @@ class StageInstance extends Base {
   }
 
   /**
-   * Deletes this stage instance.
-   * @returns {Promise<StageInstance>}
-   * @example
-   * // Delete a stage instance
-   * stageInstance.delete()
-   *  .then(stageInstance => console.log(stageInstance))
-   *  .catch(console.error);
-   */
-  async delete() {
-    await this.guild.stageInstances.delete(this.channelId);
-    const clone = this._clone();
-    return clone;
-  }
-
-  /**
    * The timestamp this stage instances was created at
    * @type {number}
    * @readonly

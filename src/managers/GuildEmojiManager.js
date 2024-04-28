@@ -103,18 +103,6 @@ class GuildEmojiManager extends BaseGuildEmojiManager {
   }
 
   /**
-   * Deletes an emoji.
-   * @param {EmojiResolvable} emoji The Emoji resolvable to delete
-   * @param {string} [reason] Reason for deleting the emoji
-   * @returns {Promise<void>}
-   */
-  async delete(emoji, reason) {
-    const id = this.resolveId(emoji);
-    if (!id) throw new TypeError('INVALID_TYPE', 'emoji', 'EmojiResolvable', true);
-    await this.client.api.guilds(this.guild.id).emojis(id).delete({ reason });
-  }
-
-  /**
    * Edits an emoji.
    * @param {EmojiResolvable} emoji The Emoji resolvable to edit
    * @param {GuildEmojiEditData} data The new data for the emoji

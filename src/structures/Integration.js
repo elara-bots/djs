@@ -154,16 +154,6 @@ class Integration extends Base {
     }
   }
 
-  /**
-   * Deletes this integration.
-   * @returns {Promise<Integration>}
-   * @param {string} [reason] Reason for deleting this integration
-   */
-  async delete(reason) {
-    await this.client.api.guilds(this.guild.id).integrations(this.id).delete({ reason });
-    return this;
-  }
-
   toJSON() {
     return super.toJSON({
       role: 'roleId',

@@ -161,15 +161,6 @@ class AutoModerationRule extends Base {
   edit(options) {
     return this.guild.autoModerationRules.edit(this.id, options);
   }
-
-  /**
-   * Deletes this auto moderation rule.
-   * @param {string} [reason] The reason for deleting this auto moderation rule
-   * @returns {Promise<void>}
-   */
-  delete(reason) {
-    return this.guild.autoModerationRules.delete(this.id, reason);
-  }
 }
 
 module.exports = AutoModerationRule;

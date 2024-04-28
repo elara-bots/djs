@@ -280,17 +280,6 @@ class AutoModerationRuleManager extends CachedManager {
       new Collection(),
     );
   }
-
-  /**
-   * Deletes an auto moderation rule.
-   * @param {AutoModerationRuleResolvable} autoModerationRule The auto moderation rule to delete
-   * @param {string} [reason] The reason for deleting the auto moderation rule
-   * @returns {Promise<void>}
-   */
-  async delete(autoModerationRule, reason) {
-    const autoModerationRuleId = this.resolveId(autoModerationRule);
-    await this.client.api.guilds(this.guild.id)('auto-moderation').rules(autoModerationRuleId).delete({ reason });
-  }
 }
 
 module.exports = AutoModerationRuleManager;

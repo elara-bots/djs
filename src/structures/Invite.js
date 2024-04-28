@@ -281,16 +281,6 @@ class Invite extends Base {
   }
 
   /**
-   * Deletes this invite.
-   * @param {string} [reason] Reason for deleting this invite
-   * @returns {Promise<Invite>}
-   */
-  async delete(reason) {
-    await this.client.api.invites[this.code].delete({ reason });
-    return this;
-  }
-
-  /**
    * When concatenated with a string, this automatically concatenates the invite's URL instead of the object.
    * @returns {string}
    * @example

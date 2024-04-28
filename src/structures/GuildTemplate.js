@@ -120,15 +120,6 @@ class GuildTemplate extends Base {
   }
 
   /**
-   * Deletes this template.
-   * @returns {Promise<GuildTemplate>}
-   */
-  async delete() {
-    await this.client.api.guilds(this.guildId).templates(this.code).delete();
-    return this;
-  }
-
-  /**
    * Syncs this template to the current state of the guild.
    * @returns {Promise<GuildTemplate>}
    */

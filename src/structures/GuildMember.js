@@ -304,18 +304,6 @@ class GuildMember extends Base {
   }
 
   /**
-   * Returns `channel.permissionsFor(guildMember)`. Returns permissions for a member in a guild channel,
-   * taking into account roles and permission overwrites.
-   * @param {GuildChannelResolvable} channel The guild channel to use as context
-   * @returns {Readonly<Permissions>}
-   */
-  permissionsIn(channel) {
-    channel = this.guild.channels.resolve(channel);
-    if (!channel) throw new Error('GUILD_CHANNEL_RESOLVE');
-    return channel.permissionsFor(this);
-  }
-
-  /**
    * Edits this member.
    * @param {GuildMemberEditData} data The data to edit the member with
    * @param {string} [reason] Reason for editing this user
@@ -323,26 +311,6 @@ class GuildMember extends Base {
    */
   edit(data, reason) {
     return this.guild.members.edit(this, data, reason);
-  }
-
-  /**
-   * Sets the nickname for this member.
-   * @param {?string} nick The nickname for the guild member, or `null` if you want to reset their nickname
-   * @param {string} [reason] Reason for setting the nickname
-   * @returns {Promise<GuildMember>}
-   * @example
-   * // Set a nickname for a guild member
-   * guildMember.setNickname('cool nickname', 'Needed a new nickname')
-   *   .then(member => console.log(`Set nickname of ${member.user.username}`))
-   *   .catch(console.error);
-   * @example
-   * // Remove a nickname for a guild member
-   * guildMember.setNickname(null, 'No nicknames allowed!')
-   *   .then(member => console.log(`Removed nickname for ${member.user.username}`))
-   *   .catch(console.error);
-   */
-  setNickname(nick, reason) {
-    return this.edit({ nick }, reason);
   }
 
   /**

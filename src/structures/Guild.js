@@ -656,21 +656,6 @@ class Guild extends AnonymousGuild {
   }
 
   /**
-   * Deletes the guild.
-   * @returns {Promise<Guild>}
-   * @example
-   * // Delete a guild
-   * guild.delete()
-   *   .then(g => console.log(`Deleted the guild ${g}`))
-   *   .catch(console.error);
-   */
-  async delete() {
-    await this.client.api.guilds(this.id).delete();
-    this.client.actions.GuildDelete.handle({ id: this.id });
-    return this;
-  }
-
-  /**
    * Whether this guild equals another guild. It compares all properties, so for most operations
    * it is advisable to just compare `guild.id === guild2.id` as it is much faster and is often
    * what most users need.

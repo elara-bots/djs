@@ -237,7 +237,6 @@ export class ApplicationCommand<PermissionsFetchType = {}> extends Base {
   >;
   public type: ApplicationCommandType;
   public version: Snowflake;
-  public delete(): Promise<ApplicationCommand<PermissionsFetchType>>;
   public edit(data: Partial<ApplicationCommandData>): Promise<ApplicationCommand<PermissionsFetchType>>;
   public equals(
     command: ApplicationCommand | ApplicationCommandData | RawApplicationCommandData,
@@ -553,7 +552,6 @@ export abstract class Channel extends Base {
   public readonly partial: false;
   public type: keyof typeof ChannelTypes;
   public flags: Readonly<ChannelFlags> | null;
-  public delete(): Promise<this>;
   public fetch(force?: boolean): Promise<this>;
   public isText(): this is TextBasedChannel;
   public isTextBased(): this is TextBasedChannel;
@@ -925,7 +923,6 @@ export class Guild extends AnonymousGuild {
   public systemChannelId: Snowflake | null;
   public vanityURLUses: number | null;
   public readonly voiceStates: VoiceStateManager;
-  public delete(): Promise<Guild>;
   public discoverySplashURL(options?: StaticImageURLOptions): string | null;
   public edit(data: GuildEditData, reason?: string): Promise<Guild>;
   public equals(guild: Guild): boolean;
@@ -1020,11 +1017,8 @@ export abstract class GuildChannel extends Channel {
   public type: Exclude<keyof typeof ChannelTypes, 'DM' | 'UNKNOWN'>;
   public flags: Readonly<ChannelFlags>;
   public readonly viewable: boolean;
-  public clone(options?: GuildChannelCloneOptions): Promise<this>;
-  public delete(reason?: string): Promise<this>;
   public edit(data: ChannelData, reason?: string): Promise<this>;
   public equals(channel: GuildChannel): boolean;
-  public lockPermissions(): Promise<this>;
   public permissionsFor(memberOrRole: GuildMember | Role, checkAdmin?: boolean): Readonly<Permissions>;
   public permissionsFor(
     memberOrRole: GuildMemberResolvable | RoleResolvable,
@@ -1042,7 +1036,6 @@ export class GuildEmoji extends BaseGuildEmoji {
   public author: User | null;
   public readonly roles: GuildEmojiRoleManager;
   public readonly url: string;
-  public delete(reason?: string): Promise<GuildEmoji>;
   public edit(data: GuildEmojiEditData, reason?: string): Promise<GuildEmoji>;
   public equals(other: GuildEmoji | unknown): boolean;
   public fetchAuthor(): Promise<User>;
@@ -1090,8 +1083,6 @@ export class GuildMember extends PartialTextBasedChannel(Base) {
     readonly communicationDisabledUntil: Date;
   };
   public kick(reason?: string): Promise<GuildMember>;
-  public permissionsIn(channel: GuildChannelResolvable): Readonly<Permissions>;
-  public setNickname(nickname: string | null, reason?: string): Promise<GuildMember>;
   public toJSON(): unknown;
   public toString(): MemberMention;
   public valueOf(): string;
@@ -1155,7 +1146,6 @@ export class GuildScheduledEvent<S extends GuildScheduledEventStatus = GuildSche
   public edit<T extends GuildScheduledEventSetStatusArg<S>>(
     options: GuildScheduledEventEditOptions<S, T>,
   ): Promise<GuildScheduledEvent<T>>;
-  public delete(): Promise<GuildScheduledEvent<S>>;
   public toString(): string;
   public isActive(): this is GuildScheduledEvent<'ACTIVE'>;
   public isCanceled(): this is GuildScheduledEvent<'CANCELED'>;
@@ -1180,7 +1170,6 @@ export class GuildTemplate extends Base {
   public guildId: Snowflake;
   public serializedGuild: APITemplateSerializedSourceGuild;
   public unSynced: boolean | null;
-  public delete(): Promise<GuildTemplate>;
   public edit(options?: EditGuildTemplateOptions): Promise<GuildTemplate>;
   public sync(): Promise<GuildTemplate>;
   public static GUILD_TEMPLATES_PATTERN: RegExp;
@@ -1226,7 +1215,6 @@ export class Integration extends Base {
   public revoked: boolean | null;
   public get user(): User | undefined;
   public get role(): Role | undefined;
-  public delete(reason?: string): Promise<Integration>;
 }
 
 export class IntegrationApplication extends Application {
@@ -1358,7 +1346,6 @@ export class Invite extends Base {
   public temporary: boolean | null;
   public readonly url: string;
   public uses: number | null;
-  public delete(reason?: string): Promise<Invite>;
   public toJSON(): unknown;
   public toString(): string;
   public static INVITES_PATTERN: RegExp;
@@ -1970,7 +1957,6 @@ export class Role extends Base {
   public comparePositionTo(role: RoleResolvable): number;
   public icon: string | null;
   public unicodeEmoji: string | null;
-  public delete(reason?: string): Promise<Role>;
   public edit(data: RoleData, reason?: string): Promise<Role>;
   public equals(role: Role): boolean;
   public iconURL(options?: StaticImageURLOptions): string | null;
@@ -2147,7 +2133,6 @@ export class StageInstance extends Base {
   public readonly guild: Guild | null;
   public get guildScheduledEvent(): GuildScheduledEvent | null;
   public edit(options: StageInstanceEditOptions): Promise<StageInstance>;
-  public delete(): Promise<StageInstance>;
   public readonly createdTimestamp: number;
   public readonly createdAt: Date;
 }
@@ -2173,7 +2158,6 @@ export class Sticker extends Base {
   public fetch(): Promise<Sticker>;
   public fetchUser(): Promise<User | null>;
   public edit(data?: GuildStickerEditData, reason?: string): Promise<Sticker>;
-  public delete(reason?: string): Promise<Sticker>;
   public equals(other: Sticker | unknown): boolean;
 }
 
@@ -2360,7 +2344,6 @@ export class ThreadChannel extends TextBasedChannelMixin(Channel, ['fetchWebhook
     readonly createdAt: Date;
     type: 'GUILD_PRIVATE_THREAD';
   };
-  public delete(reason?: string): Promise<this>;
   public edit(data: ThreadEditData, reason?: string): Promise<ThreadChannel>;
   public join(): Promise<ThreadChannel>;
   public leave(): Promise<ThreadChannel>;
@@ -2879,7 +2862,6 @@ export class ApplicationCommandManager<
   >;
   private commandPath({ id, guildId }: { id?: Snowflake; guildId?: Snowflake }): unknown;
   public create(command: ApplicationCommandDataResolvable, guildId?: Snowflake): Promise<ApplicationCommandScope>;
-  public delete(command: ApplicationCommandResolvable, guildId?: Snowflake): Promise<ApplicationCommandScope | null>;
   public edit(
     command: ApplicationCommandResolvable,
     data: Partial<ApplicationCommandDataResolvable>,
@@ -2970,7 +2952,6 @@ export class GuildApplicationCommandManager extends ApplicationCommandManager<Ap
   private constructor(guild: Guild, iterable?: Iterable<RawApplicationCommandData>);
   public guild: Guild;
   public create(command: ApplicationCommandDataResolvable): Promise<ApplicationCommand>;
-  public delete(command: ApplicationCommandResolvable): Promise<ApplicationCommand | null>;
   public edit(
     command: ApplicationCommandResolvable,
     data: Partial<ApplicationCommandDataResolvable>,
@@ -3023,7 +3004,6 @@ export class GuildChannelManager extends CachedManager<Snowflake, GuildBasedChan
   ): Promise<Collection<Snowflake, NonThreadGuildBasedChannel | null>>;
   public fetchWebhooks(channel: GuildChannelResolvable): Promise<Collection<Snowflake, Webhook>>;
   public fetchActiveThreads(cache?: boolean): Promise<FetchedThreads>;
-  public delete(channel: GuildChannelResolvable, reason?: string): Promise<void>;
 }
 
 export class GuildEmojiManager extends BaseGuildEmojiManager {
@@ -3037,7 +3017,6 @@ export class GuildEmojiManager extends BaseGuildEmojiManager {
   public fetch(id: Snowflake, options?: BaseFetchOptions): Promise<GuildEmoji>;
   public fetch(id?: undefined, options?: BaseFetchOptions): Promise<Collection<Snowflake, GuildEmoji>>;
   public fetchAuthor(emoji: EmojiResolvable): Promise<User>;
-  public delete(emoji: EmojiResolvable, reason?: string): Promise<void>;
   public edit(emoji: EmojiResolvable, data: GuildEmojiEditData, reason?: string): Promise<GuildEmoji>;
 }
 
@@ -3103,7 +3082,6 @@ export class GuildInviteManager extends DataManager<string, Invite, InviteResolv
   public create(channel: GuildInvitableChannelResolvable, options?: CreateInviteOptions): Promise<Invite>;
   public fetch(options: InviteResolvable | FetchInviteOptions): Promise<Invite>;
   public fetch(options?: FetchInvitesOptions): Promise<Collection<string, Invite>>;
-  public delete(invite: InviteResolvable, reason?: string): Promise<Invite>;
 }
 
 export class GuildScheduledEventManager extends CachedManager<
@@ -3122,7 +3100,6 @@ export class GuildScheduledEventManager extends CachedManager<
     guildScheduledEvent: GuildScheduledEventResolvable,
     options: GuildScheduledEventEditOptions<S, T>,
   ): Promise<GuildScheduledEvent<T>>;
-  public delete(guildScheduledEvent: GuildScheduledEventResolvable): Promise<void>;
 }
 
 export class GuildStickerManager extends CachedManager<Snowflake, Sticker, StickerResolvable> {
@@ -3135,7 +3112,6 @@ export class GuildStickerManager extends CachedManager<Snowflake, Sticker, Stick
     options?: GuildStickerCreateOptions,
   ): Promise<Sticker>;
   public edit(sticker: StickerResolvable, data?: GuildStickerEditData, reason?: string): Promise<Sticker>;
-  public delete(sticker: StickerResolvable, reason?: string): Promise<void>;
   public fetch(id: Snowflake, options?: BaseFetchOptions): Promise<Sticker>;
   public fetch(id?: Snowflake, options?: BaseFetchOptions): Promise<Collection<Snowflake, Sticker>>;
   public fetchUser(sticker: StickerResolvable): Promise<User | null>;
@@ -3235,7 +3211,6 @@ export class RoleManager extends CachedManager<Snowflake, Role, RoleResolvable> 
   public fetch(id?: undefined, options?: BaseFetchOptions): Promise<Collection<Snowflake, Role>>;
   public create(options?: CreateRoleOptions): Promise<Role>;
   public edit(role: RoleResolvable, options: RoleData, reason?: string): Promise<Role>;
-  public delete(role: RoleResolvable, reason?: string): Promise<void>;
   public comparePositions(role1: RoleResolvable, role2: RoleResolvable): number;
 }
 
@@ -3245,7 +3220,6 @@ export class StageInstanceManager extends CachedManager<Snowflake, StageInstance
   public create(channel: StageChannelResolvable, options: StageInstanceCreateOptions): Promise<StageInstance>;
   public fetch(channel: StageChannelResolvable, options?: BaseFetchOptions): Promise<StageInstance>;
   public edit(channel: StageChannelResolvable, options: StageInstanceEditOptions): Promise<StageInstance>;
-  public delete(channel: StageChannelResolvable): Promise<void>;
 }
 
 export class ThreadManager extends CachedManager<Snowflake, ThreadChannel, ThreadChannelResolvable> {
@@ -3811,7 +3785,6 @@ export class AutoModerationRule extends Base {
   public exemptRoles: Collection<Snowflake, Role>;
   public exemptChannels: Collection<Snowflake, GuildBasedChannel>;
   public edit(options: AutoModerationRuleEditOptions): Promise<AutoModerationRule>;
-  public delete(reason?: string): Promise<void>;
 }
 
 export class AutoModerationRuleManager extends CachedManager<
@@ -3828,7 +3801,6 @@ export class AutoModerationRuleManager extends CachedManager<
   ): Promise<AutoModerationRule>;
   public fetch(options: AutoModerationRuleResolvable | FetchAutoModerationRuleOptions): Promise<AutoModerationRule>;
   public fetch(options?: FetchAutoModerationRulesOptions): Promise<Collection<Snowflake, AutoModerationRule>>;
-  public delete(autoModerationRule: AutoModerationRuleResolvable, reason?: string): Promise<void>;
 }
 
 export interface ApplicationCommandPermissionData {
@@ -4061,7 +4033,6 @@ export interface ChannelData {
   userLimit?: number;
   parent?: CategoryChannelResolvable | null;
   rateLimitPerUser?: number;
-  lockPermissions?: boolean;
   permissionOverwrites?: readonly OverwriteResolvable[] | Collection<Snowflake, OverwriteResolvable>;
   defaultAutoArchiveDuration?: ThreadAutoArchiveDuration | 'MAX';
   rtcRegion?: string | null;
@@ -4084,7 +4055,6 @@ export type ChannelMention = `<#${Snowflake}>`;
 
 export interface ChannelPosition {
   channel: NonThreadGuildBasedChannel | Snowflake;
-  lockPermissions?: boolean;
   parent?: CategoryChannelResolvable | null;
   position?: number;
 }
@@ -5765,7 +5735,6 @@ export interface SetChannelPositionOptions {
 }
 
 export interface SetParentOptions {
-  lockPermissions?: boolean;
   reason?: string;
 }
 

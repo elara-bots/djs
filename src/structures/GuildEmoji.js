@@ -112,16 +112,6 @@ class GuildEmoji extends BaseGuildEmoji {
   }
 
   /**
-   * Deletes the emoji.
-   * @param {string} [reason] Reason for deleting the emoji
-   * @returns {Promise<GuildEmoji>}
-   */
-  async delete(reason) {
-    await this.guild.emojis.delete(this, reason);
-    return this;
-  }
-
-  /**
    * Whether this emoji is the same as another one.
    * @param {GuildEmoji|APIEmoji} other The emoji to compare it to
    * @returns {boolean}

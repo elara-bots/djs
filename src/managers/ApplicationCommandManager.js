@@ -191,29 +191,6 @@ class ApplicationCommandManager extends CachedManager {
   }
 
   /**
-   * Deletes an application command.
-   * @param {ApplicationCommandResolvable} command The command to delete
-   * @param {Snowflake} [guildId] The guild's id where the command is registered,
-   * ignored when using a {@link GuildApplicationCommandManager}
-   * @returns {Promise<?ApplicationCommand>}
-   * @example
-   * // Delete a command
-   * guild.commands.delete('123456789012345678')
-   *   .then(console.log)
-   *   .catch(console.error);
-   */
-  async delete(command, guildId) {
-    const id = this.resolveId(command);
-    if (!id) throw new TypeError('INVALID_TYPE', 'command', 'ApplicationCommandResolvable');
-
-    await this.commandPath({ id, guildId }).delete();
-
-    const cached = this.resolve(id);
-    this.cache.delete(id);
-    return cached ?? null;
-  }
-
-  /**
    * Transforms an {@link ApplicationCommandData} object into something that can be used with the API.
    * @param {ApplicationCommandDataResolvable} command The command to transform
    * @returns {APIApplicationCommand}

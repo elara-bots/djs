@@ -401,21 +401,6 @@ class ThreadChannel extends Channel {
     return this.type === 'GUILD_PRIVATE_THREAD';
   }
 
-  /**
-   * Deletes this thread.
-   * @param {string} [reason] Reason for deleting this thread
-   * @returns {Promise<ThreadChannel>}
-   * @example
-   * // Delete the thread
-   * thread.delete('cleaning out old threads')
-   *   .then(deletedThread => console.log(deletedThread))
-   *   .catch(console.error);
-   */
-  async delete(reason) {
-    await this.guild.channels.delete(this.id, reason);
-    return this;
-  }
-
   // These are here only for documentation purposes - they are implemented by TextBasedChannel
   /* eslint-disable no-empty-function */
   send() {}

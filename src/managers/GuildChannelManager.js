@@ -224,8 +224,6 @@ class GuildChannelManager extends CachedManager {
    * @property {number} [bitrate] The bitrate of the voice channel
    * @property {number} [userLimit] The user limit of the voice channel
    * @property {?CategoryChannelResolvable} [parent] The parent of the channel
-   * @property {boolean} [lockPermissions]
-   * Lock the permissions of the channel to what the parent's permissions are
    * @property {OverwriteResolvable[]|Collection<Snowflake, OverwriteResolvable>} [permissionOverwrites]
    * Permission overwrites for the channel
    * @property {number} [rateLimitPerUser] The rate limit per user (slowmode) for the channel in seconds
@@ -259,21 +257,6 @@ class GuildChannelManager extends CachedManager {
 
     let permission_overwrites = data.permissionOverwrites?.map(o => PermissionOverwrites.resolve(o, this.guild));
 
-    if (data.lockPermissions) {
-      if (parent) {
-        const newParent = this.guild.channels.resolve(parent);
-        if (newParent?.type === 'GUILD_CATEGORY') {
-          permission_overwrites = newParent.permissionOverwrites.cache.map(o =>
-            PermissionOverwrites.resolve(o, this.guild),
-          );
-        }
-      } else if (channel.parent) {
-        permission_overwrites = channel.parent.permissionOverwrites.cache.map(o =>
-          PermissionOverwrites.resolve(o, this.guild),
-        );
-      }
-    }
-
     let defaultAutoArchiveDuration = data.defaultAutoArchiveDuration;
     if (defaultAutoArchiveDuration === 'MAX') defaultAutoArchiveDuration = resolveAutoArchiveMaxLimit(this.guild);
 
@@ -287,7 +270,6 @@ class GuildChannelManager extends CachedManager {
         user_limit: data.userLimit ?? channel.userLimit,
         rtc_region: 'rtcRegion' in data ? data.rtcRegion : channel.rtcRegion,
         parent_id: parent,
-        lock_permissions: data.lockPermissions,
         rate_limit_per_user: data.rateLimitPerUser,
         default_auto_archive_duration: defaultAutoArchiveDuration,
         permission_overwrites,
@@ -369,23 +351,6 @@ class GuildChannelManager extends CachedManager {
   async fetchActiveThreads(cache = true) {
     const raw = await this.client.api.guilds(this.guild.id).threads.active.get();
     return ThreadManager._mapThreads(raw, this.client, { guild: this.guild, cache });
-  }
-
-  /**
-   * Deletes the channel.
-   * @param {GuildChannelResolvable} channel The channel to delete
-   * @param {string} [reason] Reason for deleting this channel
-   * @returns {Promise<void>}
-   * @example
-   * // Delete the channel
-   * guild.channels.delete('858850993013260338', 'making room for new channels')
-   *   .then(console.log)
-   *   .catch(console.error);
-   */
-  async delete(channel, reason) {
-    const id = this.resolveId(channel);
-    if (!id) throw new TypeError('INVALID_TYPE', 'channel', 'GuildChannelResolvable');
-    await this.client.api.channels(id).delete({ reason });
   }
 }
 

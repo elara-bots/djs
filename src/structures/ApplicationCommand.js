@@ -246,19 +246,6 @@ class ApplicationCommand extends Base {
   }
 
   /**
-   * Deletes this command.
-   * @returns {Promise<ApplicationCommand>}
-   * @example
-   * // Delete this command
-   * command.delete()
-   *   .then(console.log)
-   *   .catch(console.error);
-   */
-  delete() {
-    return this.manager.delete(this, this.guildId);
-  }
-
-  /**
    * Whether this command equals another command. It compares all properties, so for most operations
    * it is advisable to just compare `command.id === command2.id` as it is much faster and is often
    * what most users need.

@@ -195,18 +195,6 @@ class GuildInviteManager extends CachedManager {
     });
     return new Invite(this.client, invite);
   }
-
-  /**
-   * Deletes an invite.
-   * @param {InviteResolvable} invite The invite to delete
-   * @param {string} [reason] Reason for deleting the invite
-   * @returns {Promise<void>}
-   */
-  async delete(invite, reason) {
-    const code = DataResolver.resolveInviteCode(invite);
-
-    await this.client.api.invites(code).delete({ reason });
-  }
 }
 
 module.exports = GuildInviteManager;

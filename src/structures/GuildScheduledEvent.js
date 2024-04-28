@@ -279,20 +279,6 @@ class GuildScheduledEvent extends Base {
   }
 
   /**
-   * Deletes this guild scheduled event.
-   * @returns {Promise<GuildScheduledEvent>}
-   * @example
-   * // Delete a guild scheduled event
-   * guildScheduledEvent.delete()
-   *  .then(guildScheduledEvent => console.log(guildScheduledEvent))
-   *  .catch(console.error);
-   */
-  async delete() {
-    await this.guild.scheduledEvents.delete(this.id);
-    return this;
-  }
-
-  /**
    * When concatenated with a string, this automatically concatenates the event's URL instead of the object.
    * @returns {string}
    * @example

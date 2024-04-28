@@ -1,7 +1,6 @@
 'use strict';
 
 const { Channel } = require('./Channel');
-const { Error } = require('../errors');
 const PermissionOverwriteManager = require('../managers/PermissionOverwriteManager');
 const { VoiceBasedChannelTypes } = require('../util/Constants');
 const Permissions = require('../util/Permissions');
@@ -255,16 +254,6 @@ class GuildChannel extends Channel {
   }
 
   /**
-   * Locks in the permission overwrites from the parent channel.
-   * @returns {Promise<GuildChannel>}
-   */
-  lockPermissions() {
-    if (!this.parent) return Promise.reject(new Error('GUILD_CHANNEL_ORPHAN'));
-    const permissionOverwrites = this.parent.permissionOverwrites.cache.map(overwrite => overwrite.toJSON());
-    return this.edit({ permissionOverwrites });
-  }
-
-  /**
    * A collection of cached members of this channel, mapped by their ids.
    * Members that can view this channel, if the channel is text-based.
    * Members in the channel, if the channel is voice-based.
@@ -288,33 +277,6 @@ class GuildChannel extends Channel {
    */
   edit(data, reason) {
     return this.guild.channels.edit(this, data, reason);
-  }
-
-  /**
-   * Options used to clone a guild channel.
-   * @typedef {GuildChannelCreateOptions} GuildChannelCloneOptions
-   * @property {string} [name=this.name] Name of the new channel
-   */
-
-  /**
-   * Clones this channel.
-   * @param {GuildChannelCloneOptions} [options] The options for cloning this channel
-   * @returns {Promise<GuildChannel>}
-   */
-  clone(options = {}) {
-    return this.guild.channels.create(options.name ?? this.name, {
-      permissionOverwrites: this.permissionOverwrites.cache,
-      topic: this.topic,
-      type: this.type,
-      nsfw: this.nsfw,
-      parent: this.parent,
-      bitrate: this.bitrate,
-      userLimit: this.userLimit,
-      rateLimitPerUser: this.rateLimitPerUser,
-      position: this.rawPosition,
-      reason: null,
-      ...options,
-    });
   }
 
   /**
@@ -382,21 +344,6 @@ class GuildChannel extends Channel {
     const permissions = this.permissionsFor(this.client.user);
     if (!permissions) return false;
     return permissions.has(Permissions.FLAGS.VIEW_CHANNEL, false);
-  }
-
-  /**
-   * Deletes this channel.
-   * @param {string} [reason] Reason for deleting this channel
-   * @returns {Promise<GuildChannel>}
-   * @example
-   * // Delete the channel
-   * channel.delete('making room for new channels')
-   *   .then(console.log)
-   *   .catch(console.error);
-   */
-  async delete(reason) {
-    await this.guild.channels.delete(this.id, reason);
-    return this;
   }
 }
 

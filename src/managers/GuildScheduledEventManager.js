@@ -234,18 +234,6 @@ class GuildScheduledEventManager extends CachedManager {
 
     return this._add(data);
   }
-
-  /**
-   * Deletes a guild scheduled event.
-   * @param {GuildScheduledEventResolvable} guildScheduledEvent The guild scheduled event to delete
-   * @returns {Promise<void>}
-   */
-  async delete(guildScheduledEvent) {
-    const guildScheduledEventId = this.resolveId(guildScheduledEvent);
-    if (!guildScheduledEventId) throw new Error('GUILD_SCHEDULED_EVENT_RESOLVE');
-
-    await this.client.api.guilds(this.guild.id, 'scheduled-events', guildScheduledEventId).delete();
-  }
 }
 
 module.exports = GuildScheduledEventManager;

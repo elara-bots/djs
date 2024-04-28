@@ -249,21 +249,6 @@ class Role extends Base {
   }
 
   /**
-   * Deletes the role.
-   * @param {string} [reason] Reason for deleting this role
-   * @returns {Promise<Role>}
-   * @example
-   * // Delete a role
-   * role.delete('The role needed to go')
-   *   .then(deleted => console.log(`Deleted role ${deleted.name}`))
-   *   .catch(console.error);
-   */
-  async delete(reason) {
-    await this.guild.roles.delete(this.id, reason);
-    return this;
-  }
-
-  /**
    * A link to the role's icon
    * @param {StaticImageURLOptions} [options={}] Options for the image URL
    * @returns {?string}

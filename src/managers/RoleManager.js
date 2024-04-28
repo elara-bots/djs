@@ -192,23 +192,6 @@ class RoleManager extends CachedManager {
   }
 
   /**
-   * Deletes a role.
-   * @param {RoleResolvable} role The role to delete
-   * @param {string} [reason] Reason for deleting the role
-   * @returns {Promise<void>}
-   * @example
-   * // Delete a role
-   * guild.roles.delete('222079219327434752', 'The role needed to go')
-   *   .then(() => console.log('Deleted the role.'))
-   *   .catch(console.error);
-   */
-  async delete(role, reason) {
-    const id = this.resolveId(role);
-    await this.client.api.guilds[this.guild.id].roles[id].delete({ reason });
-    this.client.actions.GuildRoleDelete.handle({ guild_id: this.guild.id, role_id: id });
-  }
-
-  /**
    * Compares the positions of two roles.
    * @param {RoleResolvable} role1 First role to compare
    * @param {RoleResolvable} role2 Second role to compare

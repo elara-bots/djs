@@ -145,18 +145,6 @@ class StageInstanceManager extends CachedManager {
 
     return this._add(data);
   }
-
-  /**
-   * Deletes an existing stage instance.
-   * @param {StageChannelResolvable} channel The stage channel whose associated stage instance is to be deleted
-   * @returns {Promise<void>}
-   */
-  async delete(channel) {
-    const channelId = this.guild.channels.resolveId(channel);
-    if (!channelId) throw new Error('STAGE_CHANNEL_RESOLVE');
-
-    await this.client.api('stage-instances', channelId).delete();
-  }
 }
 
 module.exports = StageInstanceManager;

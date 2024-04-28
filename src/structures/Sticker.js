@@ -209,21 +209,6 @@ class Sticker extends Base {
   }
 
   /**
-   * Deletes the sticker.
-   * @returns {Promise<Sticker>}
-   * @param {string} [reason] Reason for deleting this sticker
-   * @example
-   * // Delete a message
-   * sticker.delete()
-   *   .then(s => console.log(`Deleted sticker ${s.name}`))
-   *   .catch(console.error);
-   */
-  async delete(reason) {
-    await this.guild.stickers.delete(this, reason);
-    return this;
-  }
-
-  /**
    * Whether this sticker is the same as another one.
    * @param {Sticker|APISticker} other The sticker to compare it to
    * @returns {boolean}
