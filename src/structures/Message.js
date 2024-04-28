@@ -3,7 +3,6 @@
 const { Collection } = require('@discordjs/collection');
 const Base = require('./Base');
 const BaseMessageComponent = require('./BaseMessageComponent');
-const ClientApplication = require('./ClientApplication');
 const InteractionCollector = require('./InteractionCollector');
 const MessageAttachment = require('./MessageAttachment');
 const Embed = require('./MessageEmbed');
@@ -14,7 +13,7 @@ const ReactionCollector = require('./ReactionCollector');
 const { Sticker } = require('./Sticker');
 const { Error } = require('../errors');
 const ReactionManager = require('../managers/ReactionManager');
-const { InteractionTypes, MessageTypes, SystemMessageTypes, MaxBulkDeletableMessageAge } = require('../util/Constants');
+const { InteractionTypes, MessageTypes, SystemMessageTypes } = require('../util/Constants');
 const MessageFlags = require('../util/MessageFlags');
 const Permissions = require('../util/Permissions');
 const SnowflakeUtil = require('../util/SnowflakeUtil');
@@ -49,17 +48,6 @@ class Message extends Base {
      * @type {Snowflake}
      */
     this.id = data.id;
-
-    if ('position' in data) {
-      /**
-       * A generally increasing integer (there may be gaps or duplicates) that represents
-       * the approximate position of the message in a thread.
-       * @type {?number}
-       */
-      this.position = data.position;
-    } else {
-      this.position ??= null;
-    }
 
     /**
      * The timestamp the message was sent at
@@ -112,28 +100,6 @@ class Message extends Base {
       this.pinned = Boolean(data.pinned);
     } else {
       this.pinned ??= null;
-    }
-
-    if ('tts' in data) {
-      /**
-       * Whether or not the message was Text-To-Speech
-       * @type {?boolean}
-       */
-      this.tts = data.tts;
-    } else {
-      this.tts ??= null;
-    }
-
-    if ('nonce' in data) {
-      /**
-       * A random number or string used for checking message delivery
-       * <warn>This is only received after the message was sent successfully, and
-       * lost if re-fetched</warn>
-       * @type {?string}
-       */
-      this.nonce = data.nonce;
-    } else {
-      this.nonce ??= null;
     }
 
     if ('embeds' in data) {
@@ -251,16 +217,6 @@ class Message extends Base {
       this.webhookId = data.webhook_id;
     } else {
       this.webhookId ??= null;
-    }
-
-    if ('application' in data) {
-      /**
-       * Supplemental application information for group activities
-       * @type {?ClientApplication}
-       */
-      this.groupActivityApplication = new ClientApplication(this.client, data.application);
-    } else {
-      this.groupActivityApplication ??= null;
     }
 
     if ('application_id' in data) {
@@ -609,39 +565,6 @@ class Message extends Base {
   }
 
   /**
-   * Whether the message is bulk deletable by the client user
-   * @type {boolean}
-   * @readonly
-   * @example
-   * // Filter for bulk deletable messages
-   * channel.bulkDelete(messages.filter(message => message.bulkDeletable));
-   */
-  get bulkDeletable() {
-    return (
-      (this.inGuild() &&
-        Date.now() - this.createdTimestamp < MaxBulkDeletableMessageAge &&
-        this.deletable &&
-        this.channel?.permissionsFor(this.client.user).has(Permissions.FLAGS.MANAGE_MESSAGES, false)) ??
-      false
-    );
-  }
-
-  /**
-   * Whether the message is pinnable by the client user
-   * @type {boolean}
-   * @readonly
-   */
-  get pinnable() {
-    const { channel } = this;
-    return Boolean(
-      !this.system &&
-        (!this.guild ||
-          (channel?.viewable &&
-            channel?.permissionsFor(this.client.user)?.has(Permissions.FLAGS.MANAGE_MESSAGES, false))),
-    );
-  }
-
-  /**
    * Fetches the Message this crosspost/reply/pin-add references, if available to the client
    * @returns {Promise<Message>}
    */
@@ -652,25 +575,6 @@ class Message extends Base {
     if (!channel) throw new Error('GUILD_CHANNEL_RESOLVE');
     const message = await channel.messages.fetch(messageId);
     return message;
-  }
-
-  /**
-   * Whether the message is crosspostable by the client user
-   * @type {boolean}
-   * @readonly
-   */
-  get crosspostable() {
-    const bitfield =
-      Permissions.FLAGS.SEND_MESSAGES |
-      (this.author.id === this.client.user.id ? Permissions.defaultBit : Permissions.FLAGS.MANAGE_MESSAGES);
-    const { channel } = this;
-    return Boolean(
-      channel?.type === 'GUILD_NEWS' &&
-        !this.flags.has(MessageFlags.FLAGS.CROSSPOSTED) &&
-        this.type === 'DEFAULT' &&
-        channel.viewable &&
-        channel.permissionsFor(this.client.user)?.has(bitfield, false),
-    );
   }
 
   /**
@@ -856,18 +760,9 @@ class Message extends Base {
   }
 
   /**
-   * Resolves a component by a custom id.
-   * @param {string} customId The custom id to resolve against
-   * @returns {?MessageActionRowComponent}
-   */
-  resolveComponent(customId) {
-    return this.components.flatMap(row => row.components).find(component => component.customId === customId) ?? null;
-  }
-
-  /**
    * Used mainly internally. Whether two messages are identical in properties. If you want to compare messages
    * without checking all the properties, use `message.id === message2.id`, which is much more efficient. This
-   * method allows you to see if there are differences in content, embeds, attachments, nonce and tts properties.
+   * method allows you to see if there are differences in content, embeds and attachments properties.
    * @param {Message} message The message to compare it to
    * @param {APIMessage} rawData Raw data passed through the WebSocket about this message
    * @returns {boolean}
@@ -881,8 +776,6 @@ class Message extends Base {
       this.id === message.id &&
       this.author.id === message.author.id &&
       this.content === message.content &&
-      this.tts === message.tts &&
-      this.nonce === message.nonce &&
       this.embeds.length === message.embeds.length &&
       this.attachments.length === message.attachments.length;
 
@@ -919,7 +812,6 @@ class Message extends Base {
     return super.toJSON({
       channel: 'channelId',
       author: 'authorId',
-      groupActivityApplication: 'groupActivityApplicationId',
       guild: 'guildId',
       cleanContent: true,
       member: false,

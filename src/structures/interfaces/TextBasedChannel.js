@@ -25,8 +25,6 @@ class TextBasedChannel {
   /**
    * Base options provided when sending.
    * @typedef {Object} BaseMessageOptions
-   * @property {boolean} [tts=false] Whether or not the message should be spoken aloud
-   * @property {string} [nonce=''] The nonce for the message
    * @property {string} [content=''] The content for the message
    * @property {Array<(MessageEmbed|APIEmbed)>} [embeds] The embeds for the message
    * (see [here](https://discord.com/developers/docs/resources/channel#embed-object) for more details)

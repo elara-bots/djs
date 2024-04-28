@@ -1440,7 +1440,6 @@ export class Message<Cached extends boolean = boolean> extends Base {
   public applicationId: Snowflake | null;
   public attachments: Collection<Snowflake, MessageAttachment>;
   public author: User;
-  public get bulkDeletable(): boolean;
   public readonly channel: If<Cached, GuildTextBasedChannel, TextBasedChannel>;
   public channelId: Snowflake;
   public readonly cleanContent: string;
@@ -1448,13 +1447,11 @@ export class Message<Cached extends boolean = boolean> extends Base {
   public content: string;
   public readonly createdAt: Date;
   public createdTimestamp: number;
-  public readonly crosspostable: boolean;
   public readonly deletable: boolean;
   public readonly editable: boolean;
   public readonly editedAt: Date | null;
   public editedTimestamp: number | null;
   public embeds: MessageEmbed[];
-  public groupActivityApplication: ClientApplication | null;
   public guildId: If<Cached, Snowflake>;
   public readonly guild: If<Cached, Guild>;
   public readonly hasThread: boolean;
@@ -1462,22 +1459,18 @@ export class Message<Cached extends boolean = boolean> extends Base {
   public interaction: MessageInteraction | null;
   public readonly member: GuildMember | null;
   public mentions: MessageMentions;
-  public nonce: string | number | null;
   public readonly partial: false;
-  public readonly pinnable: boolean;
   public pinned: boolean;
   public poll: Poll | null;
   public reactions: ReactionManager;
   public stickers: Collection<Snowflake, Sticker>;
   public system: boolean;
   public readonly thread: ThreadChannel | null;
-  public tts: boolean;
   public type: MessageType;
   public readonly url: string;
   public webhookId: Snowflake | null;
   public flags: Readonly<MessageFlags>;
   public reference: MessageReference | null;
-  public position: number | null;
   public awaitMessageComponent<T extends MessageComponentTypeResolvable = 'ACTION_ROW'>(
     options?: AwaitMessageCollectorOptionsParams<T, Cached>,
   ): Promise<MappedInteractionTypes<Cached>[T]>;
@@ -1495,7 +1488,6 @@ export class Message<Cached extends boolean = boolean> extends Base {
   public fetch(force?: boolean): Promise<Message>;
   public react(emoji: EmojiIdentifierResolvable): Promise<MessageReaction>;
   public reply(options: string | MessagePayload | ReplyMessageOptions): Promise<Message>;
-  public resolveComponent(customId: string): MessageActionRowComponent | null;
   public startThread(options: StartThreadOptions): Promise<ThreadChannel>;
   public toJSON(): unknown;
   public toString(): string;
@@ -2463,9 +2455,6 @@ export class Util extends null {
   public static cleanContent(str: string, channel: TextBasedChannel): string;
   private static _removeMentions(str: string): string;
   public static cloneObject(obj: unknown): unknown;
-  public static discordSort<K, V extends { rawPosition: number; id: Snowflake }>(
-    collection: Collection<K, V>,
-  ): Collection<K, V>;
   public static escapeMarkdown(text: string, options?: EscapeMarkdownOptions): string;
   public static escapeCodeBlock(text: string): string;
   public static escapeInlineCode(text: string): string;
@@ -5458,8 +5447,6 @@ export interface MessageMentionOptions {
 export type MessageMentionTypes = 'roles' | 'users' | 'everyone';
 
 export interface MessageOptions {
-  tts?: boolean;
-  nonce?: string | number;
   content?: string | null;
   embeds?: (MessageEmbed | MessageEmbedOptions | APIEmbed)[];
   components?: (MessageActionRow | (Required<BaseMessageComponentOptions> & MessageActionRowOptions))[];
@@ -5684,7 +5671,7 @@ export interface PartialDMChannel extends Partialize<DMChannel, null, null> {}
 export interface PartialGuildMember extends Partialize<GuildMember, 'joinedAt' | 'joinedTimestamp'> {}
 
 export interface PartialMessage
-  extends Partialize<Message, 'type' | 'system' | 'pinned' | 'tts', 'content' | 'cleanContent' | 'author'> {}
+  extends Partialize<Message, 'type' | 'system' | 'pinned', 'content' | 'cleanContent' | 'author'> {}
 
 export interface PartialMessageReaction extends Partialize<MessageReaction, 'count'> {}
 

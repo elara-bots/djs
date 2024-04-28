@@ -478,20 +478,6 @@ class Util extends null {
   }
 
   /**
-   * Sorts by Discord's position and id.
-   * @param {Collection} collection Collection of objects to sort
-   * @returns {Collection}
-   */
-  static discordSort(collection) {
-    const isGuildChannel = collection.first() instanceof GuildChannel;
-    return collection.sorted(
-      isGuildChannel
-        ? (a, b) => a.rawPosition - b.rawPosition || Number(BigInt(a.id) - BigInt(b.id))
-        : (a, b) => a.rawPosition - b.rawPosition || Number(BigInt(b.id) - BigInt(a.id)),
-    );
-  }
-
-  /**
    * Alternative to Node's `path.basename`, removing query string after the extension if it exists.
    * @param {string} path Path to get the basename of
    * @param {string} [ext] File extension to remove
@@ -676,6 +662,3 @@ class Util extends null {
 }
 
 module.exports = Util;
-
-// Fixes Circular
-const GuildChannel = require('../structures/GuildChannel');

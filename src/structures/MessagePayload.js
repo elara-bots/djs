@@ -127,16 +127,6 @@ class MessagePayload {
     const isWebhook = this.isWebhook;
 
     const content = this.makeContent();
-    const tts = Boolean(this.options.tts);
-
-    let nonce;
-    if (typeof this.options.nonce !== 'undefined') {
-      nonce = this.options.nonce;
-      // eslint-disable-next-line max-len
-      if (typeof nonce === 'number' ? !Number.isInteger(nonce) : typeof nonce !== 'string') {
-        throw new RangeError('MESSAGE_NONCE_TYPE');
-      }
-    }
 
     const components = this.options.components?.map(c => BaseMessageComponent.create(c).toJSON());
 
@@ -213,8 +203,6 @@ class MessagePayload {
 
     this.data = {
       content,
-      tts,
-      nonce,
       embeds: this.options.embeds?.map(embed => new MessageEmbed(embed).toJSON()),
       components,
       username,
