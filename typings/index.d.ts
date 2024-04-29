@@ -1671,7 +1671,6 @@ export class MessageMentions {
   private _parsedUsers: Collection<Snowflake, User> | null;
 
   public readonly channels: Collection<Snowflake, AnyChannel>;
-  public readonly client: Client;
   public everyone: boolean;
   public readonly guild: Guild;
   public has(data: UserResolvable | RoleResolvable | ChannelResolvable, options?: MessageMentionsHasOptions): boolean;
@@ -1680,7 +1679,6 @@ export class MessageMentions {
   public repliedUser: User | null;
   public roles: Collection<Snowflake, Role>;
   public users: Collection<Snowflake, User>;
-  public crosspostedChannels: Collection<Snowflake, CrosspostedChannel>;
   public toJSON(): unknown;
 
   public static CHANNELS_PATTERN: RegExp;
@@ -4458,13 +4456,6 @@ export interface StageInstanceCreateOptions {
   privacyLevel?: PrivacyLevel | number;
   sendStartNotification?: boolean;
   guildScheduledEvent?: GuildScheduledEventResolvable;
-}
-
-export interface CrosspostedChannel {
-  channelId: Snowflake;
-  guildId: Snowflake;
-  type: keyof typeof ChannelTypes;
-  name: string;
 }
 
 export type DateResolvable = Date | number | string;

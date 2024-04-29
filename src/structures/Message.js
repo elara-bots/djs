@@ -194,7 +194,6 @@ class Message extends Base {
         data.mentions ?? this.mentions.users,
         data.mention_roles ?? this.mentions.roles,
         data.mention_everyone ?? this.mentions.everyone,
-        data.mention_channels ?? this.mentions.crosspostedChannels,
         data.referenced_message?.author ?? this.mentions.repliedUser,
       );
     }

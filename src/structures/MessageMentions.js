@@ -1,21 +1,13 @@
 'use strict';
 
 const { Collection } = require('@discordjs/collection');
-const { ChannelTypes } = require('../util/Constants');
 const { flatten } = require('../util/Util');
 
 /**
  * Keeps track of mentions in a {@link Message}.
  */
 class MessageMentions {
-  constructor(message, users, roles, everyone, crosspostedChannels, repliedUser) {
-    /**
-     * The client the message is from
-     * @type {Client}
-     * @readonly
-     */
-    Object.defineProperty(this, 'client', { value: message.client });
-
+  constructor(message, users, roles, everyone, repliedUser) {
     /**
      * The guild the message is in
      * @type {?Guild}
@@ -101,44 +93,10 @@ class MessageMentions {
     this._parsedUsers = null;
 
     /**
-     * Crossposted channel data.
-     * @typedef {Object} CrosspostedChannel
-     * @property {Snowflake} channelId The mentioned channel's id
-     * @property {Snowflake} guildId The id of the guild that has the channel
-     * @property {ChannelType} type The channel's type
-     * @property {string} name The channel's name
-     */
-
-    if (crosspostedChannels) {
-      if (crosspostedChannels instanceof Collection) {
-        /**
-         * A collection of crossposted channels
-         * <info>Order as received from the API, not as they appear in the message content</info>
-         * @type {Collection<Snowflake, CrosspostedChannel>}
-         */
-        this.crosspostedChannels = new Collection(crosspostedChannels);
-      } else {
-        this.crosspostedChannels = new Collection();
-        const channelTypes = Object.keys(ChannelTypes);
-        for (const d of crosspostedChannels) {
-          const type = channelTypes[d.type];
-          this.crosspostedChannels.set(d.id, {
-            channelId: d.id,
-            guildId: d.guild_id,
-            type: type ?? 'UNKNOWN',
-            name: d.name,
-          });
-        }
-      }
-    } else {
-      this.crosspostedChannels = new Collection();
-    }
-
-    /**
      * The author of the message that this message is a reply to
      * @type {?User}
      */
-    this.repliedUser = repliedUser ? this.client.users._add(repliedUser) : null;
+    this.repliedUser = repliedUser ? message.client.users._add(repliedUser) : null;
   }
 
   /**
@@ -169,7 +127,7 @@ class MessageMentions {
     this._channels = new Collection();
     let matches;
     while ((matches = this.constructor.CHANNELS_PATTERN.exec(this._content)) !== null) {
-      const chan = this.client.channels.resolve(matches[1]);
+      const chan = this.guild.client.channels.resolve(matches[1]);
       if (chan) this._channels.set(chan.id, chan);
     }
     return this._channels;
@@ -186,7 +144,7 @@ class MessageMentions {
     this._parsedUsers = new Collection();
     let matches;
     while ((matches = this.constructor.USERS_PATTERN.exec(this._content)) !== null) {
-      const user = this.client.users.resolve(matches[1]);
+      const user = this.guild.client.users.resolve(matches[1]);
       if (user) this._parsedUsers.set(user.id, user);
     }
     return this._parsedUsers;
@@ -210,7 +168,7 @@ class MessageMentions {
    * @returns {boolean}
    */
   has(data, { ignoreDirect = false, ignoreRoles = false, ignoreRepliedUser = false, ignoreEveryone = false } = {}) {
-    const user = this.client.users.resolve(data);
+    const user = this.guild.client.users.resolve(data);
 
     if (!ignoreEveryone && user && this.everyone) return true;
 
@@ -224,7 +182,7 @@ class MessageMentions {
       const role = this.guild?.roles.resolve(data);
       if (role && this.roles.has(role.id)) return true;
 
-      const channel = this.client.channels.resolve(data);
+      const channel = this.guild.client.channels.resolve(data);
       if (channel && this.channels.has(channel.id)) return true;
     }
 
