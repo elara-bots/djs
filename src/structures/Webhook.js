@@ -269,7 +269,7 @@ class Webhook {
       .messages(typeof message === 'string' ? message : message.id)
       .patch({
         data,
-        files,
+        files: files ? files.map(c => ({ name: c.name, file: c.file })) : undefined,
         query: {
           thread_id: messagePayload.options.threadId,
         },
