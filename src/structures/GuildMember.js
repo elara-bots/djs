@@ -196,6 +196,16 @@ class GuildMember extends Base {
   get presence() {
     return (
       this.guild.presences.resolve(this.id) ||
+      this.guild.presences._add(
+        Object.assign(
+          {
+            user: this.user,
+            status: 'offline',
+            activities: [],
+          },
+          { guild: this.guild },
+        ),
+      ) ||
       new Presence(this.client, {
         user: this.user,
         guild: this.guild,
