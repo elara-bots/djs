@@ -63,18 +63,15 @@ class GuildDeleteAction extends Action {
       // don't run the cleanCache functions on the collections.
       return;
     }
-    const cleanCache = name => {
-      if (guild[name].cache.size) {
-        guild[name].cache.clear();
-      }
-    };
-    if (guild.channels.cache.size) {
-      for (const key of guild.channels.cache.keys()) {
-        this.client.channels._remove(key);
+    if (guild.channels) {
+      if (guild.channels.cache.size) {
+        for (const key of guild.channels.cache.keys()) {
+          this.client.channels._remove(key);
+        }
       }
     }
     for (const value of cleanData) {
-      cleanCache(value);
+      guild[value]?.cache?.clear?.();
     }
   }
 }

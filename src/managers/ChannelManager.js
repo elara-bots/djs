@@ -44,8 +44,10 @@ class ChannelManager extends CachedManager {
 
   _remove(id) {
     const channel = this.resolve(id);
-    channel?.guild?.channels.cache.delete(id);
-    channel?.parent?.threads?.cache.delete(id);
+    if (channel) {
+      channel.guild?.channels?.cache?.delete?.(id);
+      channel.parent?.threads?.cache?.delete?.(id);
+    }
     this.cache.delete(id);
   }
 
