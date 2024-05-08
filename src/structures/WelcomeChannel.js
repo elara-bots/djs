@@ -45,7 +45,7 @@ class WelcomeChannel extends Base {
    * @type {?(TextChannel|NewsChannel|ForumChannel)}
    */
   get channel() {
-    return this.client.channels.resolve(this.channelId);
+    return this.client.channels?.resolve(this.channelId);
   }
 
   /**
