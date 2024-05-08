@@ -280,7 +280,7 @@ class GuildMemberManager extends CachedManager {
     // Clone the data object for immutability
     const _data = { ...data };
     if (_data.channel) {
-      _data.channel = this.guild.channels.resolve(_data.channel);
+      _data.channel = this.guild?.channels?.resolve?.(_data.channel);
       if (!(_data.channel instanceof BaseGuildVoiceChannel)) {
         throw new Error('GUILD_VOICE_CHANNEL_RESOLVE');
       }

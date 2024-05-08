@@ -473,7 +473,7 @@ class GuildAuditLogsEntry {
       case Actions.MESSAGE_DELETE:
       case Actions.MESSAGE_BULK_DELETE:
         this.extra = {
-          channel: guild.channels.resolve(data.options.channel_id) ?? { id: data.options.channel_id },
+          channel: guild?.channels?.resolve?.(data.options.channel_id) ?? { id: data.options.channel_id },
           count: Number(data.options.count),
         };
         break;
@@ -600,7 +600,7 @@ class GuildAuditLogsEntry {
       // Discord sends a channel id for the MESSAGE_BULK_DELETE action type.
       this.target =
         data.action_type === Actions.MESSAGE_BULK_DELETE
-          ? guild.channels.resolve(data.target_id) ?? { id: data.target_id }
+          ? guild?.channels?.resolve?.(data.target_id) ?? { id: data.target_id }
           : guild.client.users.resolve(data.target_id) ?? null;
     } else if (targetType === Targets.INTEGRATION) {
       this.target =
@@ -618,7 +618,7 @@ class GuildAuditLogsEntry {
         );
     } else if (targetType === Targets.CHANNEL || targetType === Targets.THREAD) {
       this.target =
-        guild.channels.resolve(data.target_id) ??
+        guild?.channels?.resolve?.(data.target_id) ??
         this.changes.reduce(
           (o, c) => {
             o[c.key] = c.new ?? c.old;

@@ -207,7 +207,7 @@ class ThreadChannel extends Channel {
    * @readonly
    */
   get parent() {
-    return this.guild.channels?.resolve(this.parentId);
+    return this.guild?.channels?.resolve?.(this.parentId);
   }
 
   /**

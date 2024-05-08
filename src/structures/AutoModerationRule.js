@@ -148,7 +148,7 @@ class AutoModerationRule extends Base {
        * @type {Collection<Snowflake, GuildChannel|ThreadChannel>}
        */
       this.exemptChannels = new Collection(
-        data.exempt_channels.map(exemptChannel => [exemptChannel, this.guild.channels.resolve(exemptChannel)]),
+        data.exempt_channels.map(exemptChannel => [exemptChannel, this.guild?.channels?.resolve?.(exemptChannel)]),
       );
     }
   }
