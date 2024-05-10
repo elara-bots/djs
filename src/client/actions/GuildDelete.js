@@ -51,7 +51,7 @@ class GuildDeleteAction extends Action {
        * @param {Guild} guild The guild that was deleted
        */
       client.emit(Events.GUILD_DELETE, guild);
-      setTimeout(() => this.handleDeletedServer(guild), 10_000).unref();
+      setTimeout(() => this.handleDeletedServer(guild), 60_000).unref();
     }
 
     return { guild: guild ?? null };
