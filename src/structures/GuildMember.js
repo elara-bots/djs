@@ -256,7 +256,10 @@ class GuildMember extends Base {
    * @readonly
    */
   get permissions() {
-    if (this.user.id === this.guild.ownerId) return new Permissions(Permissions.ALL).freeze();
+    if (!this.guild) {
+      return new Permissions().freeze();
+    }
+    if (this.user.id === this.guild?.ownerId) return new Permissions(Permissions.ALL).freeze();
     return new Permissions(this.roles.cache.map(role => role.permissions)).freeze();
   }
 
