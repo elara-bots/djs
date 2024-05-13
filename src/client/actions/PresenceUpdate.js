@@ -12,12 +12,21 @@ class PresenceUpdateAction extends Action {
     if (data.user?.username) {
       if (!user._equals(data.user)) this.client.actions.UserUpdate.handle(data.user);
     }
-    if (this.client.options?.handlePresenceUpdates === false) {
-      // If handlePresenceUpdates is false then do not add/update the presence for the member.
-      return;
-    }
     const guild = this.client.guilds.resolve(data.guild_id);
     if (!guild) return;
+
+    if (this.client.options?.handlePresenceUpdates === false) {
+      // If handlePresenceUpdates is false then do not add/update the presence for the member.
+      if (!guild.members.cache.has(user.id)) {
+        // If the member isn't found in the cache, add them to the cache.
+        guild.members._add({
+          user,
+          deaf: false,
+          mute: false,
+        });
+      }
+      return;
+    }
 
     const oldPresence = guild.presences.resolve(user.id)?._clone() ?? null;
     let member = guild.members.resolve(user.id);
