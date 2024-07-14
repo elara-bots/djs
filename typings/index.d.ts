@@ -1045,6 +1045,7 @@ export class GuildMember extends PartialTextBasedChannel(Base) {
   public constructor(client: Client, data: RawGuildMemberData, guild: Guild);
   private _roles: Snowflake[];
   public avatar: string | null;
+  public banner: string | null;
   public readonly bannable: boolean;
   public readonly displayColor: number;
   public readonly displayHexColor: HexColorString;
@@ -1071,12 +1072,14 @@ export class GuildMember extends PartialTextBasedChannel(Base) {
   public user: User;
   public readonly voice: VoiceState;
   public avatarURL(options?: ImageURLOptions): string | null;
+  public bannerURL(options?: ImageURLOptions): string | null;
   public ban(options?: BanOptions): Promise<GuildMember>;
   public disableCommunicationUntil(timeout: DateResolvable | null, reason?: string): Promise<GuildMember>;
   public timeout(timeout: number | null, reason?: string): Promise<GuildMember>;
   public fetch(force?: boolean): Promise<GuildMember>;
   public createDM(force?: boolean): Promise<DMChannel>;
   public displayAvatarURL(options?: ImageURLOptions): string;
+  public displayBannerURL(options?: ImageURLOptions): string | null;
   public edit(data: GuildMemberEditData, reason?: string): Promise<GuildMember>;
   public isCommunicationDisabled(): this is GuildMember & {
     communicationDisabledUntilTimestamp: number;
