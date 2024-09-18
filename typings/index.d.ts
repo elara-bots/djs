@@ -4485,6 +4485,7 @@ export interface EmbedAuthorData {
   name: string;
   url?: string;
   iconURL?: string;
+  icon_url?: string;
 }
 
 export interface EmbedField {
@@ -4502,6 +4503,7 @@ export interface EmbedFieldData {
 export interface EmbedFooterData {
   text: string;
   iconURL?: string;
+  icon_url?: string;
 }
 
 export type EmojiIdentifierResolvable =

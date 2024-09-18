@@ -351,6 +351,7 @@ class MessageEmbed {
    * @property {string} name The name of this author.
    * @property {string} [url] The URL of this author.
    * @property {string} [iconURL] The icon URL of this author.
+   * @property {string} [icon_url] The icon URL of this author.
    */
 
   /**
@@ -373,8 +374,8 @@ class MessageEmbed {
       options = { name: options, url: deprecatedURL, iconURL: deprecatedIconURL };
     }
 
-    const { name, url, iconURL } = options;
-    this.author = { name: verifyString(name, RangeError, 'EMBED_AUTHOR_NAME'), url, iconURL };
+    const { name, url, iconURL, icon_url } = options;
+    this.author = { name: verifyString(name, RangeError, 'EMBED_AUTHOR_NAME'), url, iconURL: iconURL || icon_url };
     return this;
   }
 
@@ -403,6 +404,7 @@ class MessageEmbed {
    * @typedef {Object} EmbedFooterData
    * @property {string} text The text of the footer.
    * @property {string} [iconURL] The icon URL of the footer.
+   * @property {string} [icon_url] The icon URL of the footer.
    */
 
   /**
@@ -423,8 +425,8 @@ class MessageEmbed {
       options = { text: options, iconURL: deprecatedIconURL };
     }
 
-    const { text, iconURL } = options;
-    this.footer = { text: verifyString(text, RangeError, 'EMBED_FOOTER_TEXT'), iconURL };
+    const { text, iconURL, icon_url } = options;
+    this.footer = { text: verifyString(text, RangeError, 'EMBED_FOOTER_TEXT'), iconURL: iconURL || icon_url };
     return this;
   }
 
